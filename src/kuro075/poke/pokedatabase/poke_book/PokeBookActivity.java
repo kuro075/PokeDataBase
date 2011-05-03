@@ -3,6 +3,8 @@ package kuro075.poke.pokedatabase.poke_book;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -75,7 +77,7 @@ public class PokeBookActivity extends Activity{
 		button_all_pokes=(Button)findViewById(R.id.button_all_pokes);
 		button_all_pokes.setOnClickListener(new ButtonAllPokesClickListener());
 		//詳細検索
-		button_detail_search=(Button)findViewById(R.id.button_detail_research);
+		button_detail_search=(Button)findViewById(R.id.button_detail_search);
 		button_detail_search.setOnClickListener(new ButtonDetailSearchClickListener());
 		//フリーワード検索
 		edit_free_word=(EditText)findViewById(R.id.edit_free_word);
@@ -106,4 +108,13 @@ public class PokeBookActivity extends Activity{
 		outState.putString(KEY_FREE_WORD, edit_free_word.getText().toString());
 	}
 
+	/**
+	 * このアクティビティーをstartさせる
+	 * @param context
+	 */
+	public static void startThisActivity(Context context){
+		Utility.log(TAG, "startThisActivity");
+		Intent intent = new Intent(context,PokeBookActivity.class);
+		context.startActivity(intent);
+	}
 }
