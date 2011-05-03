@@ -21,6 +21,7 @@ import android.util.Log;
 
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.item.ItemData;
+import kuro075.poke.pokedatabase.data_base.poke.PokeData.CharacterTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.EggGroups;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.ItemRarities;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Sexes;
@@ -357,14 +358,14 @@ public class PokeDataManager implements Serializable{
 			@Override
 			public String getInformation(PokeData poke){
 				//pokeからとくせい１を取得してCharacterDataで変換して返す
-				return "";
+				return poke.getCharacter(CharacterTypes.FIRST).toString();
 			}
 			@Override
 			public Comparator<PokeData> getComparator(){
 				return new Comparator<PokeData>(){
 					@Override
 					public int compare(PokeData p1,PokeData p2){
-						return p1.getCharacter(0)-p2.getCharacter(0);
+						return p1.getCharacter(CharacterTypes.FIRST).compareTo(p2.getCharacter(CharacterTypes.FIRST));
 					}
 				};
 			}
@@ -373,18 +374,14 @@ public class PokeDataManager implements Serializable{
 			@Override
 			public String getInformation(PokeData poke){
 				//pokeからとくせい2を取得してCharacterDataで変換して返す
-				return "";
+				return poke.getCharacter(CharacterTypes.SECOND).toString();
 			}
 			@Override
 			public Comparator<PokeData> getComparator(){
 				return new Comparator<PokeData>(){
 					@Override
 					public int compare(PokeData p1,PokeData p2){
-						int p1_chara=p1.getCharacter(1);
-						int p2_chara=p2.getCharacter(1);
-						if(p1_chara<0) p1_chara=1000;//Character.length;
-						if(p2_chara<0) p2_chara=1000;//Character.length;
-						return p1_chara-p2_chara;
+						return p1.getCharacter(CharacterTypes.SECOND).compareTo(p2.getCharacter(CharacterTypes.SECOND));
 					}
 				};
 			}
@@ -393,18 +390,14 @@ public class PokeDataManager implements Serializable{
 			@Override
 			public String getInformation(PokeData poke){
 				//pokeから夢特性を取得してCharacterDataで変換して返す
-				return "";
+				return poke.getCharacter(CharacterTypes.DREAM).toString();
 			}
 			@Override
 			public Comparator<PokeData> getComparator(){
 				return new Comparator<PokeData>(){
 					@Override
 					public int compare(PokeData p1,PokeData p2){
-						int p1_chara=p1.getCharacter(2);
-						int p2_chara=p2.getCharacter(2);
-						if(p1_chara<0) p1_chara=1000;//Character.length;
-						if(p2_chara<0) p2_chara=1000;//Character.length;
-						return p1_chara-p2_chara;
+						return p1.getCharacter(CharacterTypes.DREAM).compareTo(p2.getCharacter(CharacterTypes.DREAM));
 					}
 				};
 			}

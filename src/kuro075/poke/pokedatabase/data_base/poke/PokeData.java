@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import kuro075.poke.pokedatabase.data_base.BasicData;
+import kuro075.poke.pokedatabase.data_base.character.CharacterData;
+import kuro075.poke.pokedatabase.data_base.character.CharacterDataManager;
 import kuro075.poke.pokedatabase.data_base.item.ItemData;
 import kuro075.poke.pokedatabase.data_base.item.ItemDataManager;
 import kuro075.poke.pokedatabase.data_base.skill.HidenMachines;
@@ -32,7 +34,7 @@ public class PokeData extends BasicData implements Serializable{
 		//==No,タイプ、とくせい、種族値、努力値
 		private int no=-1;//図鑑No
 		private int[] types=new int[2];//タイプ
-		private int[] characters=new int[3];//とくせい
+		private CharacterData[] characters=new CharacterData[3];//とくせい
 		private int[] specs=new int[6],effs=new int[6];//種族値,努力値
 		//==タマゴ==
 		private int[] egg_groups=new int[2];//タマゴグループ
@@ -63,7 +65,7 @@ public class PokeData extends BasicData implements Serializable{
 
 		protected Builder(){
 			Arrays.fill(types, -1);
-			Arrays.fill(characters, -1);
+			Arrays.fill(characters, CharacterDataManager.NullData);
 			Arrays.fill(egg_groups, -1);
 			Arrays.fill(specs,0);
 			Arrays.fill(effs, 0);
@@ -78,6 +80,7 @@ public class PokeData extends BasicData implements Serializable{
 				if(types[i]==-1){tmp_types[i]=null;}
 				tmp_types[i]=TypeData.fromInteger(types[i]);
 			}
+			
 			//タマゴ技、教えわざをソート
 			Collections.sort(egg_skills);
 			Collections.sort(teach_skills_Pt);
@@ -109,7 +112,7 @@ public class PokeData extends BasicData implements Serializable{
 		}
 
 		public void setCharacter(int index,int character) {
-			this.characters[index] = character;
+			this.characters[index] = CharacterDataManager.INSTANCE.getCharacterData(character);
 		}
 
 		public void setSpec(int index,int spec) {
@@ -233,7 +236,7 @@ public class PokeData extends BasicData implements Serializable{
 	//==No,タイプ、とくせい、種族値、努力値
 	private final int no;//図鑑No
 	private final TypeData[] types;//タイプ
-	private final int[] characters;//とくせい
+	private final CharacterData[] characters;//とくせい
 	private final int[] specs,effs;//種族値,努力値
 	//==タマゴ==
 	private final EggGroups[] egg_groups;//タマゴグループ
@@ -265,7 +268,7 @@ public class PokeData extends BasicData implements Serializable{
 
 	
 	
-	private PokeData(String name,int no,TypeData[] types,int[] characters,int[] specs,int[] effs,
+	private PokeData(String name,int no,TypeData[] types,CharacterData[] characters,int[] specs,int[] effs,
 					   int[] egg_groups,int hatching_step,
 					   int height,int weight,
 					   int[] sex_ratios,
@@ -577,7 +580,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param index:とくせい1or2or夢特性
 	 * @return
 	 */
-	public int getCharacter(int index) {
+	public CharacterData getCharacter(int index) {
 		return characters[index];
 	}
 	/**
@@ -585,7 +588,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param ctype:FIRST,SECOND,DREAM
 	 * @return
 	 */
-	public int getCharacter(CharacterTypes ctype){
+	public CharacterData getCharacter(CharacterTypes ctype){
 		return characters[ctype.getIndex()];
 	}
 
