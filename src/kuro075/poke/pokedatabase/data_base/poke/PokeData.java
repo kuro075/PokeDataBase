@@ -11,6 +11,13 @@ import java.util.Map;
 import java.util.Set;
 
 import kuro075.poke.pokedatabase.data_base.BasicData;
+import kuro075.poke.pokedatabase.data_base.item.ItemData;
+import kuro075.poke.pokedatabase.data_base.item.ItemDataManager;
+import kuro075.poke.pokedatabase.data_base.skill.HidenMachines;
+import kuro075.poke.pokedatabase.data_base.skill.OldSkillMachines;
+import kuro075.poke.pokedatabase.data_base.skill.SkillData;
+import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
+import kuro075.poke.pokedatabase.data_base.skill.SkillMachines;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 
 /**
@@ -36,18 +43,20 @@ public class PokeData extends BasicData implements Serializable{
 		//==性別比率
 		private int[] sex_ratios=new int[2];//性別比率
 		//==持っている道具==
-		private int[] items=new int[2];//持っている道具
+		private ItemData[] items=new ItemData[2];//持っている道具
 		//==その他==
 		private int final_ex=0;//最終経験値
 		private int ease_get=0;//つかまえやすさ
 		private int basic_ex=0;//基礎経験値
 		private int initial_natsuki=0;//初期なつき
 		//===覚えるわざ==
-		private List<Integer> lv_skills=new ArrayList<Integer>();//レベルアップで覚えるわざ
+		private List<SkillData> lv_skills=new ArrayList<SkillData>();//レベルアップで覚えるわざ
 		private List<Integer[]> learning_lvs=new ArrayList<Integer[]>();//レベルアップで覚えるわざの覚えるレベル
-		private List<Integer> machines=new ArrayList<Integer>(),hidens=new ArrayList<Integer>(),old_machines=new ArrayList<Integer>();//技マシン、秘伝マシン、旧技マシン
-		private List<Integer> egg_skills=new ArrayList<Integer>();//タマゴ技
-		private List<Integer> teach_skills_Pt=new ArrayList<Integer>(),teach_skills_HS=new ArrayList<Integer>(),teach_skills_BW=new ArrayList<Integer>();//教え技Pt,HS,bw
+		private List<SkillMachines> machines=new ArrayList<SkillMachines>();
+		private List<HidenMachines> hidens=new ArrayList<HidenMachines>();
+		private List<OldSkillMachines> old_machines=new ArrayList<OldSkillMachines>();//技マシン、秘伝マシン、旧技マシン
+		private List<SkillData> egg_skills=new ArrayList<SkillData>();//タマゴ技
+		private List<SkillData> teach_skills_Pt=new ArrayList<SkillData>(),teach_skills_HS=new ArrayList<SkillData>(),teach_skills_BW=new ArrayList<SkillData>();//教え技Pt,HS,bw
 		//==進化系列==
 		private List<Integer> evolutions=new ArrayList<Integer>();//進化系列
 		private List<String> condition_evolutions=new ArrayList<String>();//進化条件
@@ -59,7 +68,7 @@ public class PokeData extends BasicData implements Serializable{
 			Arrays.fill(specs,0);
 			Arrays.fill(effs, 0);
 			Arrays.fill(sex_ratios, 0);
-			Arrays.fill(items, -1);
+			Arrays.fill(items, null);
 			
 		}
 		
@@ -81,10 +90,10 @@ public class PokeData extends BasicData implements Serializable{
 					   sex_ratios,
 					   items,
 					   final_ex,ease_get,basic_ex,initial_natsuki,
-					   (Integer[])lv_skills.toArray(new Integer[0]),(Integer[][])learning_lvs.toArray(new Integer[0][]),
-					   (Integer[])machines.toArray(new Integer[0]),(Integer[])hidens.toArray(new Integer[0]),(Integer[])old_machines.toArray(new Integer[0]),
-					   (Integer[])egg_skills.toArray(new Integer[0]),
-					   (Integer[])teach_skills_Pt.toArray(new Integer[0]),(Integer[])teach_skills_HS.toArray(new Integer[0]),(Integer[])teach_skills_BW.toArray(new Integer[0]),
+					   (SkillData[])lv_skills.toArray(new SkillData[0]),(Integer[][])learning_lvs.toArray(new Integer[0][]),
+					   (SkillMachines[])machines.toArray(new SkillMachines[0]),(HidenMachines[])hidens.toArray(new HidenMachines[0]),(OldSkillMachines[])old_machines.toArray(new OldSkillMachines[0]),
+					   (SkillData[])egg_skills.toArray(new SkillData[0]),
+					   (SkillData[])teach_skills_Pt.toArray(new SkillData[0]),(SkillData[])teach_skills_HS.toArray(new SkillData[0]),(SkillData[])teach_skills_BW.toArray(new SkillData[0]),
 					   (Integer[])evolutions.toArray(new Integer[0]),(String[])condition_evolutions.toArray(new String[0])); 
 		}
 		
@@ -131,8 +140,8 @@ public class PokeData extends BasicData implements Serializable{
 			this.sex_ratios[index] = sex_ratio;
 		}
 
-		public void setItem(int index,int item) {
-			this.items[index] = item;
+		public void setItem(int index,String item) {
+			this.items[index] = ItemDataManager.INSTANCE.getItemData(item);
 		}
 
 		public void setFinalEx(int final_ex) {
@@ -152,7 +161,7 @@ public class PokeData extends BasicData implements Serializable{
 		}
 
 		public void addLvSkill(int lv_skill) {
-			this.lv_skills.add(lv_skill);
+			this.lv_skills.add(SkillDataManager.INSTANCE.getSkillData(lv_skill));
 		}
 
 		public void addLearningLv(int[] learning_lvs) {
@@ -177,31 +186,31 @@ public class PokeData extends BasicData implements Serializable{
 		}
 
 		public void addMachine(int machine) {
-			this.machines.add(machine);
+			this.machines.add(SkillMachines.fromNo(machine));
 		}
 
 		public void addHiden(int hiden) {
-			this.hidens.add(hiden);
+			this.hidens.add(HidenMachines.fromNo(hiden));
 		}
 
 		public void addOldMachine(int old_machine) {
-			this.old_machines.add(old_machine);
+			this.old_machines.add(OldSkillMachines.fromNo(old_machine));
 		}
 
 		public void addEggSkill(int egg_skill) {
-			this.egg_skills.add(egg_skill);
+			this.egg_skills.add(SkillDataManager.INSTANCE.getSkillData(egg_skill));
 		}
 
 		public void addTeachSkillPt(int teach_skill_Pt) {
-			this.teach_skills_Pt.add(teach_skill_Pt);
+			this.teach_skills_Pt.add(SkillDataManager.INSTANCE.getSkillData(teach_skill_Pt));
 		}
 
 		public void addTeachSkillHS(int teach_skill_HS) {
-			this.teach_skills_HS.add(teach_skill_HS);
+			this.teach_skills_HS.add(SkillDataManager.INSTANCE.getSkillData(teach_skill_HS));
 		}
 
 		public void addTeachSkillBW(int teach_skill_BW) {
-			this.teach_skills_BW.add(teach_skill_BW);
+			this.teach_skills_BW.add(SkillDataManager.INSTANCE.getSkillData(teach_skill_BW));
 		}
 
 		public void addEvolutions(int evolution) {
@@ -235,18 +244,20 @@ public class PokeData extends BasicData implements Serializable{
 	//==性別比率
 	private final int[] sex_ratios;//性別比率
 	//==持っている道具==
-	private final int[] items;//持っている道具
+	private final ItemData[] items;//持っている道具
 	//==その他==
 	private final FinalExperiences final_ex;//最終経験値
 	private final int ease_get;//つかまえやすさ
 	private final int basic_ex;//基礎経験値
 	private final int initial_natsuki;//初期なつき
 	//===覚えるわざ==
-	private final Integer[] lv_skills;//レベルアップで覚えるわざ
+	private final SkillData[] lv_skills;//レベルアップで覚えるわざ
 	private final Integer[][] learning_lvs;//レベルアップで覚えるわざの覚えるレベル
-	private final Integer[] machines,hidens,old_machines;//技マシン、秘伝マシン、旧技マシン
-	private final Integer[] egg_skills;//タマゴ技
-	private final Integer[] teach_skills_Pt,teach_skills_HS,teach_skills_BW;//教え技Pt,HS,bw
+	private final SkillMachines[] machines;//技マシン
+	private final HidenMachines[] hidens;//秘伝マシン
+	private final OldSkillMachines[] old_machines;//旧技マシン
+	private final SkillData[] egg_skills;//タマゴ技
+	private final SkillData[] teach_skills_Pt,teach_skills_HS,teach_skills_BW;//教え技Pt,HS,bw
 	//==進化系列==
 	private final Integer[] evolutions;//進化系列
 	private final String[] condition_evolutions;//進化条件
@@ -258,12 +269,12 @@ public class PokeData extends BasicData implements Serializable{
 					   int[] egg_groups,int hatching_step,
 					   int height,int weight,
 					   int[] sex_ratios,
-					   int[] items,
+					   ItemData[] items,
 					   int final_ex,int ease_get,int basic_ex,int initial_natsuki,
-					   Integer[] lv_skills,Integer[][] learning_lvs,
-					   Integer[] machines,Integer[] hidens,Integer[] old_machines,
-					   Integer[] egg_skills,
-					   Integer[] teach_skills_Pt,Integer[] teach_skills_HS,Integer[] teach_skills_BW,
+					   SkillData[] lv_skills,Integer[][] learning_lvs,
+					   SkillMachines[] machines,HidenMachines[] hidens,OldSkillMachines[] old_machines,
+					   SkillData[] egg_skills,
+					   SkillData[] teach_skills_Pt,SkillData[] teach_skills_HS,SkillData[] teach_skills_BW,
 					   Integer[] evolutions,String[] condition_evolutions) 
 	{
 		super(name);
@@ -694,7 +705,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param index 0:通常　1:レア
 	 * @return
 	 */
-	public int getItem(int index) {
+	public ItemData getItem(int index) {
 		return items[index];
 	}
 	/**
@@ -702,7 +713,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param ir:COMMON,RARE
 	 * @return
 	 */
-	public int getItem(ItemRarities ir){
+	public ItemData getItem(ItemRarities ir){
 		return items[ir.getIndex()];
 	}
 
@@ -742,7 +753,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * レベルアップで覚えるわざを全て取得
 	 * @return
 	 */
-	public Integer[] getLvSkill() {
+	public SkillData[] getLvSkill() {
 		return lv_skills.clone();
 	}
 
@@ -758,7 +769,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * 覚える技マシンNoを取得を全て取得
 	 * @return
 	 */
-	public Integer[] getMachine() {
+	public SkillMachines[] getMachine() {
 		return machines.clone();
 	}
 	
@@ -766,7 +777,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * 覚える秘伝マシンを全て取得
 	 * @return
 	 */
-	public Integer[] getHiden() {
+	public HidenMachines[] getHiden() {
 		return hidens.clone();
 	}
 
@@ -774,7 +785,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * 覚える旧技マシンを全て取得
 	 * @return
 	 */
-	public Integer[] getOldMachine() {
+	public OldSkillMachines[] getOldMachine() {
 		return old_machines.clone();
 	}
 
@@ -782,7 +793,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * タマゴ技を全て取得
 	 * @return
 	 */
-	public Integer[] getEggSkill() {
+	public SkillData[] getEggSkill() {
 		return egg_skills.clone();
 	}
 
@@ -790,7 +801,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * 教え技(Pt)を全て取得
 	 * @return
 	 */
-	public Integer[] getTeachSkillPt() {
+	public SkillData[] getTeachSkillPt() {
 		return teach_skills_Pt.clone();
 	}
 
@@ -798,7 +809,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * 教え技(HS)を全て取得
 	 * @return
 	 */
-	public Integer[] getTeachSkillHS() {
+	public SkillData[] getTeachSkillHS() {
 		return teach_skills_HS.clone();
 	}
 
@@ -806,7 +817,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * 教え技(BW)を全て取得
 	 * @return
 	 */
-	public Integer[] getTeachSkillBW() {
+	public SkillData[] getTeachSkillBW() {
 		return teach_skills_BW.clone();
 	}
 
@@ -844,12 +855,23 @@ public class PokeData extends BasicData implements Serializable{
 	 * すべての覚える技を取得
 	 * @return
 	 */
-	public Integer[] getAllSkill(){
-		Set<Integer> all_skills=new HashSet<Integer>();
+	public SkillData[] getAllSkill(){
+		Set<SkillData> all_skills=new HashSet<SkillData>();
 		//レベルアップで覚える技をall_skillsに追加
 		all_skills.addAll(Arrays.asList(this.lv_skills));
 		//技マシンで覚える技をall_skillsに追加
 		  //マシンNoで登録されているのでskills番号に変換してからall_skillsに追加
+		for(SkillMachines sm:this.machines){
+			all_skills.add(sm.getSkillData());
+		}
+		//秘伝マシンで覚える技をall_skillsに追加
+		for(HidenMachines hm:this.hidens){
+			all_skills.add(hm.getSkillData());
+		}
+		//旧わざマシンで覚える技をall_skillsに追加
+		for(OldSkillMachines osm:this.old_machines){
+			all_skills.add(osm.getSkillData());
+		}
 		//タマゴ技で覚える技をall_skillsに追加
 		all_skills.addAll(Arrays.asList(this.egg_skills));
 		//教え技で覚える技をall_skillsに追加
@@ -857,7 +879,7 @@ public class PokeData extends BasicData implements Serializable{
 		all_skills.addAll(Arrays.asList(this.teach_skills_HS));
 		all_skills.addAll(Arrays.asList(this.teach_skills_BW));
 		//all_skillsをint型配列にして返す
-		final Integer[] array_all_skills=(Integer[])all_skills.toArray(new Integer[0]);
+		final SkillData[] array_all_skills=(SkillData[])all_skills.toArray(new SkillData[0]);
 		Arrays.sort(array_all_skills);
 		return array_all_skills;
 	}
@@ -870,7 +892,7 @@ public class PokeData extends BasicData implements Serializable{
 	　済・タマゴグループ
 	　済・持っている道具
 	　済・レベルアップで覚える技
-	　・技マシン、秘伝マシン、旧技マシン
+	　済・技マシン、秘伝マシン、旧技マシン
 	　済・タマゴ技
 	　済・教え技(Pt,HS,BW) 
 	 */
@@ -900,50 +922,83 @@ public class PokeData extends BasicData implements Serializable{
 		//this.itemsにitemがあるかチェックしてあればtrue
 		return Arrays.binarySearch(this.items, item)>=0;
 	}
+	
+	/**
+	 * skillを覚えるかどうか
+	 * @param skill
+	 * @return skillを覚えればtrue
+	 */
+	public boolean hasSkill(SkillData skill){
+		//レベルアップで覚える技
+		if(hasSkillByLvSkill(skill)) return true;
+		//わざマシンで覚えるかどうか
+		if(hasSkillByMachine(skill)) return true;
+		//タマゴ技
+		if(hasSkillByEggSkill(skill)) return true;
+		//教え技(Pt,HS,BW) 
+		if(hasSkillByTeachSkill(skill))return true;
+		
+		return false;
+	}
+	
 	/**
 	 * skillをレベルアップで覚えるかどうか
 	 * @param skill
 	 * @return
 	 */
-	public boolean hasSkillByLvSkill(int skill){
+	public boolean hasSkillByLvSkill(SkillData skill){
 		return Arrays.binarySearch(lv_skills, skill)>=0;
 	}
 	/**
-	 * skillを技マシンで覚えるかどうか(未実装)
+	 * わざマシン、秘伝マシン、旧わざマシンで覚えるかどうか
 	 * @param skill
 	 * @return
 	 */
-	public boolean hasSkillByMachine(int skill){
+	public boolean hasSkillByMachine(SkillData skill){
+		//技マシン
+		if(hasSkillBySkillMachine(SkillMachines.fromString(skill.toString()))) return true;
+		//秘伝マシン
+		if(hasSkillByHidenMachine(HidenMachines.fromString(skill.toString()))) return true;
+		//旧わざマシン
+		if(hasSkillByOldSkillMachine(OldSkillMachines.fromString(skill.toString()))) return true;
+		return false;
+	}
+	/**
+	 * skillを技マシンで覚えるかどうか
+	 * @param skill
+	 * @return
+	 */
+	public boolean hasSkillBySkillMachine(SkillMachines skill){
 		//skillが技マシンかどうかをチェックしマシンNo(machine_no)に変換
 		//this.machineの中にmachine_noがあるかをチェックしあればtrue
-		return false;
+		return Arrays.binarySearch(machines, skill)>=0;
 	}
 	/**
-	 * skillを秘伝マシンで覚えるかどうか(未実装)
+	 * skillを秘伝マシンで覚えるかどうか
 	 * @param skill
 	 * @return
 	 */
-	public boolean hasSkillByHiden(int skill){
+	public boolean hasSkillByHidenMachine(HidenMachines skill){
 		//skillが秘伝マシンかどうかをチェックし秘伝No(hiden_no)に変換
 		//this.hidensの中にhiden_noがあるかをチェックしあればtrue
-		return false;
+		return Arrays.binarySearch(hidens, skill)>=0;
 	}
 	/**
-	 * skillを旧技マシンで覚えるかどうか(未実装)
+	 * skillを旧技マシンで覚えるかどうか
 	 * @param skill
 	 * @return
 	 */
-	public boolean hasSkillByOldMachine(int skill){
+	public boolean hasSkillByOldSkillMachine(OldSkillMachines skill){
 		//skillが旧わざマシンかどうかをチェックし旧技マシンNo(old_machine_no)に変換
 		//this.old_machineにold_machine_noがあるかをチェックしあればtrue
-		return false;
+		return Arrays.binarySearch(old_machines, skill)>=0;
 	}
 	/**
 	 * skillをタマゴ技で覚えるかどうか
 	 * @param skill
 	 * @return
 	 */
-	public boolean hasSkillByEggSkill(int skill){
+	public boolean hasSkillByEggSkill(SkillData skill){
 		//this.egg_skillにskillがあるかをチェックしあればtrue
 		return Arrays.binarySearch(egg_skills, skill)>=0;
 	}
@@ -952,7 +1007,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param skill
 	 * @return
 	 */
-	public boolean hasSkillByTeachSkill(int skill){
+	public boolean hasSkillByTeachSkill(SkillData skill){
 		//Ptで覚えるかどうかをチェックしtrueならreturn
 		if(hasSkillByTeachSkillPt(skill)) return true;
 		//HSで覚えるかどうかをチェックしtrueならreturn
@@ -967,7 +1022,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param skill
 	 * @return
 	 */
-	public boolean hasSkillByTeachSkillPt(int skill){
+	public boolean hasSkillByTeachSkillPt(SkillData skill){
 		//this.teach_skill_Ptにskillがあるかをチェックしあればtrue
 		return Arrays.binarySearch(teach_skills_Pt, skill)>=0;
 	}
@@ -976,7 +1031,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param skill
 	 * @return
 	 */
-	public boolean hasSkillByTeachSkillHS(int skill){
+	public boolean hasSkillByTeachSkillHS(SkillData skill){
 		//this.teach_skills_HSにskillがあるかをチェックしあればtrue
 		return Arrays.binarySearch(teach_skills_HS, skill)>=0;
 	}
@@ -985,7 +1040,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param skill
 	 * @return
 	 */
-	public boolean hasSkillByTeachSkillBW(int skill){
+	public boolean hasSkillByTeachSkillBW(SkillData skill){
 		//this.teach_skill_BWにskillがあるかをチェックしあればtrue
 		return Arrays.binarySearch(teach_skills_BW, skill)>=0;
 	}
@@ -994,7 +1049,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param type
 	 * @return
 	 */
-	public boolean hasType(int type){
+	public boolean hasType(TypeData type){
 		return Arrays.binarySearch(this.types, type)>=0;
 	}
 	//=============================================================
@@ -1064,16 +1119,4 @@ public class PokeData extends BasicData implements Serializable{
 		return false;
 	}
 	
-	/**
-	 * テストコード
-	 */
-	public String getTestString(){
-		return "No."+no+":"+toString()+","+types[0]+"/"+types[1]+
-				" ,"+characters[0]+"/"+characters[1]+"/"+characters[2]+" ,種族値:"+specs+",努力値:"+effs+
-				" ,タマゴグループ:"+Arrays.deepToString(egg_groups)+" ,孵化歩数:"+hatching_step+",高さ:"+height+",重さ:"+weight+
-				",性別比率:"+sex_ratios[0]+"/"+sex_ratios[1]+",持っている道具:"+items[0]+"/"+items[1]+",最終経験値:"+final_ex+",初期なつき:"+initial_natsuki+
-				",レベルアップで覚えるわざ:"+lv_skills+",覚えるレベル:"+learning_lvs+",技マシン:"+machines+",ひでん:"+hidens+",旧マシン:"+old_machines+
-				",タマゴ技:"+egg_skills+",教え技："+teach_skills_Pt+","+teach_skills_HS+","+teach_skills_BW+
-				",進化系列:"+evolutions+"/"+Arrays.deepToString(condition_evolutions);
-	}
 }

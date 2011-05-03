@@ -1,13 +1,9 @@
 package kuro075.poke.pokedatabase.data_base.poke;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +20,7 @@ import android.content.Context;
 import android.util.Log;
 
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
+import kuro075.poke.pokedatabase.data_base.item.ItemData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.EggGroups;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.ItemRarities;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Sexes;
@@ -168,11 +165,10 @@ public class PokeDataManager implements Serializable{
 							}
 							//====================================================================================
 							/*=================/
-							/  持っているアイテム(未完成)  /
+							/  持っているアイテム  /
 							/=================*/
 							for(int i=0;i<2;i++){
-								st.nextToken();
-								poke_builder.setItem(i, 0/*Integer.valueOf(st.nextToken())*/);
+								poke_builder.setItem(i, st.nextToken());
 							}
 							//====================================================================================
 							/*==============/
@@ -348,6 +344,7 @@ public class PokeDataManager implements Serializable{
 			@Override
 			public Comparator<PokeData> getComparator(){
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						int p1_type=TypeDataManager.changeTypeToNum(p1.getType(0), p1.getType(1));
 						int p2_type=TypeDataManager.changeTypeToNum(p2.getType(0), p2.getType(1));
@@ -365,6 +362,7 @@ public class PokeDataManager implements Serializable{
 			@Override
 			public Comparator<PokeData> getComparator(){
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						return p1.getCharacter(0)-p2.getCharacter(0);
 					}
@@ -380,6 +378,7 @@ public class PokeDataManager implements Serializable{
 			@Override
 			public Comparator<PokeData> getComparator(){
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						int p1_chara=p1.getCharacter(1);
 						int p2_chara=p2.getCharacter(1);
@@ -399,6 +398,7 @@ public class PokeDataManager implements Serializable{
 			@Override
 			public Comparator<PokeData> getComparator(){
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						int p1_chara=p1.getCharacter(2);
 						int p2_chara=p2.getCharacter(2);
@@ -853,6 +853,7 @@ public class PokeDataManager implements Serializable{
 			public Comparator<PokeData> getComparator() {
 				// TODO Auto-generated method stub
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						int p1_group=EggGroups.changeEggGroupToNum(p1.getEggGroup(0), p1.getEggGroup(1));
 						int p2_group=EggGroups.changeEggGroupToNum(p2.getEggGroup(0), p2.getEggGroup(1));
@@ -872,6 +873,7 @@ public class PokeDataManager implements Serializable{
 			public Comparator<PokeData> getComparator() {
 				// TODO Auto-generated method stub
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						return p1.getHatchingStep().getIndex()-p2.getHatchingStep().getIndex();
 					}
@@ -907,6 +909,7 @@ public class PokeDataManager implements Serializable{
 			public Comparator<PokeData> getComparator() {
 				// TODO Auto-generated method stub
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						final int p1_male=p1.getSexRatio(Sexes.MALE)<=0?10:p1.getSexRatio(Sexes.MALE),
 								  p1_female=p1.getSexRatio(Sexes.FEMALE)<=0?10:p1.getSexRatio(Sexes.FEMALE);
@@ -925,15 +928,22 @@ public class PokeDataManager implements Serializable{
 			public String getInformation(PokeData poke) {
 				// TODO Auto-generated method stub
 				//ItemDataManagerから道具名を取ってきて返す
-				return "";
+				final ItemData item=poke.getItem(ItemRarities.COMMON);
+				if(item==null) return "-";
+				return item.toString();
 			}
 
 			@Override
 			public Comparator<PokeData> getComparator() {
 				// TODO Auto-generated method stub
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
-						return p1.getItem(ItemRarities.COMMON)-p2.getItem(ItemRarities.COMMON);
+						final ItemData item1=p1.getItem(ItemRarities.COMMON);
+						final ItemData item2=p2.getItem(ItemRarities.COMMON);
+						final String name1=item1==null?"-":item1.toString();
+						final String name2=item2==null?"-":item2.toString();
+						return name1.compareTo(name2);
 					}
 				};
 			}
@@ -943,15 +953,22 @@ public class PokeDataManager implements Serializable{
 			public String getInformation(PokeData poke) {
 				// TODO Auto-generated method stub
 				//ItemDataManagerから道具名を取ってきて返す
-				return "";
+				final ItemData item=poke.getItem(ItemRarities.RARE);
+				if(item==null) return "-";
+				return item.toString();
 			}
 
 			@Override
 			public Comparator<PokeData> getComparator() {
 				// TODO Auto-generated method stub
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
-						return p1.getItem(ItemRarities.RARE)-p2.getItem(ItemRarities.RARE);
+						final ItemData item1=p1.getItem(ItemRarities.RARE);
+						final ItemData item2=p2.getItem(ItemRarities.RARE);
+						final String name1=item1==null?"-":item1.toString();
+						final String name2=item2==null?"-":item2.toString();
+						return name1.compareTo(name2);
 					}
 				};
 			}
@@ -967,6 +984,7 @@ public class PokeDataManager implements Serializable{
 			public Comparator<PokeData> getComparator() {
 				// TODO Auto-generated method stub
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						return p1.getFinalEx().getIndex()-p2.getFinalEx().getIndex();
 					}
@@ -984,6 +1002,7 @@ public class PokeDataManager implements Serializable{
 			public Comparator<PokeData> getComparator() {
 				// TODO Auto-generated method stub
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						return p1.getEaseGet()-p2.getEaseGet();
 					}
@@ -1001,6 +1020,7 @@ public class PokeDataManager implements Serializable{
 			public Comparator<PokeData> getComparator() {
 				// TODO Auto-generated method stub
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						return p1.getBasicEx()-p2.getBasicEx();
 					}
@@ -1018,6 +1038,7 @@ public class PokeDataManager implements Serializable{
 			public Comparator<PokeData> getComparator() {
 				// TODO Auto-generated method stub
 				return new Comparator<PokeData>(){
+					@Override
 					public int compare(PokeData p1,PokeData p2){
 						return p1.getInitialNatsuki()-p2.getInitialNatsuki();
 					}
@@ -1122,11 +1143,14 @@ public class PokeDataManager implements Serializable{
 	//ポケモンのデータ配列
 	private final PokeData[] poke_data;
 	private final String[] poke_name;
+	private final int num;
+	public static final PokeData NullData=new PokeData.Builder().build();
 	
 	private PokeDataManager(PokeData[] poke_data){
 		this.poke_data=poke_data;
-		poke_name=new String[poke_data.length];
-		for(int i=0,n=poke_data.length;i<n;i++){	
+		num=this.poke_data.length;
+		poke_name=new String[num];
+		for(int i=0;i<num;i++){	
 			this.poke_name[i]=poke_data[i].toString();
 		}
 	}
@@ -1135,8 +1159,8 @@ public class PokeDataManager implements Serializable{
 	/**
 	 * poke_dataの数を返す
 	 */
-	public int getNumOfPokeData(){
-		return poke_data.length;
+	public int getNum(){
+		return num;
 	}
 	/**
 	 * PokeDataを図鑑ナンバーから取得
@@ -1144,10 +1168,10 @@ public class PokeDataManager implements Serializable{
 	 * @return PokeData
 	 */
 	public PokeData getPokeData(int no){
-		if(no>0){
+		if(0<no && no<=num){
 			return poke_data[no-1];
 		}
-		return null;
+		return NullData;
 	}
 	
 	/**
