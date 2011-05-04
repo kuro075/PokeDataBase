@@ -1,6 +1,7 @@
 package kuro075.poke.pokedatabase.poke_book.poke_page;
 
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
+import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
 import android.graphics.Color;
@@ -62,11 +63,12 @@ public class OtherInformationLayout extends FrameLayout{
      * すべての進化系列をセット
      */
     private void setEvolutions(){
-    	textEvolutions=new TextView[poke.getEvolutions().length];
-    	for(int i=0,n=poke.getEvolutions().length;i<n;i++){
+    	final Integer[] evolutions=poke.getEvolutions();
+    	textEvolutions=new TextView[evolutions.length];
+    	for(int i=0,n=evolutions.length;i<n;i++){
     		TableRow tr=new TableRow(tl_evo.getContext());
     		textEvolutions[i]=new TextView(tr.getContext());
-	    	textEvolutions[i].setText(poke.getEvolutions()[i]);
+	    	textEvolutions[i].setText(PokeDataManager.INSTANCE.getPokeData(evolutions[i]).toString());
 	    	if(poke.getEvolutions()[i].equals(poke.getName())){
 	    		textEvolutions[i].setTextColor(Color.WHITE);
 	    	}else{

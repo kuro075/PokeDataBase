@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,7 +22,8 @@ import android.widget.ViewFlipper;
 public class PokePageActivity extends Activity{
 	private static final String PACKAGE="kuro075.poke.pokedatabase.poke_book.poke_page";
 	private static final String TAG="PokePageActivity";
-	private static final String KEY_POKE_NAME=PACKAGE+"."+TAG+".poke_name";
+	private static final String KEY_POKE_NAME=PACKAGE+"."+TAG+".poke_name",
+								KEY_DISPLAYED_INDEX=PACKAGE+"."+TAG+".displayed_index";
 	
 	private static final int MAX_TAB_COUNT=5;
 	private static final Animation inFromLeft = AnimationHelper.inFromLeftAnimation();
@@ -30,6 +32,7 @@ public class PokePageActivity extends Activity{
 	private static final Animation outToLeft = AnimationHelper.outToLeftAnimation();
 	
 	private TextView text_no,text_name,text_type1,text_type2;
+	private TextView[] text_tab=new TextView[MAX_TAB_COUNT];
 	//ViewFlipper
 	private ViewFlipper view_flipper;
 	private BasicInformationLayout basic_info_layout;//基本
@@ -58,6 +61,15 @@ public class PokePageActivity extends Activity{
             return true;
         }
     }
+	/**
+	 * 現在のタブかどうかを返す
+	 * @param tab_id
+	 * @return
+	 */
+	private boolean isCurrentTab(int tab_id){
+		return tab_id==view_flipper.getDisplayedChild();
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -70,18 +82,141 @@ public class PokePageActivity extends Activity{
 			poke=PokeDataManager.INSTANCE.getPokeData(extras.getString(KEY_POKE_NAME));
 		}
 		
-		//画面上部を初期化
+		/*================/
+		/  画面上部を初期化  /
+		/================*/
 		initTopInfoBar();
 		
-		//画面中部初期化
+		/*==============/
+		/  画面中部初期化  /
+		/==============*/
+		final MyFlickListener flick_listener=new MyFlickListener();
 		view_flipper=(ViewFlipper)findViewById(R.id.layoutswitcher);
+		view_flipper.setOnTouchListener(flick_listener);
+		//基本
 		basic_info_layout=new BasicInformationLayout(view_flipper.getContext(),poke);
-		machine_info_layout=new MachineInformationLayout(view_flipper.getContext(),poke);
-		egg_info_layout=new EggSkillInformationLayout(view_flipper.getContext(),poke);
+		view_flipper.addView(basic_info_layout,0);
+	    //覚える技
 		lv_skill_info_layout=new LvSkillInformationLayout(view_flipper.getContext(),poke);
-		other_info_layout=new OtherInformationLayout(view_flipper.getContext(),poke);
+		view_flipper.addView(lv_skill_info_layout,1);
+	    //技マシン
+		machine_info_layout=new MachineInformationLayout(view_flipper.getContext(),poke);
+		view_flipper.addView(machine_info_layout,2);
+	    //タマゴ技
+		egg_info_layout=new EggSkillInformationLayout(view_flipper.getContext(),poke);
+		view_flipper.addView(egg_info_layout,3);
+	    //その他
+		other_info_layout=new OtherInformationLayout(view_flipper.getContext(),flick_listener,poke);
+		view_flipper.addView(other_info_layout,4);
+		
+		/*==============/
+		/  画面下部初期化  /
+		/==============*/
+	    text_tab[0]=(TextView)findViewById(R.id.tab_basic);
+	    text_tab[0].setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				clickTextTab(0);
+			}
+	    });
+	    text_tab[1]=(TextView)findViewById(R.id.tab_lvskill);
+	    text_tab[1].setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				clickTextTab(1);
+			}
+	    });
+	    text_tab[2]=(TextView)findViewById(R.id.tab_machine);
+	    text_tab[2].setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				clickTextTab(2);
+			}
+	    });
+	    text_tab[3]=(TextView)findViewById(R.id.tab_eggskill);
+	    text_tab[3].setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				clickTextTab(3);
+			}
+	    });
+	    text_tab[4]=(TextView)findViewById(R.id.tab_etc);
+	    text_tab[4].setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				clickTextTab(4);
+			}
+	    });
+	    
+	    setClickedTab();
 	}
-	
+	/**
+	 * 表示しているタブを復元
+	 */
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onRestoreInstanceState(savedInstanceState);
+		final int prev=view_flipper.getDisplayedChild();
+		final int index=savedInstanceState.getInt(KEY_DISPLAYED_INDEX);
+		if(index<prev){
+			for(int i=0,n=prev-index;i<n;i++){
+				view_flipper.showPrevious();
+			}
+		}else
+		if(prev<index){
+			for(int i=0,n=index-prev;i<n;i++){
+				view_flipper.showNext();
+			}
+		}
+		setClickedTab();
+	}
+
+	/**
+	 * 表示しているタブを保存
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		outState.putInt(KEY_DISPLAYED_INDEX, view_flipper.getDisplayedChild());
+	}
+
+	/**
+	 * タブをクリックした時の動作
+	 * @param index
+	 */
+	private void clickTextTab(int index){
+		Log.v(TAG,"pushTabText");
+		final int prev=view_flipper.getDisplayedChild();
+		if (index<prev) {
+            view_flipper.setInAnimation(null);
+            view_flipper.setOutAnimation(outToRight);
+            for(int i=0;i<prev-index-1;i++){
+                view_flipper.showPrevious();
+                view_flipper.getCurrentView().setVisibility(View.GONE);
+            }
+            view_flipper.setInAnimation(inFromLeft);
+            view_flipper.showPrevious();
+        }
+        if (prev<index) {
+            view_flipper.setInAnimation(null);
+            view_flipper.setOutAnimation(outToLeft);
+            for(int i=0;i<index-prev-1;i++){
+                view_flipper.showNext();
+                view_flipper.getCurrentView().setVisibility(View.GONE);
+            }
+            view_flipper.setInAnimation(inFromRight);
+            view_flipper.setOutAnimation(outToLeft);
+            view_flipper.showNext();
+        }
+        setClickedTab();
+	}
 	/**
 	 * <<を押した時の動作
 	 */
@@ -117,6 +252,7 @@ public class PokePageActivity extends Activity{
 	 * 一番上のNo.名前　タイプ　のところをセット
 	 */
 	private void initTopInfoBar(){
+		Utility.log(TAG, "initTopInfoBar");
 		//TopInfoBar
 		text_no=(TextView)findViewById(R.id.text_no);
 		text_no.setText(poke.getNo2String());
@@ -142,6 +278,7 @@ public class PokePageActivity extends Activity{
 		});
 		
 		//タイプ
+		Utility.log(TAG, poke.getNo2String());
 		final TypeData type1=poke.getType(0);
 		text_type1.setText(type1.toString());
 		text_type1.setBackgroundColor(type1.getColor());
@@ -154,7 +291,7 @@ public class PokePageActivity extends Activity{
 			}
 		});
 		
-		final TypeData type2=poke.getType(2);
+		final TypeData type2=poke.getType(1);
 		if(type2==null){
 			((TextView)findViewById(R.id.text_betweentype)).setVisibility(View.INVISIBLE);
 			text_type2.setVisibility(View.INVISIBLE);
@@ -213,12 +350,27 @@ public class PokePageActivity extends Activity{
 	                    view_flipper.showNext();
 	                }
 	            }
-	            setClickedOfTabText();
+	            setClickedTab();
 	            break;
 	        default:
 	        	break;
 	    }
 	}  
+    /**
+	 * クリックされているタブの色を変える
+	 */
+	private void setClickedTab(){
+		final int current=view_flipper.getDisplayedChild();
+		for(int i=0;i<text_tab.length;i++){
+			if(i==current){
+				text_tab[i].setTextColor(Color.GRAY);
+			}else{
+				text_tab[i].setTextColor(Color.WHITE);
+			}
+		}
+	}
+	
+	
 	/**
 	 * このアクティビティーをstartさせる
 	 * 
@@ -226,8 +378,8 @@ public class PokePageActivity extends Activity{
 	 * @param poke　PokeData
 	 */
 	public static void startThisActivity(Context context,PokeData poke){
-		Utility.log(TAG, "startThisActivity with PokeData");
-		startThisActivity(context,poke.getName());
+		Utility.log(TAG, "startThisActivity with PokeData:"+poke.getNo2String());
+		startThisActivity(context,poke.toString());
 	}
 	/**
 	 * このアクティビティーをstartさせる
@@ -235,7 +387,7 @@ public class PokePageActivity extends Activity{
 	 * @param name
 	 */
 	public static void startThisActivity(Context context,String name){
-		Utility.log(TAG, "startThisActivity with PokeName");
+		Utility.log(TAG, "startThisActivity with PokeName:"+name);
 		Intent intent = new Intent(context,PokePageActivity.class);
 		intent.putExtra(KEY_POKE_NAME, name);
 		context.startActivity(intent);
@@ -247,7 +399,7 @@ public class PokePageActivity extends Activity{
 	 */
 	public static void startThisActivity(Context context,int no){
 		Utility.log(TAG, "startThisActivity with PokeNo");
-		startThisActivity(context,PokeDataManager.INSTANCE.getPokeData(no).getName());
+		startThisActivity(context,PokeDataManager.INSTANCE.getPokeData(no).toString());
 	}
 	
 }
