@@ -15,6 +15,7 @@ import java.util.StringTokenizer;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.item.ItemData.ItemClasses;
 import kuro075.poke.pokedatabase.data_base.item.ItemData.ItemSubClasses;
+import kuro075.poke.pokedatabase.util.Utility;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -35,7 +36,7 @@ public class ItemDataManager {
 			readFile();
 		}
 		private void readFile(){
-			Log.v(TAG,"readItemData");
+			Utility.log(TAG,"readItemData");
 			FileInputStream fis=null;
 			BufferedReader br=null;
 			String line,tmp;//
@@ -54,7 +55,7 @@ public class ItemDataManager {
 							ItemData.Builder item_builder=new ItemData.Builder();
 							//==============================================================
 							//アイテムの管理ナンバー
-							Log.v(TAG,"No."+no);
+							Utility.log(TAG,"No."+no);
 							item_builder.setNo(no);
 							no++;
 							//==============================================================
@@ -101,7 +102,7 @@ public class ItemDataManager {
 					
 				}
 			}
-			Log.v(TAG,"end readFile");
+			Utility.log(TAG,"end readFile");
 		}
 		private ItemDataManager build(){
 			return new ItemDataManager(item_list.toArray(new ItemData[0]));

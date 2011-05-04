@@ -566,6 +566,21 @@ public class PokeData extends BasicData implements Serializable{
 	}
 
 	/**
+	 * 図鑑Noを文字列で取得(001,015など)
+	 * @return
+	 */
+	public String getNo2String(){
+		StringBuilder sb=new StringBuilder();
+		if(no<10){
+			sb.append("00");
+		}else if(no<100){
+			sb.append("0");
+		}
+		sb.append(no);
+		return new String(sb);
+	}
+	
+	/**
 	 * タイプを取得
 	 * @param index:タイプ1or2
 	 * @return

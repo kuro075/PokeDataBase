@@ -3,11 +3,16 @@ package kuro075.poke.pokedatabase;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Sexes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager.ViewableInformations;
+import kuro075.poke.pokedatabase.poke_book.DetailSearchActivity;
+import kuro075.poke.pokedatabase.poke_book.PokeBookActivity;
+import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import kuro075.poke.pokedatabase.util.Utility.FileNames;
 
@@ -28,8 +33,7 @@ public class PokeDataBaseActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-    	Log.v(TAG,"onCreate");
-        
+    	Utility.log(TAG,"onCreate");
         int version=0;
         try{
     		PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
@@ -51,16 +55,19 @@ public class PokeDataBaseActivity extends Activity {
 	    	    }
 	       	}
         }
-       	Log.v(TAG,"Num:"+PokeDataManager.INSTANCE.getNum());
-        ((TextView)findViewById(R.id.hello)).setText(new kuro075.poke.pokedatabase.data_base.poke.Test().getTestString());
+       	
+       	if(Utility.DEBUG) Utility.log(TAG,"Num:"+PokeDataManager.INSTANCE.getNum());
+        if(Utility.DEBUG) ((TextView)findViewById(R.id.hello)).setText(new kuro075.poke.pokedatabase.data_base.poke.Test().getTestString());
         		//new kuro075.poke.pokedatabase.data_base.item.Test().getTestString());
         		//new kuro075.poke.pokedatabase.data_base.character.Test().getTestString());
         		//new kuro075.poke.pokedatabase.data_base.skill.Test().getTestString());
-       	
+        PokeBookActivity.startThisActivity(this);
+        DetailSearchActivity.startThisActivity(this);
+        SearchResultActivity.startThisActivity(this);
     }
     
     private void copy2Apk(InputStream input,String file) throws IOException{
-        Log.v(TAG, "copy2Apk@"+file);
+        Utility.log(TAG, "copy2Apk@"+file);
     	FileOutputStream fos = PokeDataBaseActivity.this.openFileOutput(file, 0);
     	final int DEFAULT_BUFFER_SIZE = 1024*4;
     	byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
@@ -75,7 +82,7 @@ public class PokeDataBaseActivity extends Activity {
      * @throws IOException
      */
     private final void copyData(String filename) throws IOException{
-        Log.v(TAG, "CopyData");
+        Utility.log(TAG, "CopyData");
 
         //データファイルを展開
         AssetManager as = getResources().getAssets();

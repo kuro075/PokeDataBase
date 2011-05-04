@@ -1,6 +1,7 @@
 package kuro075.poke.pokedatabase.poke_book;
 
 import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.Activity;
 import android.content.Context;
@@ -17,52 +18,60 @@ import android.widget.EditText;
  *
  */
 public class PokeBookActivity extends Activity{
+	
+	/*=========/
+	/  static  /
+	/=========*/
 	private static final String PACKAGE="kuro075.poke.pokedatabase.poke_book";
 	private static final String TAG="PokeBookActivity";
 	private static final String KEY_FREE_WORD=PACKAGE+"."+TAG+".free_word";
+
+	/**
+	 * このアクティビティーをstartさせる
+	 * @param context
+	 */
+	public static void startThisActivity(Context context){
+		Utility.log(TAG, "startThisActivity");
+		Intent intent = new Intent(context,PokeBookActivity.class);
+		context.startActivity(intent);
+	}
 	
-	
+	/*================/
+	/  インスタンス変数  /
+	/================*/
 	private Button button_all_pokes;//全ポケモン
 	private Button button_detail_search;//詳細検索
 	private Button button_free_word;//フリーワード検索
 	private EditText edit_free_word;//フリーワード検索のワード
 	
 	/**
-	 * button_all_pokesがクリックされたときのリスナー
+	 * button_all_pokesがクリックされたとき
 	 * @author sanogenma
 	 *
 	 */
-	private class ButtonAllPokesClickListener implements OnClickListener{
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			//検索結果アクティビティーを開く
-		}
+	private void clickButtonAllPokes(){
+		Utility.log(TAG, "clickButtonAllPokes");
+		SearchResultActivity.startThisActivity(this);
 	}
 	/**
 	 * button_detail_searchがクリックされた時のリスナー
 	 * @author sanogenma
 	 *
 	 */
-	private class ButtonDetailSearchClickListener implements OnClickListener{
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			//詳細検索アクティビティーを開く
-		}
+	private void clickButtonDetailSearch(){
+		Utility.log(TAG, "clickButtonDetailSearch");
+		DetailSearchActivity.startThisActivity(this);
 	}
+	
 	/**
 	 * button_free_wordがクリックされた時のリスナー
 	 * @author sanogenma
 	 *
 	 */
-	private class ButtonFreeWordClickListener implements OnClickListener{
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			//フリーワード検索を行い、検索結果アクティビティーを開く
-		}
+	private void clickButtonFreeWord(){
+		Utility.log(TAG, "clickButtonFreeWord");
 	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -75,14 +84,32 @@ public class PokeBookActivity extends Activity{
 		/=================*/
 		//全ポケモン
 		button_all_pokes=(Button)findViewById(R.id.button_all_pokes);
-		button_all_pokes.setOnClickListener(new ButtonAllPokesClickListener());
+		button_all_pokes.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				clickButtonAllPokes();
+			}
+		});
 		//詳細検索
 		button_detail_search=(Button)findViewById(R.id.button_detail_search);
-		button_detail_search.setOnClickListener(new ButtonDetailSearchClickListener());
+		button_detail_search.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				clickButtonDetailSearch();
+			}
+		});
 		//フリーワード検索
 		edit_free_word=(EditText)findViewById(R.id.edit_free_word);
 		button_free_word=(Button)findViewById(R.id.button_search);
-		button_free_word.setOnClickListener(new ButtonFreeWordClickListener());
+		button_free_word.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				clickButtonFreeWord();
+			}
+		});
 		
 	}
 
@@ -106,15 +133,5 @@ public class PokeBookActivity extends Activity{
 		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
 		outState.putString(KEY_FREE_WORD, edit_free_word.getText().toString());
-	}
-
-	/**
-	 * このアクティビティーをstartさせる
-	 * @param context
-	 */
-	public static void startThisActivity(Context context){
-		Utility.log(TAG, "startThisActivity");
-		Intent intent = new Intent(context,PokeBookActivity.class);
-		context.startActivity(intent);
 	}
 }

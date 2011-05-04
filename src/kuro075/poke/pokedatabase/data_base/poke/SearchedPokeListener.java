@@ -11,5 +11,5 @@ public interface SearchedPokeListener{
 	 * @param poke_array　検索後のポケモン配列
 	 * @param search_condition　検索条件
 	 */
-	public void receivePokeArray(PokeData[] poke_array,String search_condition);
+	public void receivePokeArray(PokeData[] poke_array,String search_if);
 }

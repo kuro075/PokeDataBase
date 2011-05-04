@@ -16,6 +16,7 @@ import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.SearchedPokeListener;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData.AttackTargets;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
+import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
@@ -41,7 +42,7 @@ public class SkillDataManager {
 			readFile();
 		}
 		private void readFile(){
-			Log.v(TAG,"readSkillData");
+			Utility.log(TAG,"readSkillData");
 			FileInputStream fis = null;
 			BufferedReader br=null;
 			String line,tmp;//
@@ -60,7 +61,7 @@ public class SkillDataManager {
 							SkillData.Builder skill_builder=new SkillData.Builder();
 							//==============================================================
 							//わざの管理ナンバー
-							//Log.v(TAG,"No."+no);
+							//Utility.log(TAG,"No."+no);
 							skill_builder.setNo(no);
 							no++;
 							//==============================================================
@@ -116,7 +117,7 @@ public class SkillDataManager {
 					
 				}
 			}
-			Log.v(TAG,"end readFile");
+			Utility.log(TAG,"end readFile");
 		}
 		
 		

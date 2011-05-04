@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +29,7 @@ import kuro075.poke.pokedatabase.data_base.poke.PokeData.ItemRarities;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Sexes;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
+import kuro075.poke.pokedatabase.util.Utility;
 
 /**
  * ポケモンデータ管理クラス
@@ -1080,7 +1083,7 @@ public class PokeDataManager implements Serializable{
 			}
 
 			@Override
-			public PokeData[] search(PokeData[] poke_array, String condition) {
+			public PokeData[] search(PokeData[] poke_array, String search_if) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -1100,21 +1103,119 @@ public class PokeDataManager implements Serializable{
 		 */
 		abstract public AlertDialog getDialog(Context context,PokeData[] pokes,SearchTypes search_type,SearchedPokeListener listener);
 		/**
-		 * 検索条件(文字列)からポケモンを検索して返すメソッド
+		 * poke_arrayから検索条件(文字列)似合うポケモンを検索して返すメソッド
+		 * @param poke_array ポケモンリスト
 		 * @param condition　検索条件
-		 * @return
+		 * @return　条件に合ったポケモンのリスト
 		 */
-		abstract public PokeData[] search(PokeData[] poke_array,String condition);
+		abstract public PokeData[] search(PokeData[] poke_array,String search_if);
+		
 		/**
 		 * condition=種類:hoge(SearchTypes)
-		 * @param poke_array
-		 * @param condtion
+		 * @param poke_array　現在のポケモンリスト
+		 * @param condtion　検索条件
+		 * @return　検索後のポケモンリスト
+		 */
+		public static PokeData[] searchByCondition(PokeData[] poke_array,String search_if){
+			Utility.log(TAG, "searchByCondition");
+			String[] tmp=search_if.split(":()/");
+			PokeData[] searched_array=null;
+			Set<PokeData> searched_set=new HashSet<PokeData>();
+			SearchableInformations si=fromString(tmp[0]);
+			if(si!=null){//検索であった場合
+				switch(SearchTypes.fromString(tmp[2])){
+					case FILTER:
+						searched_array=fromString(tmp[0]).search(poke_array, tmp[1]);
+						searched_set.addAll(Arrays.asList(searched_array));
+						break;
+					case REMOVE:
+						searched_array=fromString(tmp[0]).search(poke_array, tmp[1]);
+						for(PokeData poke:poke_array){
+							if(Arrays.binarySearch(searched_array, poke)<0){
+								searched_set.add(poke);
+							}
+						}
+						break;
+					case ADD:
+						searched_array=fromString(tmp[0]).search(PokeDataManager.INSTANCE.getAllPokeData(), tmp[1]);
+						searched_set.addAll(Arrays.asList(poke_array));
+						searched_set.addAll(Arrays.asList(searched_array));
+						break;
+					default:
+						searched_set.addAll(Arrays.asList(poke_array));
+						break;
+				}
+			}
+			else{//検索以外(除外、追加)
+				SearchTypes st=SearchTypes.fromString(tmp[0]);
+				searched_set.addAll(Arrays.asList(poke_array));
+				switch(st){
+					case REMOVE:
+						for(int i=1,n=tmp.length;i<n;i++){
+							searched_set.remove(PokeDataManager.INSTANCE.getPokeData(tmp[i]));
+						}
+						break;
+					case ADD:
+						for(int i=1,n=tmp.length;i<n;i++){
+							searched_set.add(PokeDataManager.INSTANCE.getPokeData(tmp[i]));
+						}
+						break;
+					default:
+				}
+			}
+			return searched_set.toArray(new PokeData[0]);
+		}
+		/**
+		 * 除外が一匹の時の検索条件を取得
+		 * @param remove_poke
 		 * @return
 		 */
-		public static PokeData[] searchByCondition(PokeData[] poke_array,String condition){
-			String[] tmp=condition.split(":()");
-			return fromString(tmp[0]).search(poke_array, tmp[1]);
+		public static String getRemoveIf(PokeData remove_poke){
+			return SearchTypes.REMOVE+":"+remove_poke.getName();
 		}
+		/**
+		 * 除外が複数の時の検索条件を取得
+		 * @param remove_pokes
+		 * @return
+		 */
+		public static String getRemoveIf(PokeData[] remove_pokes){
+			StringBuilder sb=new StringBuilder();
+			sb.append(SearchTypes.REMOVE.toString());
+			sb.append(":");
+			for(int i=0,n=remove_pokes.length;i<n;i++){
+				sb.append(remove_pokes[i].getName());
+				if(i<n-1){
+					sb.append("/");
+				}
+			}
+			return new String(sb);
+		}
+		/**
+		 * 追加が一匹の時の検索条件を取得
+		 * @param add_poke
+		 * @return
+		 */
+		public static String getAddIf(PokeData add_poke){
+			return SearchTypes.ADD.toString()+":"+add_poke;
+		}
+		/**
+		 * 追加が複数の時の検索条件を取得
+		 * @param add_pokes
+		 * @return
+		 */
+		public static String getAddIf(PokeData[] add_pokes){
+			StringBuilder sb=new StringBuilder();
+			sb.append(SearchTypes.ADD.toString());
+			sb.append(":");
+			for(int i=0,n=add_pokes.length;i<n;i++){
+				sb.append(add_pokes[i].getName());
+				if(i<n-1){
+					sb.append("/");
+				}
+			}
+			return new String(sb);
+		}
+		
 		
 		private static final Map<String,SearchableInformations>
 			stringToEnum = new HashMap<String,SearchableInformations>();//文字列からenumへ
@@ -1131,6 +1232,7 @@ public class PokeDataManager implements Serializable{
 		public static SearchableInformations fromString(String name){
 			return stringToEnum.get(name);
 		}
+
 	}
 	//=========================================================================
 	//ポケモンのデータ配列
@@ -1154,6 +1256,10 @@ public class PokeDataManager implements Serializable{
 	 */
 	public int getNum(){
 		return num;
+	}
+	
+	public PokeData[] getAllPokeData(){
+		return poke_data.clone();
 	}
 	/**
 	 * PokeDataを図鑑ナンバーから取得

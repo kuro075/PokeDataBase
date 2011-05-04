@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager.SearchableInformations;
+import kuro075.poke.pokedatabase.util.Utility;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -39,7 +40,7 @@ public class CharacterDataManager {
 			readFile();
 		}
 		private void readFile(){
-			Log.v(TAG,"readCharacterData");
+			Utility.log(TAG,"readCharacterData");
 			FileInputStream fis = null;
 			BufferedReader br=null;
 			String line,tmp;//
@@ -57,7 +58,7 @@ public class CharacterDataManager {
 						if(st.hasMoreTokens()){
 							CharacterData.Builder chara_builder=new CharacterData.Builder();
 							//================================================================
-							Log.v(TAG,"No."+num);
+							Utility.log(TAG,"No."+num);
 							chara_builder.setNo(num);
 							chara_builder.setName(tmp);
 							chara_builder.setBattle_effect(st.nextToken());
