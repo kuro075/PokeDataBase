@@ -80,7 +80,7 @@ public class LvSkillInformationLayout extends FrameLayout{
 	private List<SkillData> SkillList=null;
 	private List<Integer[]> SkillLvsList=null;
 	private List<String> SkillNote=null;
-	private int sort_index;
+	private int sort_index=5;
 	
 	
 	public LvSkillInformationLayout(Context context,OnTouchListener listener,PokeData poke) {
@@ -92,7 +92,6 @@ public class LvSkillInformationLayout extends FrameLayout{
 		
 		this.addView(layout);
 		
-		sort_index=-1;
 		initAllSkill();
         ll=(LinearLayout)layout.findViewById(R.id.linearlayout);
         ll.setOnTouchListener(listener);
@@ -286,14 +285,14 @@ public class LvSkillInformationLayout extends FrameLayout{
      */
     private void sortSkill(int operate){
     	//備考の場合
-    	if(operate>4){
+    	if(operate<0 || 4<operate){
 			initAllSkill();
 			for(int i=0;i<tb.length;i++){
 				if(tb[i].isChecked()){
 					addSkill(PokeDataManager.INSTANCE.getPokeData(tb[i].getText().toString()));
 				}
 			}
-			sort_index=-1;
+			sort_index=operate;
 			return;
     	}
     	

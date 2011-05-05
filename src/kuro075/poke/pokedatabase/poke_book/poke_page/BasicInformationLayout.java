@@ -2,6 +2,7 @@ package kuro075.poke.pokedatabase.poke_book.poke_page;
 
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.character.CharacterData;
+import kuro075.poke.pokedatabase.data_base.item.ItemData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Sexes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
@@ -190,9 +191,8 @@ public class BasicInformationLayout extends LinearLayout{
     		((TextView)layout.findViewById(TEXT_NUM_TYPERELATION_ID[i])).setText(String.valueOf(weaktype[i].length));
     	}
     	//持っている道具
-    	for(int i=0,n=2;i<n;i++){
-    		Item[i].setText(poke.getItem(i).toString());
-    	}
+    	Item[0].setText(PokeDataManager.ViewableInformations.ITEM_COMMON.getInformation(poke));
+    	Item[1].setText(PokeDataManager.ViewableInformations.ITEM_RARE.getInformation(poke));	
     	//タマゴグループ
     	final PokeData.EggGroups egg_group1=poke.getEggGroup(0);
     	EggGroup[0].setText(egg_group1.toString());

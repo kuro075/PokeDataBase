@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -61,6 +62,20 @@ public class PokePageActivity extends Activity{
             return true;
         }
     }
+	
+	private class MyListView extends ListView{
+		private static final String TAG="MyListView";
+		public MyListView(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		public boolean onTouchEvent(MotionEvent event) {
+        	onTouchAction(event.getAction(),event.getX(),event.getY());
+			return super.onTouchEvent(event);
+		}
+	}
 	/**
 	 * 現在のタブかどうかを返す
 	 * @param tab_id
@@ -94,16 +109,16 @@ public class PokePageActivity extends Activity{
 		view_flipper=(ViewFlipper)findViewById(R.id.layoutswitcher);
 		view_flipper.setOnTouchListener(flick_listener);
 		//基本
-		basic_info_layout=new BasicInformationLayout(view_flipper.getContext(),poke);
+		basic_info_layout=new BasicInformationLayout(view_flipper.getContext(),flick_listener,poke);
 		view_flipper.addView(basic_info_layout,0);
 	    //覚える技
-		lv_skill_info_layout=new LvSkillInformationLayout(view_flipper.getContext(),poke);
+		lv_skill_info_layout=new LvSkillInformationLayout(view_flipper.getContext(),flick_listener,poke);
 		view_flipper.addView(lv_skill_info_layout,1);
 	    //技マシン
-		machine_info_layout=new MachineInformationLayout(view_flipper.getContext(),poke);
+		machine_info_layout=new MachineInformationLayout(view_flipper.getContext(),flick_listener,poke);
 		view_flipper.addView(machine_info_layout,2);
 	    //タマゴ技
-		egg_info_layout=new EggSkillInformationLayout(view_flipper.getContext(),poke);
+		egg_info_layout=new EggSkillInformationLayout(view_flipper.getContext(),flick_listener,poke);
 		view_flipper.addView(egg_info_layout,3);
 	    //その他
 		other_info_layout=new OtherInformationLayout(view_flipper.getContext(),flick_listener,poke);
