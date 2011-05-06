@@ -1,7 +1,10 @@
 package kuro075.poke.pokedatabase.data_base.skill;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
+import kuro075.poke.pokedatabase.data_base.skill.SkillMachines.DataTypes;
 
 /**
  * 旧わざマシン
@@ -32,6 +35,80 @@ public enum OldSkillMachines {
 		_79("あくのはどう",79),
 		_82("ねごと",82),
 		_83("しぜんのめぐみ",83);
+		
+		/**
+		 * 登録されているデータ
+		 * @author sanogenma
+		 *
+		 */
+		public enum DataTypes{
+			No("No",0) {
+				@Override
+				public Comparator<OldSkillMachines> getComparator() {
+					// TODO Auto-generated method stub
+					return new Comparator<OldSkillMachines>(){
+						@Override
+						public int compare(OldSkillMachines machine1,
+								OldSkillMachines machine2) {
+							// TODO Auto-generated method stub
+							return machine1.no-machine2.no;
+						}
+					};
+				}
+			},
+			Name("技名",1) {
+				@Override
+				public Comparator<OldSkillMachines> getComparator() {
+					// TODO Auto-generated method stub
+					return new Comparator<OldSkillMachines>(){
+						@Override
+						public int compare(OldSkillMachines machine1,
+								OldSkillMachines machine2) {
+							// TODO Auto-generated method stub
+							return machine1.name.compareTo(machine2.name);
+						}
+					};
+				}
+			};
+			private final String name;
+			private final int index;
+			DataTypes(String name,int index){
+				this.name=name;
+				this.index=index;
+			}
+			@Override
+			public String toString(){ return name; }
+			public int getIndex(){ return index; }
+			
+			abstract public Comparator<OldSkillMachines> getComparator();
+			
+			private static final Map<Integer,DataTypes> 
+				integerToEnum = new HashMap<Integer, DataTypes>();//数値からenumへ
+			private static final Map<String,DataTypes>
+				stringToEnum = new HashMap<String,DataTypes>();//文字列からenumへ
+			static { //定数名からenum定数へのマップを初期化
+				for(DataTypes sm : values()){
+					integerToEnum.put(sm.index, sm);
+					stringToEnum.put(sm.toString(), sm);
+				}
+			}
+			/**
+			 * 文字列からHidenMachinesを取得
+			 * @param step
+			 * @return
+			 */
+			public static DataTypes fromString(String step){
+				return stringToEnum.get(step);
+			}
+			/**
+			 * 数値（インデックス）からHidenMachinesを取得
+			 * @param integer
+			 * @return
+			 */
+			public static DataTypes fromIndex(int index){
+				return integerToEnum.get(index);
+			}
+		}
 		
 		private final String name;
 		private final int no;

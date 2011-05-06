@@ -3,9 +3,16 @@ package kuro075.poke.pokedatabase.poke_book.poke_page;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
+import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
+import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
+import kuro075.poke.pokedatabase.poke_book.poke_page.basic.BasicInformationLayout;
+import kuro075.poke.pokedatabase.poke_book.poke_page.egg_skill.EggSkillInformationLayout;
+import kuro075.poke.pokedatabase.poke_book.poke_page.lv_skill.LvSkillInformationLayout;
+import kuro075.poke.pokedatabase.poke_book.poke_page.machine.MachineInformationLayout;
+import kuro075.poke.pokedatabase.poke_book.poke_page.other.OtherInformationLayout;
+import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,11 +23,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-public class PokePageActivity extends Activity{
+public class PokePageActivity extends PokeBookMenuActivity{
 	private static final String PACKAGE="kuro075.poke.pokedatabase.poke_book.poke_page";
 	private static final String TAG="PokePageActivity";
 	private static final String KEY_POKE_NAME=PACKAGE+"."+TAG+".poke_name",
@@ -62,29 +68,7 @@ public class PokePageActivity extends Activity{
             return true;
         }
     }
-	
-	private class MyListView extends ListView{
-		private static final String TAG="MyListView";
-		public MyListView(Context context) {
-			super(context);
-			// TODO Auto-generated constructor stub
-		}
-		
-		@Override
-		public boolean onTouchEvent(MotionEvent event) {
-        	onTouchAction(event.getAction(),event.getX(),event.getY());
-			return super.onTouchEvent(event);
-		}
-	}
-	/**
-	 * 現在のタブかどうかを返す
-	 * @param tab_id
-	 * @return
-	 */
-	private boolean isCurrentTab(int tab_id){
-		return tab_id==view_flipper.getDisplayedChild();
-	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -262,6 +246,7 @@ public class PokePageActivity extends Activity{
 	private void clickTextType(TypeData type){
 		Utility.log(TAG,"clickTextType");
 		//検索結果アクティビティーを起動
+		SearchResultActivity.startThisActivityWithDefaultSearch(this, SearchableInformations.TYPE, type.toString());
 	}
     /**
 	 * 一番上のNo.名前　タイプ　のところをセット

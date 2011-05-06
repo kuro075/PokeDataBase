@@ -1,5 +1,8 @@
 package kuro075.poke.pokedatabase.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -61,4 +64,26 @@ public class Utility {
 		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
 	}
 
+	/**
+	 * Listを逆順にする
+	 * @param list
+	 */
+	public static void reverseList(List list){
+		for(int i=list.size()-2;i>=0;i--){
+    		list.add(list.get(i));
+    		list.remove(i);
+    	}
+	}
+	/**
+	 * 配列を逆順にする
+	 * @param array
+	 */
+	public static void reverseArray(Object[] array){
+		final int last_index=array.length-1;
+		for(int i=0,n=array.length/2;i<n;i++){
+			Object tmp=array[i];
+			array[i]=array[last_index-i];
+			array[last_index-i]=tmp;
+		}
+	}
 }

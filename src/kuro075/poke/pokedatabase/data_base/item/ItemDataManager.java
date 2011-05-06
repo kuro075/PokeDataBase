@@ -55,7 +55,6 @@ public class ItemDataManager {
 							ItemData.Builder item_builder=new ItemData.Builder();
 							//==============================================================
 							//アイテムの管理ナンバー
-							Utility.log(TAG,"No."+no);
 							item_builder.setNo(no);
 							no++;
 							//==============================================================
@@ -342,16 +341,15 @@ public class ItemDataManager {
 	/  データ  / 
 	/========*/
 	private final ItemData[] item_data;
-	private final String[] item_name;
+	private final Map<String,ItemData> name2item_map=new HashMap<String,ItemData>();
 	private final int num;
 	public static final ItemData NullData=new ItemData.Builder().build();
 	
 	private ItemDataManager(ItemData[] item_data){
 		this.item_data=item_data;
 		num=this.item_data.length;
-		item_name=new String[num];
-		for(int i=0;i<num;i++){
-			this.item_name[i]=item_data[i].toString();
+		for(ItemData item:item_data){
+			name2item_map.put(item.toString(), item);
 		}
 	}
 	//================================================================================
@@ -382,7 +380,6 @@ public class ItemDataManager {
 	 * @return
 	 */
 	public ItemData getItemData(String name){
-		final int index=Arrays.binarySearch(item_name, name);
-		return getItemData(index);
+		return name2item_map.get(name);
 	}
 }

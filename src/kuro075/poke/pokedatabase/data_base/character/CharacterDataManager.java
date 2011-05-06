@@ -58,7 +58,7 @@ public class CharacterDataManager {
 						if(st.hasMoreTokens()){
 							CharacterData.Builder chara_builder=new CharacterData.Builder();
 							//================================================================
-							Utility.log(TAG,"No."+num);
+							//Utility.log(TAG,"No."+num);
 							chara_builder.setNo(num);
 							chara_builder.setName(tmp);
 							chara_builder.setBattle_effect(st.nextToken());
@@ -223,16 +223,15 @@ public class CharacterDataManager {
 	/  データ  / 
 	/========*/
 	private final CharacterData[] chara_data;
-	private final String[] chara_name;
+	private final Map<String,CharacterData> name2chara_map=new HashMap<String,CharacterData>();
 	private final int num;
 	public static final CharacterData NullData=new CharacterData.Builder().build();
 	
 	private CharacterDataManager(CharacterData[] chara_data){
 		this.chara_data=chara_data;
 		num=this.chara_data.length;
-		chara_name=new String[num];
-		for(int i=0;i<num;i++){
-			this.chara_name[i]=chara_data[i].toString();
+		for(CharacterData character:chara_data){
+			name2chara_map.put(character.toString(), character);
 		}
 	}
 	//================================================================================
@@ -262,7 +261,6 @@ public class CharacterDataManager {
 	 * @return　CharacterData
 	 */
 	public CharacterData getCharacterData(String name){
-		final int index=Arrays.binarySearch(chara_name, name);
-		return getCharacterData(index);
+		return name2chara_map.get(name);
 	}
 }

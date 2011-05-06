@@ -3,20 +3,17 @@ package kuro075.poke.pokedatabase;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
-import kuro075.poke.pokedatabase.data_base.poke.PokeData.Sexes;
-import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager.ViewableInformations;
+import kuro075.poke.pokedatabase.menu.DefaultMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.DetailSearchActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeBookActivity;
 import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import kuro075.poke.pokedatabase.util.Utility.FileNames;
 
-import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -25,15 +22,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-public class PokeDataBaseActivity extends Activity {
+public class PokeDataBaseActivity extends DefaultMenuActivity {
+	private static final String PACKAGE="kuro075.poke.pokedatabase";
 	private static final String TAG="PokeDataBaseActivity";
-	
+	private static final String KEY_VERSION=PACKAGE+"."+TAG+".key_version";
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
     	Utility.log(TAG,"onCreate");
+    	/*==============/
+    	/  バージョン確認  /
+    	/==============*/
         int version=0;
         try{
     		PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
@@ -42,9 +43,13 @@ public class PokeDataBaseActivity extends Activity {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-    	final boolean new_version=false;
+    	SharedPreferences preference=this.getPreferences(MODE_PRIVATE);
+    	final boolean new_version=version==preference.getInt(KEY_VERSION, -1);
+    	Editor edit=preference.edit();
+    	edit.putInt(KEY_VERSION, version);
+    	edit.commit();
        	for(FileNames fn : FileNames.values()){
-       		if(Utility.DEBUG || 	//デバッグ用 trueで必ずファイル更新
+       		if(//Utility.DEBUG || 	//デバッグ用 trueで必ずファイル更新
        		   !new_version ||	//最新バージョンかどうか
         	   !PokeDataBaseActivity.this.getFileStreamPath(fn.toString()).exists())//ファイルが存在するか
         	{
@@ -56,7 +61,9 @@ public class PokeDataBaseActivity extends Activity {
 	       	}
         }
        	
-       	if(Utility.DEBUG) Utility.log(TAG,"Num:"+PokeDataManager.INSTANCE.getNum());
+       	
+       	
+       	Utility.log(TAG,"Num:"+PokeDataManager.INSTANCE.getNum());
         if(Utility.DEBUG) ((TextView)findViewById(R.id.hello)).setText(new kuro075.poke.pokedatabase.data_base.poke.Test().getTestString());
         		//new kuro075.poke.pokedatabase.data_base.item.Test().getTestString());
         		//new kuro075.poke.pokedatabase.data_base.character.Test().getTestString());

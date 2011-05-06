@@ -3,7 +3,10 @@ package kuro075.poke.pokedatabase.data_base.type;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import android.graphics.Color;
 
 /**
  * タイプデータマネージャークラス
@@ -61,6 +64,14 @@ public class TypeDataManager{
 				{/*あく*/100,100,100,100,100,100,50,100,100,100,200,100,100,200,100,50,50},
 				{/*はがね*/100,50,50,50,100,200,100,100,100,100,100,100,200,100,100,100,50}
 		};
+		//タイプの色
+		private static final int[] TypeColor={/*ノーマルColor.rgb(204,204,153)*/Color.rgb(204, 204, 204),/*ほのお*/Color.rgb(255,102,0),/*みず*/Color.rgb(0,102,255),
+			 /*でんき*/Color.rgb(255,220,10),/*くさ*/Color.rgb(102,204,0),/*こおり*/Color.rgb(53,153,255),
+			 /*かくとう*//*Color.rgb(102,0,51)*/Color.rgb(122, 20, 71),/*どく*/Color.rgb(153,0,153),/*じめん*//*Color.rgb(153,102,51)*/Color.rgb(173, 122, 71),
+			 /*ひこう*/Color.rgb(153,153,255),/*エスパー*/Color.rgb(255,102,204),/*むし*/Color.rgb(204,204,0),
+			 /*いわ*//*Color.rgb(204,153,51)*/Color.rgb(204, 153, 51),/*ゴースト*//*Color.rgb(51,0,102)*/Color.rgb(111, 60, 162),/*ドラゴン*//*Color.rgb(102,0,153)*/Color.rgb(142, 40, 193),
+			 /*あく*//*Color.rgb(102,51,51)*/Color.rgb(112, 61, 61),/*はがね*/Color.rgb(153,153,153)};
+
 		private final String name;//タイプ名
 		private final String short_name;//一文字でのタイプ名
 		private final int index;//インデックス
@@ -77,7 +88,15 @@ public class TypeDataManager{
 			return short_name;
 		}
 		public int getIndex(){return index;}
+		
+		public int getColor(){
+			return TypeColor[index];
+		}
+		
+		
 		private static final int getTypeRelation(TypeData attack_type,TypeData defense_type){return TypeRelation[attack_type.getIndex()][defense_type.getIndex()];}
+		
+		
 		/**
 		 * 単タイプを攻撃したときの相性を取得
 		 * @param defense_type　タイプ
@@ -85,6 +104,26 @@ public class TypeDataManager{
 		 */
 		public int AttackTo(TypeData defense_type){
 			return getTypeRelation(this,defense_type);
+		}
+		/**
+		 * 複合タイプを攻撃したときの相性を取得
+		 * @param defense_type1
+		 * @param defense_type2
+		 * @return
+		 */
+		public int AttackTo(TypeData defense_type1,TypeData defense_type2){
+			if(defense_type1==null){
+				if(defense_type2==null){
+					return 100;
+				}else{
+					return AttackTo(defense_type2);
+				}
+			}else
+			if(defense_type2==null){
+				return AttackTo(defense_type1);
+			}
+			
+			return getTypeRelation(this,defense_type1)*getTypeRelation(this,defense_type2)/100;
 		}
 		/**
 		 * 攻撃したときの相性がvalueと同じ防御タイプを全て取得
@@ -151,13 +190,29 @@ public class TypeDataManager{
 			return integerToEnum.get(integer);
 		}
 	}
-	
+	/**
+	 * 複合タイプに攻撃したときの相性がvalueのタイプを全て取得
+	 * @param defense_type1
+	 * @param defense_type2
+	 * @param value
+	 * @return
+	 */
+	public static final TypeData[] getWeakTypes(TypeData defense_type1,TypeData defense_type2,ValuesOfTypeRelation value){
+		List<TypeData> weak_list=new ArrayList<TypeData>();
+		for(TypeData attack_type:TypeData.values()){
+			if(attack_type.AttackTo(defense_type1,defense_type2)==value.getRelation()){
+				weak_list.add(attack_type);
+			}
+		}
+		return weak_list.toArray(new TypeData[0]);
+	}
 	/**
 	 * 単色、または複合タイプを数値にして取得
 	 * @param type1　タイプ１
 	 * @param type2　タイプ２(単色の場合null)
 	 * @return
 	 */
+
 	public static final int changeTypeToNum(TypeData type1,TypeData type2){
 		int num=0;
 		if(type1!=null) num+=type1.getIndex()*TypeData.values().length;

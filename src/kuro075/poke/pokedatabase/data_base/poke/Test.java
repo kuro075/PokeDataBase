@@ -1,6 +1,5 @@
 package kuro075.poke.pokedatabase.data_base.poke;
 
-import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager.ViewableInformations;
 
 /**
  * PokeDataのテストクラス
@@ -14,6 +13,16 @@ public class Test {
        	sb=new StringBuilder();
        	for(int i=1,n=PokeDataManager.INSTANCE.getNum();i<=n;i++){
        		PokeData poke=PokeDataManager.INSTANCE.getPokeData(i);
+       		Integer[][] lvs=poke.getLearningLv();
+       		for(Integer[] s:lvs){
+       			if(s.length!=4){
+       				sb.append(poke.getNo());
+       				sb.append(":");
+       				sb.append(s.length);
+           			sb.append("\n");
+       			}
+       		}
+       		/*
        		sb.append(poke.getNo());
        		sb.append(" ");
        		sb.append(poke.toString());
@@ -24,7 +33,7 @@ public class Test {
        			sb.append(vi.getInformation(poke));
        			sb.append("\n");
        		}
-       		sb.append("\n");
+       		sb.append("\n");*/
        	}
 	}
 	

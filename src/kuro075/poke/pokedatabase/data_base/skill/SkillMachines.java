@@ -1,14 +1,17 @@
 package kuro075.poke.pokedatabase.data_base.skill;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
+import kuro075.poke.pokedatabase.data_base.skill.HidenMachines.DataTypes;
 
 /**
  * 技マシン
  * @author sanogenma
  *
  */
-public enum SkillMachines {
+public enum SkillMachines{
 	_01("つめとぎ",1),
 	_02("ドラゴンクロー",2),
 	_03("サイコショック",3),
@@ -43,7 +46,7 @@ public enum SkillMachines {
 	_32("かげぶんしん",32),
 	_33("リフレクター",33),
 	_34("ヘドロウェーブ",34),
-	_35("かえんしょうしゃ",35),
+	_35("かえんほうしゃ",35),
 	_36("ヘドロばくだん",36),
 	_37("すなあらし",37),
 	_38("だいもんじ",38),
@@ -104,6 +107,80 @@ public enum SkillMachines {
 	_93("ワイルドボルト",93),
 	_94("いわくだき",94),
 	_95("バークアウト",95);
+	
+	/**
+	 * 登録されているデータ
+	 * @author sanogenma
+	 *
+	 */
+	public enum DataTypes{
+		No("No",0) {
+			@Override
+			public Comparator<SkillMachines> getComparator() {
+				// TODO Auto-generated method stub
+				return new Comparator<SkillMachines>(){
+					@Override
+					public int compare(SkillMachines machine1,
+							SkillMachines machine2) {
+						// TODO Auto-generated method stub
+						return machine1.no-machine2.no;
+					}
+				};
+			}
+		},
+		Name("技名",1) {
+			@Override
+			public Comparator<SkillMachines> getComparator() {
+				// TODO Auto-generated method stub
+				return new Comparator<SkillMachines>(){
+					@Override
+					public int compare(SkillMachines machine1,
+							SkillMachines machine2) {
+						// TODO Auto-generated method stub
+						return machine1.name.compareTo(machine2.name);
+					}
+				};
+			}
+		};
+		private final String name;
+		private final int index;
+		DataTypes(String name,int index){
+			this.name=name;
+			this.index=index;
+		}
+		@Override
+		public String toString(){ return name; }
+		public int getIndex(){ return index; }
+		
+		abstract public Comparator<SkillMachines> getComparator();
+		
+		private static final Map<Integer,DataTypes> 
+			integerToEnum = new HashMap<Integer, DataTypes>();//数値からenumへ
+		private static final Map<String,DataTypes>
+			stringToEnum = new HashMap<String,DataTypes>();//文字列からenumへ
+		static { //定数名からenum定数へのマップを初期化
+			for(DataTypes sm : values()){
+				integerToEnum.put(sm.index, sm);
+				stringToEnum.put(sm.toString(), sm);
+			}
+		}
+		/**
+		 * 文字列からHidenMachinesを取得
+		 * @param step
+		 * @return
+		 */
+		public static DataTypes fromString(String step){
+			return stringToEnum.get(step);
+		}
+		/**
+		 * 数値（インデックス）からHidenMachinesを取得
+		 * @param integer
+		 * @return
+		 */
+		public static DataTypes fromIndex(int index){
+			return integerToEnum.get(index);
+		}
+	}
 	
 	private final String name;
 	private final int no;

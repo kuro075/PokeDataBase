@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
-import kuro075.poke.pokedatabase.data_base.poke.SearchedPokeListener;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData.AttackTargets;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -436,15 +434,14 @@ public class SkillDataManager {
 	/  データ  / 
 	/========*/
 	private final SkillData[] skill_data;
-	private final String[] skill_name;
+	private final Map<String,SkillData> name2skill_map=new HashMap<String,SkillData>();
 	private final int num;
 	public static final SkillData NullData=new SkillData.Builder().build();
 	private SkillDataManager(SkillData[] skill_data){
 		this.skill_data=skill_data;
 		num=this.skill_data.length;
-		skill_name=new String[num];
-		for(int i=0;i<num;i++){
-			this.skill_name[i]=skill_data[i].toString();
+		for(SkillData skill:skill_data){
+			name2skill_map.put(skill.toString(), skill);
 		}
 	}
 	//================================================================================
@@ -474,7 +471,6 @@ public class SkillDataManager {
 	 * @return　SkillData
 	 */
 	public SkillData getSkillData(String name){
-		final int index=Arrays.binarySearch(skill_name, name);
-		return getSkillData(index);
+		return name2skill_map.get(name);
 	}
 }

@@ -70,7 +70,7 @@ public class PokeData extends BasicData implements Serializable{
 			Arrays.fill(specs,0);
 			Arrays.fill(effs, 0);
 			Arrays.fill(sex_ratios, 0);
-			Arrays.fill(items, null);
+			Arrays.fill(items, ItemDataManager.NullData);
 			
 		}
 		
@@ -93,11 +93,11 @@ public class PokeData extends BasicData implements Serializable{
 					   sex_ratios,
 					   items,
 					   final_ex,ease_get,basic_ex,initial_natsuki,
-					   (SkillData[])lv_skills.toArray(new SkillData[0]),(Integer[][])learning_lvs.toArray(new Integer[0][]),
-					   (SkillMachines[])machines.toArray(new SkillMachines[0]),(HidenMachines[])hidens.toArray(new HidenMachines[0]),(OldSkillMachines[])old_machines.toArray(new OldSkillMachines[0]),
-					   (SkillData[])egg_skills.toArray(new SkillData[0]),
-					   (SkillData[])teach_skills_Pt.toArray(new SkillData[0]),(SkillData[])teach_skills_HS.toArray(new SkillData[0]),(SkillData[])teach_skills_BW.toArray(new SkillData[0]),
-					   (Integer[])evolutions.toArray(new Integer[0]),(String[])condition_evolutions.toArray(new String[0])); 
+					   lv_skills.toArray(new SkillData[0]),learning_lvs.toArray(new Integer[0][]),
+					   machines.toArray(new SkillMachines[0]),hidens.toArray(new HidenMachines[0]),old_machines.toArray(new OldSkillMachines[0]),
+					   egg_skills.toArray(new SkillData[0]),
+					   teach_skills_Pt.toArray(new SkillData[0]),teach_skills_HS.toArray(new SkillData[0]),teach_skills_BW.toArray(new SkillData[0]),
+					   evolutions.toArray(new Integer[0]),condition_evolutions.toArray(new String[0])); 
 		}
 		
 		public void setName(String name){
@@ -586,7 +586,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @return
 	 */
 	public TypeData getType(int index) {
-		if(index>=types.length) return types[0];
+		if(index<0 || types.length<=index) return types[0];
 		return types[index];
 	}
 	
@@ -779,10 +779,22 @@ public class PokeData extends BasicData implements Serializable{
 	 * レベルアップで覚える技の覚えるレベルを全て取得
 	 * @return
 	 */
-	public Integer[][] getLearning_lv() {
+	public Integer[][] getLearningLv() {
 		return learning_lvs.clone();
 	}
-
+	/**
+	 * skillを覚えるレベルを取得
+	 * @param skill
+	 * @return
+	 */
+	public Integer[] getLearningLv(SkillData skill){
+		for(int i=0,n=lv_skills.length;i<n;i++){
+			if(lv_skills[i].equals(skill)){
+				return learning_lvs[i];
+			}
+		}
+		return null;
+	}
 	/**
 	 * 覚える技マシンNoを取得を全て取得
 	 * @return
@@ -847,14 +859,35 @@ public class PokeData extends BasicData implements Serializable{
 		return evolutions.clone();
 	}
 
+	
+	/**
+	 * 進化系列を取得
+	 * @param index
+	 * @return
+	 */
+	public PokeData getEvolution(int index){
+		return PokeDataManager.INSTANCE.getPokeData(evolutions[index]);
+	}
+	/**
+	 * 進化系列で自分が何番目かを返す
+	 * @return
+	 */
+	public int getPositionOfEvolution(){
+		for(int i=0,n=evolutions.length;i<n;i++){
+			if(evolutions[i]==no){
+				return i;
+			}
+		}
+		return -1;
+	}
 	/**
 	 * 進化条件を全て取得
 	 * @return
 	 */
-	public String[] getCondition_evolutions() {
+	public String[] getConditionEvolutions() {
 		return condition_evolutions.clone();
 	}
-
+	
 	/**
 	 * 最大物理耐久を取得(（HP種族値＋107）×(int)｛(防御種族値＋52）×1.1｝)
 	 * @return
@@ -897,7 +930,7 @@ public class PokeData extends BasicData implements Serializable{
 		all_skills.addAll(Arrays.asList(this.teach_skills_HS));
 		all_skills.addAll(Arrays.asList(this.teach_skills_BW));
 		//all_skillsをint型配列にして返す
-		final SkillData[] array_all_skills=(SkillData[])all_skills.toArray(new SkillData[0]);
+		final SkillData[] array_all_skills=all_skills.toArray(new SkillData[0]);
 		Arrays.sort(array_all_skills);
 		return array_all_skills;
 	}
@@ -919,16 +952,22 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param chara
 	 * @return
 	 */
-	public boolean hasCharacter(int chara){
-		return Arrays.binarySearch(characters,chara)>=0;
+	public boolean hasCharacter(CharacterData chara){
+		for(CharacterData c:characters){
+			if(c.equals(chara)) return true;
+		}
+		return false;
 	}
 	/**
 	 * タマゴグループにgroupが含まれているかどうか
 	 * @param group
 	 * @return
 	 */
-	public boolean hasEggGroup(int group){
-		return Arrays.binarySearch(egg_groups, group)>=0;
+	public boolean hasEggGroup(EggGroups egg_group){
+		for(EggGroups g:egg_groups){
+			if(g!=null && g.equals(egg_group)) return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -936,9 +975,11 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param item
 	 * @return
 	 */
-	public boolean hasItem(int item){
-		//this.itemsにitemがあるかチェックしてあればtrue
-		return Arrays.binarySearch(this.items, item)>=0;
+	public boolean hasItem(ItemData item){
+		for(ItemData i:items){
+			if(i!=null && i.equals(item)) return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -1068,7 +1109,26 @@ public class PokeData extends BasicData implements Serializable{
 	 * @return
 	 */
 	public boolean hasType(TypeData type){
-		return Arrays.binarySearch(this.types, type)>=0;
+		for(TypeData t:types){
+			if(t!=null && t.equals(type)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean hasForm(){
+		int position=0;
+		for(int i=0,n=evolutions.length;i<n;i++){
+			if(evolutions[i]==no){
+				position=i;
+				break;
+			}
+		}
+		if(!condition_evolutions[position].equals("フォルム")){
+			return evolutions.length-1==position+1 && condition_evolutions[position+1].equals("フォルム");
+		}
+		return false;
 	}
 	//=============================================================
 	//is系

@@ -1,8 +1,8 @@
 package kuro075.poke.pokedatabase.poke_book;
 
 import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.util.Utility;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import android.os.Bundle;
  * @author sanogenma
  *
  */
-public class DetailSearchActivity extends Activity{
+public class DetailSearchActivity extends PokeBookMenuActivity{
 	private static final String PACKAGE="kuro075.poke.pokedatabase.poke_book";
 	private static final String TAG="DetailSearchActivity";
 	

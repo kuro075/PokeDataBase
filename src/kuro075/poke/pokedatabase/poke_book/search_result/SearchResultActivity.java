@@ -1,22 +1,34 @@
 package kuro075.poke.pokedatabase.poke_book.search_result;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.data_base.SearchIfListener;
+import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
-import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager.SearchableInformations;
-import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager.ViewableInformations;
-import kuro075.poke.pokedatabase.poke_book.PokeBookActivity;
+import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
+import kuro075.poke.pokedatabase.data_base.poke.viewable_informations.ViewableInformations;
+import kuro075.poke.pokedatabase.menu.MenuItems;
+import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
+import kuro075.poke.pokedatabase.poke_book.poke_page.PokePageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,13 +38,208 @@ import android.widget.TextView;
  * @author sanogenma
  *
  */
-public class SearchResultActivity extends Activity{
+public class SearchResultActivity extends PokeBookMenuActivity{
 
+	/*===========/
+	/  ダイアログ  /
+	/===========*/
+	private class DialogManager{
+		/**
+		 * 検索条件受信クラス
+		 * @author sanogenma
+		 *
+		 */
+		private class MySearchIfReceiver implements SearchIfListener{
+			@Override
+			public void receiveSearchIf(String search_if) {
+				// TODO Auto-generated method stub
+				
+			}
+		}
+		final Context context;
+		final AlertDialog operate_dialog,//操作ダイアログ
+						  filter_dialog,//絞込ダイアログ
+						  add_dialog,//追加ダイアログ
+						  remove_dialog,//除外ダイアログ
+						  view_change_dialog;//表示切替ダイアログ
+		SearchIfListener listener = new MySearchIfReceiver();
+		
+		/**
+		 * コンストラクタ
+		 * 全ダイアログを初期化
+		 */
+		private DialogManager(Context context){
+			this.context=context;
+			operate_dialog=getOperateDialog();
+			filter_dialog=getDialog(SearchTypes.FILTER);
+			add_dialog=getDialog(SearchTypes.ADD);
+			remove_dialog=getDialog(SearchTypes.REMOVE);
+			view_change_dialog=getViewChangeDialog();
+		}
+		/**
+		 * (絞込・追加・除外)ダイアログを作成・取得
+		 * @param type
+		 * @return
+		 */
+		private AlertDialog getDialog(SearchTypes type){
+			Utility.log(TAG, "getDialog");
+			AlertDialog.Builder builder;
+			LayoutInflater factory=LayoutInflater.from(context);
+			
+			final View layout = factory.inflate(R.layout.simple_list_dialog, null);
+			builder = new AlertDialog.Builder(context);
+			builder.setTitle(type.toString());
+			builder.setView(layout);
+			
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,SearchableInformations.toStringArray());
+			final ListView list_view = (ListView)layout.findViewById(R.id.list_view);
+			list_view.setAdapter(adapter);
+			final SearchTypes search_type=type;
+			list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					// TODO Auto-generated method stub
+					SearchableInformations.values()[position].openDialog(context, poke_list, search_type, listener);
+					switch(search_type){
+						case FILTER:filter_dialog.dismiss();break;
+						case ADD:	add_dialog.dismiss();	break;
+						case REMOVE:remove_dialog.dismiss();break;
+					}
+				}
+			});
+			builder.setPositiveButton(getString(R.string.back), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					operate_dialog.show();
+					dialog.dismiss();
+				}
+			});
+			return builder.create();
+		}
+		/**
+		 * 操作ダイアログの作成・取得
+		 * @return
+		 */
+		private AlertDialog getOperateDialog(){
+			Utility.log(TAG, "getOperateDialog");
+			AlertDialog.Builder builder;
+			LayoutInflater factory=LayoutInflater.from(context);
+			
+			final View layout = factory.inflate(R.layout.simple_list_dialog, null);
+			builder = new AlertDialog.Builder(context);
+			builder.setTitle(getString(R.string.operate_dialog_name));
+			builder.setView(layout);
+			
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,SearchTypes.toStringArray());
+			final ListView list_view = (ListView)layout.findViewById(R.id.list_view);
+			list_view.setAdapter(adapter);
+			list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					// TODO Auto-generated method stub
+					openDialog(SearchTypes.fromIndex(position));
+					operate_dialog.dismiss();
+				}
+			});
+			builder.setPositiveButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			});
+			return builder.create();
+		}
+		
+		/**
+		 * 表示切替ダイアログを作成・取得
+		 * @return
+		 */
+		private AlertDialog getViewChangeDialog(){
+			Utility.log(TAG, "getViewChangeDialog");
+			AlertDialog.Builder builder;
+			LayoutInflater factory=LayoutInflater.from(context);
+			
+			final View layout = factory.inflate(R.layout.simple_list_dialog, null);
+			builder = new AlertDialog.Builder(context);
+			builder.setTitle(getString(R.string.view_change));
+			builder.setView(layout);
+			
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,ViewableInformations.toStringArray());
+			final ListView list_view = (ListView)layout.findViewById(R.id.list_view);
+			list_view.setAdapter(adapter);
+			list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					// TODO Auto-generated method stub
+					clickViewChangeItem(ViewableInformations.values()[position]);
+					view_change_dialog.dismiss();
+				}
+			});
+			builder.setPositiveButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			});
+			return builder.create();
+		}
+		/**
+		 * (絞込・追加・除外)ダイアログを開く
+		 * @param type
+		 */
+		private void openDialog(SearchTypes type){
+			Utility.log(TAG, "openDialog");
+			switch(type){
+				case FILTER:
+					filter_dialog.show();
+					break;
+				case ADD:
+					add_dialog.show();
+					break;
+				case REMOVE:
+					remove_dialog.show();
+					break;
+			}
+		}
+		/**
+		 * 操作ダイアログを開く
+		 */
+		private void openOperateDialog(){
+			operate_dialog.show();
+		}
+		/**
+		 * 表示切替ダイアログを開く
+		 */
+		private void openViewChangeDialog(){
+			Utility.log(TAG, "openViewChangeDialog");
+			view_change_dialog.show();
+		}
+	}
+	/**
+	 * ソート
+	 * @author sanogenma
+	 *
+	 */
+	enum SortTypes{
+		NO("図鑑No"),NAME("名前"),INFO("情報");
+		private final String name;
+		SortTypes(String name){this.name=name;}
+		@Override
+		public String toString(){return name;}
+	}
 	/*=========/
 	/  static  / 
 	/=========*/
 	private static final String PACKAGE="kuro075.poke.pokedatabase.poke_book.search_result";
 	private static final String TAG="SearchResultActivity";
+	
 	private static final String KEY_SEARCH_IF=PACKAGE+"."+TAG+".search_if",
 								KEY_TITLE=PACKAGE+"."+TAG+".title";
 	
@@ -45,7 +252,6 @@ public class SearchResultActivity extends Activity{
 		Utility.log(TAG, "startThisActivity with no search_if");
 		startThisActivity(context,"全ポケモン",new String[0]);
 	}
-	
 	/**
 	 * このアクティビティーをstartさせる
 	 * 検索条件が一つのとき
@@ -59,6 +265,7 @@ public class SearchResultActivity extends Activity{
 		ifs[0]=search_if;
 		startThisActivity(context,title,ifs);
 	}
+	
 	/**
 	 * このアクティビティーをstartさせる
 	 * 検索条件が複数のとき
@@ -73,8 +280,19 @@ public class SearchResultActivity extends Activity{
 		intent.putExtra(KEY_SEARCH_IF, search_ifs);
 		context.startActivity(intent);
 	}
-	
-	
+	/**
+	 * このアクティビティーをstartさせる
+	 * 検索条件がデフォルトのとき
+	 * @param context　
+	 * @param info　検索項目
+	 * @param _case 検索条件
+	 */
+	public static void startThisActivityWithDefaultSearch(Context context,SearchableInformations info,String _case){
+		Utility.log(TAG, "startThisActivityWithDefaultSearch");
+		String[] ifs=new String[1];
+		ifs[0]=info.getDefaultSearchIf(_case);
+		startThisActivity(context,info.getDefaultTitle(_case),ifs);
+	}
 	/*================/
 	/  インスタンス変数  /
 	/================*/
@@ -90,8 +308,11 @@ public class SearchResultActivity extends Activity{
 	
 	private int prev_poke_num;//前回のポケモンの数,リストをリフレッシュするごとに更新
 	
-	
+	private SortTypes sort_type=SortTypes.NO;
+	private boolean flag_reverse=false;//逆順にソートするかどうか
 	private ViewableInformations view_info;//表示する情報
+	
+	private DialogManager dialog_manager;
 	
 	/**
 	 * 詳細条件をクリックしたとき
@@ -100,15 +321,52 @@ public class SearchResultActivity extends Activity{
 	 */
 	private void clickDetailIf(){
 		Utility.log(TAG, "clickDetailIf");
+		AlertDialog.Builder builder;
+		AlertDialog alertDialog;
+		
+		LayoutInflater factory=LayoutInflater.from(this);
+		final View layout = factory.inflate(R.layout.detail_if_dialog,null);
+		
+		builder = new AlertDialog.Builder(this);
+		builder.setTitle("検索条件詳細");
+		builder.setView(layout);
+		final LinearLayout linearlayout=(LinearLayout)layout.findViewById(R.id.layout);
+		for(String _if:search_ifs){
+			TextView tv=new TextView(linearlayout.getContext());
+			tv.setText(_if);
+			tv.setTextSize(17.0f);
+			linearlayout.addView(tv);
+		}
+		builder.setPositiveButton("閉じる", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		});
+		alertDialog = builder.create();
+		alertDialog.show();
 	}
+	
 	/**
 	 * リストの列名ラベルをクリックした時
 	 * @author sanogenma
 	 *
 	 */
-	private void clickLabel(View v){
+	private void clickLabel(SortTypes sort_type){
 		Utility.log(TAG, "clickLabel");
+		flag_reverse=this.sort_type.equals(sort_type);
+		this.sort_type=sort_type;
+		StringBuilder toast=new StringBuilder();
+		if(sort_type==SortTypes.INFO) toast.append(view_info.toString());
+		else /*図鑑No or 名前の場合*/	  toast.append(sort_type.toString());
+		toast.append("で");
+		if(flag_reverse)toast.append("逆順に");
+		toast.append("ソートしました");
+		refreshListView(new String(toast));
 	}
+	
+	
 	/**
 	 * ポケモンリストをクリックした時の動作
 	 * @author sanogenma
@@ -116,6 +374,19 @@ public class SearchResultActivity extends Activity{
 	 */
 	private void clickPokeListItem(int position){
 		Utility.log(TAG, "clickPokeListItem");
+		PokePageActivity.startThisActivity(this, poke_list[position]);
+	}
+	
+	/**
+	 * 表示切替ダイアログの項目をクリックした時の動作
+	 * @param info
+	 */
+	private void clickViewChangeItem(ViewableInformations info){
+		this.view_info=info;
+		StringBuilder sb=new StringBuilder();
+		sb.append(info);
+		sb.append("に切り替えました。");
+		refreshListView(new String(sb));
 	}
 	/**
 	 * ポケモンリストを長押しした時の動作
@@ -131,7 +402,7 @@ public class SearchResultActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_result_layout);
 		Utility.log(TAG, "onCreate");
-		
+		dialog_manager=new DialogManager(this);
 		/*=================/
 		/  ウィジェットの登録  /
 		/=================*/
@@ -152,7 +423,7 @@ public class SearchResultActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				clickLabel(v);
+				clickLabel(SortTypes.NO);
 			}
 		});
 		//名前
@@ -161,7 +432,7 @@ public class SearchResultActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				clickLabel(v);
+				clickLabel(SortTypes.NAME);
 			}
 		});
 		//情報
@@ -170,7 +441,7 @@ public class SearchResultActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				clickLabel(v);
+				clickLabel(SortTypes.INFO);
 			}
 		});
 		//リスト
@@ -189,14 +460,43 @@ public class SearchResultActivity extends Activity{
 				setSearchIf(_if);
 			}
 		}
-		refreshListView();
+		refreshListView(title);
+	}
+	/**
+	 * メニューを作成
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		MenuItems.POKE_SEARCH_RESULT_VIEW_CHANGE.addMenuItem(menu);
+		MenuItems.POKE_SEARCH_RESULT_OPERATE.addMenuItem(menu);
+		MenuItems.POKE_SEARCH_RESULT_SAVE.addMenuItem(menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch(MenuItems.fromId(item.getItemId())){
+			case POKE_SEARCH_RESULT_VIEW_CHANGE://表示切替
+				dialog_manager.openViewChangeDialog();
+				break;
+			case POKE_SEARCH_RESULT_OPERATE://操作
+				dialog_manager.openOperateDialog();
+				break;
+			case POKE_SEARCH_RESULT_SAVE://保存
+				break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	
 	/**
 	 * リストビューを更新
 	 */
-	private void refreshListView(){
+	private void refreshListView(String toast){
 		Utility.log(TAG,"refreshListView");
+		
+		sortPokeList();
 		
 		text_info.setText(view_info.toString());//情報のラベルのテキストをセット
 		//リストビューの項目を作成
@@ -228,7 +528,11 @@ public class SearchResultActivity extends Activity{
 			}
 		});
 		
-		Utility.popToast(this, prev_poke_num+"匹→"+poke_list.length+"匹");
+		if(toast==null){
+			Utility.popToast(this, prev_poke_num+"匹→"+poke_list.length+"匹");
+		}else{
+			Utility.popToast(this, toast);
+		}
 		prev_poke_num=poke_list.length;
 		refreshTitle();
 	}
@@ -251,8 +555,34 @@ public class SearchResultActivity extends Activity{
 	 */
 	private void setSearchIf(String search_if){
 		Utility.log(TAG, "setSearchIf");
-		poke_list=SearchableInformations.searchByCondition(poke_list, search_if);//ポケモンリストを更新
+		poke_list=SearchableInformations.searchBySearchIf(poke_list, search_if);//ポケモンリストを更新
 		prev_search_ifs.add(search_ifs.toArray(new String[0]));//アンドゥ用に検索条件を保存
 		search_ifs.add(search_if);//検索条件を追加
+	}
+	/**
+	 * ポケモンリストをソート
+	 */
+	private void sortPokeList(){
+		if(flag_reverse){//逆順にソート
+			Utility.reverseArray(poke_list);
+		}else{
+			switch(sort_type){
+				case NO:
+					Arrays.sort(poke_list, new Comparator<PokeData>(){
+						@Override
+						public int compare(PokeData p1, PokeData p2) {
+							// TODO Auto-generated method stub
+							return p1.getNo()-p2.getNo();
+						}
+					});
+					break;
+				case NAME:
+					Arrays.sort(poke_list);
+					break;
+				case INFO:
+					Arrays.sort(poke_list, view_info.getComparator());
+					break;
+			}
+		}
 	}
 }
