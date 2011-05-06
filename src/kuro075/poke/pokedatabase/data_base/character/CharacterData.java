@@ -10,9 +10,10 @@ import kuro075.poke.pokedatabase.data_base.BasicData;
  */
 public class CharacterData extends BasicData{
 
+
 	protected static class Builder{
 		private String name="-";//名前
-		private int no=-1;//管理ナンバー
+		private int no=9999;//管理ナンバー
 		private String battle_effect="-";//戦闘中の効果
 		private String field_effect="-";//フィールド上の効果
 		
@@ -46,25 +47,21 @@ public class CharacterData extends BasicData{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private final int no;//管理ナンバー
 	private final String battle_effect;//戦闘中の効果
 	private final String field_effect;//フィールド上の効果
 	
 	
 	private CharacterData(String name,int no,String battle_effect,String field_effect) {
-		super(name);
+		super(name,no);
 		// TODO Auto-generated constructor stub
-		this.no=no;
 		this.battle_effect=battle_effect;
 		this.field_effect=field_effect;
 	}
 
-	/**
-	 * 管理ナンバーを取得
-	 * @return　管理ナンバー
-	 */
-	public int getNo() {
-		return no;
+	@Override
+	public int compareTo(BasicData another) {
+		// TODO Auto-generated method stub
+		return getNo()-another.getNo();
 	}
 
 	/**

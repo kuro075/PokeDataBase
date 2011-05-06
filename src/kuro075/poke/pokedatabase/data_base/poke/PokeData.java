@@ -234,7 +234,6 @@ public class PokeData extends BasicData implements Serializable{
 	
 	
 	//==No,タイプ、とくせい、種族値、努力値
-	private final int no;//図鑑No
 	private final TypeData[] types;//タイプ
 	private final CharacterData[] characters;//とくせい
 	private final int[] specs,effs;//種族値,努力値
@@ -280,9 +279,8 @@ public class PokeData extends BasicData implements Serializable{
 					   SkillData[] teach_skills_Pt,SkillData[] teach_skills_HS,SkillData[] teach_skills_BW,
 					   Integer[] evolutions,String[] condition_evolutions) 
 	{
-		super(name);
+		super(name,no);
 		// TODO Auto-generated constructor stub
-		this.no=no;
 		this.types=types;
 		this.characters=characters;
 		this.specs=specs;
@@ -556,20 +554,13 @@ public class PokeData extends BasicData implements Serializable{
 	
 	　未・全てのわざを取得
 	*/
-
-	/**
-	 * 図鑑Noを取得
-	 * @return
-	 */
-	public int getNo() {
-		return no;
-	}
-
+	
 	/**
 	 * 図鑑Noを文字列で取得(001,015など)
 	 * @return
 	 */
 	public String getNo2String(){
+		int no=getNo();
 		StringBuilder sb=new StringBuilder();
 		if(no<10){
 			sb.append("00");
@@ -873,6 +864,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @return
 	 */
 	public int getPositionOfEvolution(){
+		int no=getNo();
 		for(int i=0,n=evolutions.length;i<n;i++){
 			if(evolutions[i]==no){
 				return i;
@@ -1118,6 +1110,7 @@ public class PokeData extends BasicData implements Serializable{
 	}
 	
 	public boolean hasForm(){
+		final int no=getNo();
 		int position=0;
 		for(int i=0,n=evolutions.length;i<n;i++){
 			if(evolutions[i]==no){
@@ -1137,6 +1130,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @return
 	 */
 	public boolean isFinalEvolution(){
+		final int no=getNo();
 		//Evolutions配列の最後の場合
 		if(evolutions[evolutions.length-1]==no){
 			return true;
@@ -1155,6 +1149,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @return
 	 */
 	public boolean isFirstEvolution(){
+		final int no=getNo();
 		//進化系が存在するポケモンで
 		if(evolutions.length>1){
 			//二番目がフォルムでなく、進化系列の最初の場合
@@ -1186,6 +1181,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @return
 	 */
 	public boolean isSeedPokemon(){
+		final int no=getNo();
 		//Evolutions配列の最初
 		if(evolutions[0]==no){
 			return true;

@@ -53,7 +53,13 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			@Override
 			public void receiveSearchIf(String search_if) {
 				// TODO Auto-generated method stub
-				
+				Utility.log(TAG, "receiveSearchIf");
+				if(search_if==null){
+					openDialog(prev_open);
+				}else{
+					setSearchIf(search_if);
+					refreshListView(search_if);
+				}
 			}
 		}
 		final Context context;
@@ -63,7 +69,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 						  remove_dialog,//除外ダイアログ
 						  view_change_dialog;//表示切替ダイアログ
 		SearchIfListener listener = new MySearchIfReceiver();
-		
+		SearchTypes prev_open=SearchTypes.FILTER;
 		/**
 		 * コンストラクタ
 		 * 全ダイアログを初期化
@@ -91,7 +97,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			builder.setTitle(type.toString());
 			builder.setView(layout);
 			
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,SearchableInformations.toStringArray());
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,SearchableInformations.toStringArray());
 			final ListView list_view = (ListView)layout.findViewById(R.id.list_view);
 			list_view.setAdapter(adapter);
 			final SearchTypes search_type=type;
@@ -132,7 +138,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			builder.setTitle(getString(R.string.operate_dialog_name));
 			builder.setView(layout);
 			
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,SearchTypes.toStringArray());
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,SearchTypes.toStringArray());
 			final ListView list_view = (ListView)layout.findViewById(R.id.list_view);
 			list_view.setAdapter(adapter);
 			list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -169,7 +175,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			builder.setTitle(getString(R.string.view_change));
 			builder.setView(layout);
 			
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,ViewableInformations.toStringArray());
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,ViewableInformations.toStringArray());
 			final ListView list_view = (ListView)layout.findViewById(R.id.list_view);
 			list_view.setAdapter(adapter);
 			list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -196,6 +202,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		 */
 		private void openDialog(SearchTypes type){
 			Utility.log(TAG, "openDialog");
+			prev_open=type;
 			switch(type){
 				case FILTER:
 					filter_dialog.show();
@@ -355,7 +362,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	 */
 	private void clickLabel(SortTypes sort_type){
 		Utility.log(TAG, "clickLabel");
-		flag_reverse=this.sort_type.equals(sort_type);
+		flag_reverse=this.sort_type.equals(sort_type)?!flag_reverse:false;
 		this.sort_type=sort_type;
 		StringBuilder toast=new StringBuilder();
 		if(sort_type==SortTypes.INFO) toast.append(view_info.toString());
@@ -528,11 +535,18 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			}
 		});
 		
-		if(toast==null){
-			Utility.popToast(this, prev_poke_num+"匹→"+poke_list.length+"匹");
-		}else{
-			Utility.popToast(this, toast);
+		StringBuilder sb=new StringBuilder();
+		if(toast!=null){
+			sb.append(toast);
 		}
+		if(prev_poke_num!=poke_list.length){
+			if(toast!=null) sb.append(" ");
+			sb.append(prev_poke_num);
+			sb.append("匹→");
+			sb.append(poke_list.length);
+			sb.append("匹");
+		}
+		Utility.popToast(this, new String(sb));
 		prev_poke_num=poke_list.length;
 		refreshTitle();
 	}
@@ -563,26 +577,25 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	 * ポケモンリストをソート
 	 */
 	private void sortPokeList(){
+		switch(sort_type){
+			case NO:
+				Arrays.sort(poke_list, new Comparator<PokeData>(){
+						@Override
+					public int compare(PokeData p1, PokeData p2) {
+						// TODO Auto-generated method stub
+						return p1.getNo()-p2.getNo();
+					}
+				});
+				break;
+			case NAME:
+				Arrays.sort(poke_list);
+				break;
+			case INFO:
+				Arrays.sort(poke_list, view_info.getComparator());
+				break;
+		}
 		if(flag_reverse){//逆順にソート
 			Utility.reverseArray(poke_list);
-		}else{
-			switch(sort_type){
-				case NO:
-					Arrays.sort(poke_list, new Comparator<PokeData>(){
-						@Override
-						public int compare(PokeData p1, PokeData p2) {
-							// TODO Auto-generated method stub
-							return p1.getNo()-p2.getNo();
-						}
-					});
-					break;
-				case NAME:
-					Arrays.sort(poke_list);
-					break;
-				case INFO:
-					Arrays.sort(poke_list, view_info.getComparator());
-					break;
-			}
 		}
 	}
 }

@@ -70,7 +70,6 @@ public class ItemData extends BasicData{
 		}
 	}
 	
-	private final int no;//管理ナンバー
 	private final ItemClasses item_class;//分類
 	private final ItemSubClasses item_sub_class;//サブ分類
 	private final int buy_value;//買値
@@ -82,9 +81,8 @@ public class ItemData extends BasicData{
 	private ItemData(String name,int no,ItemClasses item_class,ItemSubClasses item_sub_class,
 					 int buy_value,int sell_value,
 					 String using_effect,String having_effect,String getting_place) {
-		super(name);
+		super(name,no);
 		// TODO Auto-generated constructor stub
-		this.no=no;
 		this.item_class=item_class;
 		this.item_sub_class=item_sub_class;
 		this.buy_value=buy_value;
@@ -168,10 +166,6 @@ public class ItemData extends BasicData{
 	}
 	//=============================================================
 	//メソッド
-
-	public int getNo() {
-		return no;
-	}
 	public ItemClasses getItemClass() {
 		return item_class;
 	}

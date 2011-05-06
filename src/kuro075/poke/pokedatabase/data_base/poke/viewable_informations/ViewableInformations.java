@@ -48,7 +48,7 @@ public enum ViewableInformations {
 			return new Comparator<PokeData>(){
 				@Override
 				public int compare(PokeData p1,PokeData p2){
-					return p1.getCharacter(CharacterTypes.FIRST).compareTo(p2.getCharacter(CharacterTypes.FIRST));
+					return p1.getCharacter(CharacterTypes.FIRST).getNo()-p2.getCharacter(CharacterTypes.FIRST).getNo();
 				}
 			};
 		}
@@ -64,7 +64,7 @@ public enum ViewableInformations {
 			return new Comparator<PokeData>(){
 				@Override
 				public int compare(PokeData p1,PokeData p2){
-					return p1.getCharacter(CharacterTypes.SECOND).compareTo(p2.getCharacter(CharacterTypes.SECOND));
+					return p1.getCharacter(CharacterTypes.SECOND).getNo()-p2.getCharacter(CharacterTypes.SECOND).getNo();
 				}
 			};
 		}
@@ -80,7 +80,7 @@ public enum ViewableInformations {
 			return new Comparator<PokeData>(){
 				@Override
 				public int compare(PokeData p1,PokeData p2){
-					return p1.getCharacter(CharacterTypes.DREAM).compareTo(p2.getCharacter(CharacterTypes.DREAM));
+					return p1.getCharacter(CharacterTypes.DREAM).getNo()-p2.getCharacter(CharacterTypes.DREAM).getNo();
 				}
 			};
 		}
@@ -587,14 +587,20 @@ public enum ViewableInformations {
 			return new Comparator<PokeData>(){
 				@Override
 				public int compare(PokeData p1,PokeData p2){
-					final int p1_male=p1.getSexRatio(Sexes.MALE)<=0?10:p1.getSexRatio(Sexes.MALE),
-							  p1_female=p1.getSexRatio(Sexes.FEMALE)<=0?10:p1.getSexRatio(Sexes.FEMALE);
-					final int p2_male=p2.getSexRatio(Sexes.MALE)<=0?10:p2.getSexRatio(Sexes.MALE),
-					          p2_female=p2.getSexRatio(Sexes.FEMALE)<=0?10:p2.getSexRatio(Sexes.FEMALE);
-					if(p1_female==p2_female){
-						return p1_male-p2_male;
+					int p1_male=p1.getSexRatio(Sexes.MALE),
+					 	p1_female=p1.getSexRatio(Sexes.FEMALE);
+					int p2_male=p2.getSexRatio(Sexes.MALE),
+					 	p2_female=p2.getSexRatio(Sexes.FEMALE);
+					if(p2_male==p1_male){
+						return p2_female-p1_female;
 					}
-					return p1_female-p2_female;
+					return p2_male-p1_male;
+					/*final int p1_female=p1.getSexRatio(Sexes.FEMALE)<=0?0:p1.getSexRatio(Sexes.FEMALE),
+							  p1_sex=p1.getSexRatio(Sexes.MALE)<=0?0:p1.getSexRatio(Sexes.MALE)+p1_female;
+					
+					final int p2_female=p2.getSexRatio(Sexes.FEMALE)<=0?0:p2.getSexRatio(Sexes.FEMALE),
+							  p2_sex=p2.getSexRatio(Sexes.MALE)<=0?0:p2.getSexRatio(Sexes.MALE)+p2_female;
+					return (p1_female*p2_sex)-(p2_female*p1_sex);*/
 				}
 			};
 		}

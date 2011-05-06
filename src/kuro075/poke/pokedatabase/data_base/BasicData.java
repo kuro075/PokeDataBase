@@ -19,14 +19,17 @@ public class BasicData implements Comparable<BasicData>,Serializable{
 
 	//名前
 	final private String Name;
-	
-	protected BasicData(String name){
+	final private int no;
+	protected BasicData(String name,int no){
 		Name=name;
+		this.no=no;
 	}
 	
 	public String getName(){
 		return Name;
 	}
+	
+	public int getNo(){return no;}
 	
 	@Override
 	public int compareTo(BasicData another) {

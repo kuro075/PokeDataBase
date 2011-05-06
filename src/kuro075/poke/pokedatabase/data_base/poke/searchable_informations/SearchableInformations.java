@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.item.ItemDataManager;
@@ -15,7 +16,14 @@ import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.EggGroups;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.util.Utility;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 /**
  * 絞り込み、追加、除外を行える情報のenum
@@ -31,17 +39,75 @@ public enum SearchableInformations implements SearchIfCategory{
 		/*===================================/
 		 * 地方で検索
 		/==================================*/
+		private final String[] REGION_NAMES={"カントー","ジョウト","ホウエン","シンオウ","イッシュ"};
+		private final int[] FIRST_NO={1,152,252,387,494,650};
 		@Override
 		public void openDialog(Context context, PokeData[] pokes,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
+			Utility.log(toString(),"openDialog");
+			AlertDialog.Builder builder;
+			LayoutInflater factory=LayoutInflater.from(context);
 			
+			final View layout = factory.inflate(R.layout.simple_list_dialog,null);
+			builder = new AlertDialog.Builder(context);
+			StringBuilder sb=new StringBuilder();
+			sb.append(toString());
+			sb.append("(");
+			sb.append(search_type.toString());
+			sb.append(")");
+			builder.setTitle(new String(sb));
+			builder.setView(layout);
+			
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,REGION_NAMES);
+			final ListView listView = (ListView) layout.findViewById(R.id.list_view);
+			listView.setAdapter(adapter);
+			
+			final SearchIfListener final_listener=listener;
+			final SearchTypes final_search_type=search_type;
+
+			builder.setPositiveButton("戻る",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					final_listener.receiveSearchIf(null);
+				}
+			});
+			
+			final AlertDialog dialog=builder.create();
+			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+					// TODO Auto-generated method stub
+					Utility.log(toString(),"onItemClick");
+					final_listener.receiveSearchIf(createSearchIf(REGION,REGION_NAMES[position],final_search_type));
+					dialog.dismiss();
+				}
+			});
+			dialog.show();
 		}
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String region) {
 			// TODO Auto-generated method stub
-			return null;
+			if(toString().equals(category)){
+				int first=0,last=0;
+				for(int i=0,n=REGION_NAMES.length;i<n;i++){
+					if(REGION_NAMES[i].equals(region)){
+						first=FIRST_NO[i];
+						last=FIRST_NO[i+1];
+						break;
+					}
+				}
+				List<PokeData> list=new ArrayList<PokeData>();
+				for(PokeData poke:poke_array){
+					if(first<=poke.getNo() && poke.getNo()<last){
+						list.add(poke);
+					}
+				}
+				return list.toArray(new PokeData[0]);
+			}
+			return new PokeData[0];
 		}
 	},
 	TYPE("タイプ"){
@@ -490,9 +556,15 @@ public enum SearchableInformations implements SearchIfCategory{
 				case REMOVE:
 					searched_array=si.search(poke_array,tmp[0], tmp[1]);
 					for(PokeData poke:poke_array){
-						if(Arrays.binarySearch(searched_array, poke)<0){
-							searched_set.add(poke);
+						boolean flag=true;
+						for(PokeData target:searched_array){
+							if(poke.equals(target)){ 
+								flag=false;
+								break;
+							}
 						}
+						if(flag)
+							searched_set.add(poke);
 					}
 					break;
 				case ADD:
