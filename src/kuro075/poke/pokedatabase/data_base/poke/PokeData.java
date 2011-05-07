@@ -402,6 +402,18 @@ public class PokeData extends BasicData implements Serializable{
 		public int getStep(){return step;}
 		public int getIndex(){return index;}
 		
+		/**
+		 * 文字列配列で取得
+		 * @return
+		 */
+		public static String[] toStringArray(){
+			String[] array=new String[values().length];
+			for(int i=0,n=array.length;i<n;i++){
+				array[i]=values()[i].toString();
+			}
+			return array;
+		}
+		
 		private static final Map<Integer,HatchingSteps> 
 			integerToEnum = new HashMap<Integer, HatchingSteps>();//数値からenumへ
 		private static final Map<String,HatchingSteps>
@@ -497,6 +509,18 @@ public class PokeData extends BasicData implements Serializable{
 		public String toString(){return name;}
 		public int getIndex(){return index;}
 
+		/**
+		 * 文字列配列で取得
+		 * @return
+		 */
+		public static String[] toStringArray(){
+			String[] array=new String[values().length];
+			for(int i=0,n=array.length;i<n;i++){
+				array[i]=values()[i].toString();
+			}
+			return array;
+		}
+		
 		private static final Map<String,FinalExperiences> 
 			stringToEnum = new HashMap<String, FinalExperiences>();//数値からenumへ
 		private static final Map<Integer,FinalExperiences> 
@@ -1126,6 +1150,36 @@ public class PokeData extends BasicData implements Serializable{
 	//=============================================================
 	//is系
 	/**
+	 * 1進化後かどうか
+	 */
+	public boolean isAfterOneEvolution(){
+		final int no=getNo();
+		
+		if(evolutions.length>1){//進化系が存在する
+			if(evolutions[1]==no && //1進化後
+			   !condition_evolutions[1].equals("フォルム")){//フォルムじゃない
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * 2進化後かどうか
+	 * @return
+	 */
+	public boolean isAfterTwoEvolution(){
+		final int no=getNo();
+		
+		if(evolutions.length>2){//2進化する
+			if(evolutions[2]==no &&//2進化後
+			   !condition_evolutions[2].equals("フォルム")){//フォルムじゃない
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * 最終進化系かどうかを返す
 	 * @return
 	 */
@@ -1144,27 +1198,28 @@ public class PokeData extends BasicData implements Serializable{
 		return false;
 	}
 	/**
-	 * 未進化かどうかを返す(進化しないポケモンは含まない)
+	 * 進化可能かどうかを返す
 	 * @param no
 	 * @return
 	 */
-	public boolean isFirstEvolution(){
-		final int no=getNo();
+	public boolean isEvolutionable(){
+		final int position=getPositionOfEvolution();
+		
 		//進化系が存在するポケモンで
-		if(evolutions.length>1){
-			//二番目がフォルムでなく、進化系列の最初の場合
-			if(!condition_evolutions[1].equals("フォルム") && evolutions[0]==no){
+		if(evolutions.length>position+1){
+			//次のポケモンがフォルムでない場合
+			if(!condition_evolutions[position+1].equals("フォルム")){
 				return true;
 			}		
 		}
 		return false;
 	}
 	/**
-	 * 無進化かどうかを返す
+	 * 進化系列無し
 	 * @param no
 	 * @return
 	 */
-	public boolean isnotEvolution(){
+	public boolean isNotEvolution(){
 		//進化系列が一匹の場合
 		if(evolutions.length==1){
 			return true;

@@ -24,6 +24,7 @@ public enum MenuItems {
 	/*POKE_SEARCH_RESULT_SELECT("複数選択",7,android.R.drawable.){
 	 *}
 	 */
+	UNDO("元に戻す",98,android.R.drawable.ic_menu_revert),
 	PREFERENCE("設定",99,android.R.drawable.ic_menu_preferences);
 	
 	private final String name;

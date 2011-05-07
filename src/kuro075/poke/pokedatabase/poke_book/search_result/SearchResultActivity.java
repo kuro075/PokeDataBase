@@ -106,7 +106,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					// TODO Auto-generated method stub
-					SearchableInformations.values()[position].openDialog(context, poke_list, search_type, listener);
+					SearchableInformations.values()[position].openDialog(context, poke_list,search_type, listener);
 					switch(search_type){
 						case FILTER:filter_dialog.dismiss();break;
 						case ADD:	add_dialog.dismiss();	break;
@@ -150,7 +150,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 					operate_dialog.dismiss();
 				}
 			});
-			builder.setPositiveButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -187,7 +187,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 					view_change_dialog.dismiss();
 				}
 			});
-			builder.setPositiveButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
@@ -477,6 +477,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		// TODO Auto-generated method stub
 		MenuItems.POKE_SEARCH_RESULT_VIEW_CHANGE.addMenuItem(menu);
 		MenuItems.POKE_SEARCH_RESULT_OPERATE.addMenuItem(menu);
+		MenuItems.UNDO.addMenuItem(menu);
 		MenuItems.POKE_SEARCH_RESULT_SAVE.addMenuItem(menu);
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -491,12 +492,21 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			case POKE_SEARCH_RESULT_OPERATE://操作
 				dialog_manager.openOperateDialog();
 				break;
+			case UNDO:
+				undo();
+				break;
 			case POKE_SEARCH_RESULT_SAVE://保存
 				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		menu.findItem(MenuItems.UNDO.getId()).setVisible(this.prev_search_ifs.size()>0);
+		return super.onPrepareOptionsMenu(menu);
+	}
 	/**
 	 * リストビューを更新
 	 */
@@ -572,6 +582,27 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		poke_list=SearchableInformations.searchBySearchIf(poke_list, search_if);//ポケモンリストを更新
 		prev_search_ifs.add(search_ifs.toArray(new String[0]));//アンドゥ用に検索条件を保存
 		search_ifs.add(search_if);//検索条件を追加
+	}
+	
+	/**
+	 * undoを行う
+	 */
+	private void undo(){
+		Utility.log(TAG,"undo");
+		//データ初期化
+		poke_list=PokeDataManager.INSTANCE.getAllPokeData();//poke_list初期化
+		for(int i=0,n=search_ifs.size();i<n;i++){
+			search_ifs.remove(0);
+		}
+		final int last_index=prev_search_ifs.size()-1;//最新undoデータのインデックスを取得
+		//最新undoデータを適用
+		for(String _if:prev_search_ifs.get(last_index)){
+			poke_list=SearchableInformations.searchBySearchIf(poke_list, _if);
+			search_ifs.add(_if);
+		}
+		prev_search_ifs.remove(last_index);//最新undoデータを削除
+		
+		this.refreshListView("undoを実行");
 	}
 	/**
 	 * ポケモンリストをソート

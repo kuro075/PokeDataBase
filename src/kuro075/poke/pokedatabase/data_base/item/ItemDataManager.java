@@ -341,6 +341,7 @@ public class ItemDataManager {
 	/  データ  / 
 	/========*/
 	private final ItemData[] item_data;
+	private final String[] item_name;
 	private final Map<String,ItemData> name2item_map=new HashMap<String,ItemData>();
 	private final int num;
 	public static final ItemData NullData=new ItemData.Builder().build();
@@ -351,6 +352,7 @@ public class ItemDataManager {
 		for(ItemData item:item_data){
 			name2item_map.put(item.toString(), item);
 		}
+		item_name=Utility.changeToStringArray(item_data);
 	}
 	//================================================================================
 	/*==========/
@@ -364,6 +366,20 @@ public class ItemDataManager {
 		return num;
 	}
 	
+	/**
+	 * ItemDataを全て取得
+	 * @return
+	 */
+	public ItemData[] getAllItemData(){
+		return item_data.clone();
+	}
+	/**
+	 * item_nameを取得
+	 * @return
+	 */
+	public String[] getAllItemName(){
+		return item_name.clone();
+	}
 	/**
 	 * ItemDataをインデックスから取得
 	 * @param index

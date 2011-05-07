@@ -147,12 +147,12 @@ public class BasicInformationLayout extends LinearLayout{
     	final TypeData defense_type1=poke.getType(0),
     				   defense_type2=poke.getType(1);
     	final TypeData[][] weaktype=new TypeData[6][];
-    	weaktype[0]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.ValuesOfTypeRelation._400);
-    	weaktype[1]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.ValuesOfTypeRelation._200);
-    	weaktype[2]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.ValuesOfTypeRelation._100);
-    	weaktype[3]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.ValuesOfTypeRelation._50);
-    	weaktype[4]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.ValuesOfTypeRelation._25);
-    	weaktype[5]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.ValuesOfTypeRelation._0);
+    	weaktype[0]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.TypeRelations._400);
+    	weaktype[1]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.TypeRelations._200);
+    	weaktype[2]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.TypeRelations._100);
+    	weaktype[3]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.TypeRelations._50);
+    	weaktype[4]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.TypeRelations._25);
+    	weaktype[5]=TypeDataManager.getWeakTypes(defense_type1, defense_type2, TypeDataManager.TypeRelations._0);
     	
     	//種族値//努力値
     	for(int i=0,n=6;i<n;i++){

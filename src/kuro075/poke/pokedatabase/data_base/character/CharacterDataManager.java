@@ -223,6 +223,7 @@ public class CharacterDataManager {
 	/  データ  / 
 	/========*/
 	private final CharacterData[] chara_data;
+	private final String[] chara_name;
 	private final Map<String,CharacterData> name2chara_map=new HashMap<String,CharacterData>();
 	private final int num;
 	public static final CharacterData NullData=new CharacterData.Builder().build();
@@ -233,6 +234,7 @@ public class CharacterDataManager {
 		for(CharacterData character:chara_data){
 			name2chara_map.put(character.toString(), character);
 		}
+		chara_name=Utility.changeToStringArray(chara_data);
 	}
 	//================================================================================
 	/*==========/
@@ -244,12 +246,26 @@ public class CharacterDataManager {
 	public int getNum(){
 		return num;
 	}
-	
+	/**
+	 * 全てのCharacterDataを取得
+	 * @return
+	 */
+	public CharacterData[] getAllCharaData(){
+		return chara_data.clone();
+	}
+	/**
+	 * chara_nameを取得
+	 * @return
+	 */
+	public String[] getAllCharaName(){
+		return chara_name.clone();
+	}
 	/**
 	 * CharacterDataをインデックスから取得
 	 * @param index　インデックス
 	 * @return CharacterData
 	 */
+
 	public CharacterData getCharacterData(int index){
 		if(index<0 || num<=index)return NullData;
 		return chara_data[index];

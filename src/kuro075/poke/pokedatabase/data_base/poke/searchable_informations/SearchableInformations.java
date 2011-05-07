@@ -11,10 +11,13 @@ import java.util.Set;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
+import kuro075.poke.pokedatabase.data_base.character.CharacterData;
+import kuro075.poke.pokedatabase.data_base.character.CharacterDataManager;
 import kuro075.poke.pokedatabase.data_base.item.ItemDataManager;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.EggGroups;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
+import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 /**
  * 絞り込み、追加、除外を行える情報のenum
@@ -41,8 +45,9 @@ public enum SearchableInformations implements SearchIfCategory{
 		/==================================*/
 		private final String[] REGION_NAMES={"カントー","ジョウト","ホウエン","シンオウ","イッシュ"};
 		private final int[] FIRST_NO={1,152,252,387,494,650};
+		
 		@Override
-		public void openDialog(Context context, PokeData[] pokes,
+		public void openDialog(Context context,final PokeData[] poke_array,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
 			Utility.log(toString(),"openDialog");
@@ -51,12 +56,7 @@ public enum SearchableInformations implements SearchIfCategory{
 			
 			final View layout = factory.inflate(R.layout.simple_list_dialog,null);
 			builder = new AlertDialog.Builder(context);
-			StringBuilder sb=new StringBuilder();
-			sb.append(toString());
-			sb.append("(");
-			sb.append(search_type.toString());
-			sb.append(")");
-			builder.setTitle(new String(sb));
+			builder.setTitle(createDialogTitle(this, search_type));
 			builder.setView(layout);
 			
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,REGION_NAMES);
@@ -132,9 +132,10 @@ public enum SearchableInformations implements SearchIfCategory{
 			return false;
 		}
 		@Override
-		public void openDialog(Context context, PokeData[] pokes,
+		public void openDialog(Context context,final PokeData[] poke_array,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
+			TypeCategories.MYSELF.openDialog(context,poke_array, search_type, listener);
 		}
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
@@ -142,90 +143,91 @@ public enum SearchableInformations implements SearchIfCategory{
 			// TODO Auto-generated method stub
 			return TypeCategories.fromString(category).search(poke_array, category, type);
 		}
-	}
-	
-	/*,
-	CHARACTER("特性"){
-
-		@Override
-		public String getDefaultSearchIf(String search_if) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void openDialog(Context context, PokeData[] pokes,
-				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public PokeData[] search(PokeData[] poke_array, String search_if) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public boolean isCategory(String category) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-		
 	},
-	KIND("種類"){
-
+	CHARACTER("特性"){
 		@Override
-		public String getDefaultSearchIf(String search_if) {
+		public void openDialog(Context context,final PokeData[] poke_array,
+				SearchTypes search_type,SearchIfListener listener) {
 			// TODO Auto-generated method stub
-			return null;
+			createSimpleSpinnerDialogBuilder(context,search_type,listener,this,CharacterDataManager.INSTANCE.getAllCharaName()).create().show();
 		}
 
 		@Override
-		public void openDialog(Context context, PokeData[] pokes,
-				SearchTypes search_type, SearchIfListener listener) {
+		public PokeData[] search(PokeData[] poke_array, String category,
+				String chara_name) {
 			// TODO Auto-generated method stub
+			if(toString().equals(category)){
+				CharacterData chara=CharacterDataManager.INSTANCE.getCharacterData(chara_name);
+				List<PokeData> list=new ArrayList<PokeData>();
+				for(PokeData poke:poke_array){
+					if(poke.hasCharacter(chara)) list.add(poke);
+				}
+				return list.toArray(new PokeData[0]);
+			}
+			return new PokeData[0];
 		}
-
-		@Override
-		public PokeData[] search(PokeData[] poke_array, String search_if) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public boolean isCategory(String category) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-		
 	},
 	SPEC("種族値"){
-
-		@Override
-		public String getDefaultSearchIf(String search_if) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void openDialog(Context context, PokeData[] pokes,
-				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public PokeData[] search(PokeData[] poke_array, String search_if) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
 		@Override
 		public boolean isCategory(String category) {
 			// TODO Auto-generated method stub
+			for(SpecCategories spec:SpecCategories.values()){
+				if(spec.toString().equals(category))
+					return true;
+			}
 			return false;
 		}
-		
-	},
+
+		@Override
+		public void openDialog(final Context context,final PokeData[] poke_array,
+				final SearchTypes search_type,final SearchIfListener listener) {
+			// TODO Auto-generated method stub
+			Utility.log(toString(),"openDialog");
+			AlertDialog.Builder builder;
+			LayoutInflater factory=LayoutInflater.from(context);
+			
+			final View layout = factory.inflate(R.layout.simple_list_dialog,null);
+			builder = new AlertDialog.Builder(context);
+			builder.setTitle(createDialogTitle(this, search_type));
+			builder.setView(layout);
+			
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,Utility.changeToStringArray(SpecCategories.values()));
+			final ListView listView = (ListView) layout.findViewById(R.id.list_view);
+			listView.setAdapter(adapter);
+
+			builder.setPositiveButton("戻る",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					listener.receiveSearchIf(null);
+				}
+			});
+			
+			final AlertDialog dialog=builder.create();
+			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+					// TODO Auto-generated method stub
+					Utility.log(toString(),"onItemClick");
+					SpecCategories.values()[position].openDialog(context, poke_array, search_type, listener);
+					dialog.dismiss();
+				}
+			});
+			dialog.show();
+		}
+
+		@Override
+		public PokeData[] search(PokeData[] poke_array, String category,
+				String _case) {
+			// TODO Auto-generated method stub
+			for(SpecCategories spec:SpecCategories.values()){
+				if(spec.toString().equals(category)){
+					return spec.search(poke_array, category, _case);
+				}
+			}
+			return new PokeData[0];
+		}
+	}/*,
 	EFF("努力値"){
 
 		@Override
@@ -390,9 +392,10 @@ public enum SearchableInformations implements SearchIfCategory{
 	}*/,
 	EGG_GROUP("タマゴグループ"){
 		@Override
-		public void openDialog(Context context, PokeData[] pokes,
+		public void openDialog(Context context,final PokeData[] poke_array,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
+			createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(PokeData.EggGroups.values())).create().show();
 		}
 
 		@Override
@@ -414,9 +417,10 @@ public enum SearchableInformations implements SearchIfCategory{
 	},
 	HATCHING_STEP("孵化歩数"){
 		@Override
-		public void openDialog(Context context, PokeData[] pokes,
+		public void openDialog(Context context, final PokeData[] poke_array,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
+			createSimpleSpinnerDialogBuilder(context,search_type,listener,this,PokeData.HatchingSteps.toStringArray()).create().show();
 		}
 
 		@Override
@@ -446,9 +450,10 @@ public enum SearchableInformations implements SearchIfCategory{
 			return new String(sb);
 		}
 		@Override
-		public void openDialog(Context context, PokeData[] pokes,
+		public void openDialog(Context context,final PokeData[] poke_array,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
+			createSimpleSpinnerDialogBuilder(context,search_type,listener,this,ItemDataManager.INSTANCE.getAllItemName()).create().show();
 		}
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
@@ -467,10 +472,10 @@ public enum SearchableInformations implements SearchIfCategory{
 	},
 	FINAL_EX("最終経験値"){
 		@Override
-		public void openDialog(Context context, PokeData[] pokes,
+		public void openDialog(Context context,final PokeData[] poke_array,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
-			
+			createSimpleSpinnerDialogBuilder(context,search_type,listener,this,PokeData.FinalExperiences.toStringArray()).create().show();
 		}
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
@@ -485,6 +490,32 @@ public enum SearchableInformations implements SearchIfCategory{
 				return list.toArray(new PokeData[0]);
 			}
 			return new PokeData[0];
+		}
+	},
+	KIND("種類"){
+		@Override
+		public boolean isCategory(String category) {
+			// TODO Auto-generated method stub
+			for(KindCategories kind:KindCategories.values()){
+				if(kind.toString().equals(category)){
+					return true;
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public void openDialog(Context context,final PokeData[] poke_array,
+				SearchTypes search_type,SearchIfListener listener) {
+			// TODO Auto-generated method stub
+			KindCategories.EVOLUTION.openDialog(context,poke_array, search_type, listener);
+		}
+
+		@Override
+		public PokeData[] search(PokeData[] poke_array, String category,
+				String kind) {
+			// TODO Auto-generated method stub
+			return KindCategories.fromString(category).search(poke_array,category,kind);
 		}
 	};
 	
@@ -508,6 +539,22 @@ public enum SearchableInformations implements SearchIfCategory{
 		sb.append(")");
 		return new String(sb);
 	}
+	
+	/**
+	 * ダイアログのタイトルを作成
+	 * @param category
+	 * @param type
+	 * @return
+	 */
+	public static String createDialogTitle(SearchIfCategory category,SearchTypes type){
+		StringBuilder sb=new StringBuilder();
+		sb.append(category.toString());
+		sb.append("(");
+		sb.append(type.toString());
+		sb.append(")");
+		return new String(sb);
+	}
+	
 	/**
 	 * 除外が一匹の時の検索条件を取得
 	 * @param remove_poke
@@ -612,7 +659,7 @@ public enum SearchableInformations implements SearchIfCategory{
 	 */
 	public static SearchableInformations fromCategory(String category){
 		for(SearchableInformations info:values()){
-			if(info.toString().equals(category)) return info;
+			if(info.isCategory(category)) return info;
 		}
 		return null;
 	}
@@ -651,6 +698,47 @@ public enum SearchableInformations implements SearchIfCategory{
 	}
 	
 	/**
+	 * スピナーのみの検索ダイアログのビルダーを取得
+	 * @param context
+	 * @param search_type
+	 * @param listener
+	 * @param category
+	 * @param datas
+	 * @return
+	 */
+	public static AlertDialog.Builder createSimpleSpinnerDialogBuilder(Context context,final SearchTypes search_type,final SearchIfListener listener,final SearchIfCategory category,final String[] datas){
+		Utility.log(TAG, "createSimpleSpinnerDialogBuilder");
+		AlertDialog.Builder builder;
+		LayoutInflater factory=LayoutInflater.from(context);
+		
+		final View layout = factory.inflate(R.layout.simple_spinner_dialog, null);
+		builder = new AlertDialog.Builder(context);
+		builder.setTitle(createDialogTitle(category,search_type));
+		builder.setView(layout);
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,datas);
+		final Spinner spinner = (Spinner)layout.findViewById(R.id.spinner);
+		spinner.setAdapter(adapter);
+		builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				Utility.log(toString(), "onClickSearchButton");
+				listener.receiveSearchIf(SearchableInformations.createSearchIf(category,spinner.getSelectedItem().toString(),search_type));
+				dialog.dismiss();
+			}
+		});
+		builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				listener.receiveSearchIf(null);
+			}
+		});
+		return builder;
+	}
+	
+	/**
 	 * 文字列配列で取得
 	 * @return
 	 */
@@ -662,12 +750,7 @@ public enum SearchableInformations implements SearchIfCategory{
 		return array;
 	}
 	SearchableInformations(String name){this.name=name;}
-	
-	@Override
-	public SearchableInformations getBelongedInformation() {
-		// TODO Auto-generated method stub
-		return this;
-	}
+
 	
 	/**
 	 * ポケモンのページでタイプをクリックしたときなど
@@ -702,4 +785,7 @@ public enum SearchableInformations implements SearchIfCategory{
 	
 	@Override
 	public String toString(){return name;}
+
+
+
 }

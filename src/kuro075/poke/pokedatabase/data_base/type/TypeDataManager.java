@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kuro075.poke.pokedatabase.data_base.poke.PokeData;
+
 import android.graphics.Color;
 
 /**
@@ -19,16 +21,47 @@ public class TypeDataManager{
 	 * @author sanogenma
 	 *
 	 */
-	public enum ValuesOfTypeRelation implements Serializable{
-		_0("こうかが ないようだ",0),_25("こうかは いまひとつの ようだ",25),_50("こうかは いまひとつの ようだ",50),
-		_100("",100),_200("こうかは ばつぐんだ",200),_400("こうかは ばつぐんだ",400);
+	public enum TypeRelations implements Serializable{
+		_0("こうかが ないようだ",0,0),_25("こうかは いまひとつの ようだ",25,1),_50("こうかは いまひとつの ようだ",50,2),
+		_100("",100,3),_200("こうかは ばつぐんだ",200,4),_400("こうかは ばつぐんだ",400,5);
 		private final String text;
-		private final int relation;
-		ValuesOfTypeRelation(String text,int relation){this.text=text;this.relation=relation;}
+		private final int relation;//相性
+		private final int index;//インデックス
+		TypeRelations(String text,int relation,int index){this.text=text;this.relation=relation;this.index=index;}
 		@Override
 		public String toString(){return text;}
 		public int getRelation(){return relation;}
-		
+		public int getIndex(){return index;}
+		/**
+		 * 相性同士のかけ算
+		 * @param type_relations
+		 * @return
+		 */
+		public TypeRelations by(TypeRelations type_relations){
+			return TypeRelations.fromRelation(this.relation*type_relations.relation/100);
+		}
+		/**
+		 * インデックスから取得
+		 * @param index
+		 * @return
+		 */
+		public static TypeRelations fromIndex(int index){
+			for(TypeRelations relation:values()){
+				if(relation.getIndex()==index) return relation;
+			}
+			return null;
+		}
+		/**
+		 * 相性から取得
+		 * @param index
+		 * @return
+		 */
+		public static TypeRelations fromRelation(int relation){
+			for(TypeRelations type_relation:values()){
+				if(type_relation.getRelation()==relation)return type_relation;
+			}
+			return null;
+		}
 	}
 	//N,炎,水,電,草,氷,闘,毒,地,飛,超,虫,岩,霊,竜,悪,鋼　（17種類）
 	/**
@@ -45,7 +78,7 @@ public class TypeDataManager{
 		 * [攻撃タイプ][防御タイプ]
 		 * 1/2->50,1->100,2->200
 		 */
-		private static final int[][] TypeRelation={
+		private static final int[][] TYPE_RELATION={
 				{/*ノーマル*/100,100,100,100,100,100,100,100,100,100,100,100,50,0,100,100,50},
 				{/*ほのお*/100,50,50,100,200,200,100,100,100,100,100,200,50,100,50,100,200},
 				{/*みず*/100,200,50,100,50,100,100,100,200,100,100,100,200,100,50,100,100},
@@ -94,7 +127,15 @@ public class TypeDataManager{
 		}
 		
 		
-		private static final int getTypeRelation(TypeData attack_type,TypeData defense_type){return TypeRelation[attack_type.getIndex()][defense_type.getIndex()];}
+		/**
+		 * 相性を取得
+		 * @param attack_type
+		 * @param defense_type
+		 * @return
+		 */
+		private static final TypeRelations getTypeRelation(TypeData attack_type,TypeData defense_type){
+			return TypeRelations.fromRelation(TYPE_RELATION[attack_type.getIndex()][defense_type.getIndex()]);
+		}
 		
 		
 		/**
@@ -102,7 +143,7 @@ public class TypeDataManager{
 		 * @param defense_type　タイプ
 		 * @return 攻撃したときの相性(100倍されたタイプ相性)
 		 */
-		public int AttackTo(TypeData defense_type){
+		public TypeRelations attackTo(TypeData defense_type){
 			return getTypeRelation(this,defense_type);
 		}
 		/**
@@ -111,29 +152,38 @@ public class TypeDataManager{
 		 * @param defense_type2
 		 * @return
 		 */
-		public int AttackTo(TypeData defense_type1,TypeData defense_type2){
+		public TypeRelations attackTo(TypeData defense_type1,TypeData defense_type2){
 			if(defense_type1==null){
 				if(defense_type2==null){
-					return 100;
+					return TypeRelations._100;
 				}else{
-					return AttackTo(defense_type2);
+					return attackTo(defense_type2);
 				}
 			}else
 			if(defense_type2==null){
-				return AttackTo(defense_type1);
+				return attackTo(defense_type1);
 			}
 			
-			return getTypeRelation(this,defense_type1)*getTypeRelation(this,defense_type2)/100;
+			return getTypeRelation(this,defense_type1).by(getTypeRelation(this,defense_type2));
+		}
+		
+		/**
+		 * ポケモンに攻撃したときの相性を取得
+		 * @param poke
+		 * @return
+		 */
+		public TypeRelations attackTo(PokeData poke){
+			return attackTo(poke.getType(0),poke.getType(1));
 		}
 		/**
 		 * 攻撃したときの相性がvalueと同じ防御タイプを全て取得
 		 * @param value　タイプ相性倍率
 		 * @return 防御タイプのArrayList
 		 */
-		public ArrayList<TypeData> getDefenseTypesByRelationEquals(ValuesOfTypeRelation value){
+		public ArrayList<TypeData> getDefenseTypesByRelationEquals(TypeRelations value){
 			ArrayList<TypeData> types=new ArrayList<TypeData>();
 			for(TypeData i:values()){
-				if(AttackTo(i)==value.getRelation()){
+				if(attackTo(i)==value){
 					types.add(i);
 				}
 			}
@@ -144,7 +194,7 @@ public class TypeDataManager{
 		 * @param attack_type
 		 * @return　攻撃されたときの相性
 		 */
-		public int AttackedBy(TypeData attack_type){
+		public TypeRelations attackedBy(TypeData attack_type){
 			return getTypeRelation(attack_type,this);
 		}
 		/**
@@ -152,10 +202,10 @@ public class TypeDataManager{
 		 * @param value　タイプ相性
 		 * @return　攻撃タイプのArrayList
 		 */
-		public ArrayList<TypeData> getAttackTypesByRelationEquals(ValuesOfTypeRelation value){
+		public ArrayList<TypeData> getAttackTypesByRelationEquals(TypeRelations value){
 			ArrayList<TypeData> types=new ArrayList<TypeData>();
 			for(TypeData i:values()){
-				if(AttackedBy(i)==value.getRelation()){
+				if(attackedBy(i)==value){
 					types.add(i);
 				}
 			}
@@ -189,6 +239,18 @@ public class TypeDataManager{
 		public static TypeData fromInteger(int integer){
 			return integerToEnum.get(integer);
 		}
+	
+		/**
+		 * 項目を文字列配列にして返す
+		 * @return
+		 */
+		public static String[] toStringArray(){
+			String[] array=new String[values().length];
+			for(int i=0,n=values().length;i<n;i++){
+				array[i]=values()[i].toString();
+			}
+			return array;
+		}
 	}
 	/**
 	 * 複合タイプに攻撃したときの相性がvalueのタイプを全て取得
@@ -197,10 +259,10 @@ public class TypeDataManager{
 	 * @param value
 	 * @return
 	 */
-	public static final TypeData[] getWeakTypes(TypeData defense_type1,TypeData defense_type2,ValuesOfTypeRelation value){
+	public static final TypeData[] getWeakTypes(TypeData defense_type1,TypeData defense_type2,TypeRelations value){
 		List<TypeData> weak_list=new ArrayList<TypeData>();
 		for(TypeData attack_type:TypeData.values()){
-			if(attack_type.AttackTo(defense_type1,defense_type2)==value.getRelation()){
+			if(attack_type.attackTo(defense_type1,defense_type2)==value){
 				weak_list.add(attack_type);
 			}
 		}

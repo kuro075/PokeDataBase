@@ -86,4 +86,17 @@ public class Utility {
 			array[last_index-i]=tmp;
 		}
 	}
+
+	/**
+	 * Object配列をString配列に変換して返す
+	 * @param array
+	 * @return
+	 */
+	public static String[] changeToStringArray(Object[] array){
+		String[] string_array=new String[array.length];
+		for(int i=0,n=array.length;i<n;i++){
+			string_array[i]=array[i].toString();
+		}
+		return string_array;
+	}
 }
