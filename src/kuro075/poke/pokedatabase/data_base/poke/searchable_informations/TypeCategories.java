@@ -26,7 +26,7 @@ import android.widget.Spinner;
 enum TypeCategories implements SearchIfCategory{
 	MYSELF("タイプ"){
 		@Override
-		public void openDialog(Context context,final PokeData[] poke_array,
+		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
 			Utility.log(TAG, "openDialog");
@@ -58,7 +58,7 @@ enum TypeCategories implements SearchIfCategory{
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
 					dialog.dismiss();
-					RELATION.openDialog(final_context,poke_array, final_search_type, final_listener);
+					RELATION.openDialog(final_context,final_search_type, final_listener);
 				}
 			});
 			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
@@ -94,7 +94,7 @@ enum TypeCategories implements SearchIfCategory{
 	RELATION("タイプ相性"){
 		private final String[] RELATION_KINDS = {"弱点","半減以下","無効","1/4倍","1/2倍","等倍","2倍","4倍"};
 		@Override
-		public void openDialog(Context context,final PokeData[] poke_array,
+		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
 			Utility.log(toString(), "openDialog");
@@ -131,7 +131,7 @@ enum TypeCategories implements SearchIfCategory{
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
 					dialog.dismiss();
-					MYSELF.openDialog(final_context,poke_array, final_search_type, final_listener);
+					MYSELF.openDialog(final_context,final_search_type, final_listener);
 				}
 			});
 			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){

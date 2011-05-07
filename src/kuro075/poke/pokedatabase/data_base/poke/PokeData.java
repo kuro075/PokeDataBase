@@ -1020,6 +1020,10 @@ public class PokeData extends BasicData implements Serializable{
 		//教え技(Pt,HS,BW) 
 		if(hasSkillByTeachSkill(skill))return true;
 		
+		int position=getPositionOfEvolution();
+		if(position>0){
+			return PokeDataManager.INSTANCE.getPokeData(evolutions[position-1]).hasSkill(skill);
+		}
 		return false;
 	}
 	
@@ -1029,7 +1033,10 @@ public class PokeData extends BasicData implements Serializable{
 	 * @return
 	 */
 	public boolean hasSkillByLvSkill(SkillData skill){
-		return Arrays.binarySearch(lv_skills, skill)>=0;
+		for(SkillData lv_skill:lv_skills){
+			if(lv_skill.equals(skill)) return true;
+		}
+		return false;
 	}
 	/**
 	 * わざマシン、秘伝マシン、旧わざマシンで覚えるかどうか
@@ -1053,7 +1060,12 @@ public class PokeData extends BasicData implements Serializable{
 	public boolean hasSkillBySkillMachine(SkillMachines skill){
 		//skillが技マシンかどうかをチェックしマシンNo(machine_no)に変換
 		//this.machineの中にmachine_noがあるかをチェックしあればtrue
-		return Arrays.binarySearch(machines, skill)>=0;
+		for(SkillMachines machine:machines){
+			if(machine.equals(skill)){
+				return true;
+			}
+		}
+		return false;
 	}
 	/**
 	 * skillを秘伝マシンで覚えるかどうか
@@ -1063,7 +1075,10 @@ public class PokeData extends BasicData implements Serializable{
 	public boolean hasSkillByHidenMachine(HidenMachines skill){
 		//skillが秘伝マシンかどうかをチェックし秘伝No(hiden_no)に変換
 		//this.hidensの中にhiden_noがあるかをチェックしあればtrue
-		return Arrays.binarySearch(hidens, skill)>=0;
+		for(HidenMachines hiden:hidens){
+			if(hiden.equals(skill)) return true;
+		}
+		return false;
 	}
 	/**
 	 * skillを旧技マシンで覚えるかどうか
@@ -1073,7 +1088,10 @@ public class PokeData extends BasicData implements Serializable{
 	public boolean hasSkillByOldSkillMachine(OldSkillMachines skill){
 		//skillが旧わざマシンかどうかをチェックし旧技マシンNo(old_machine_no)に変換
 		//this.old_machineにold_machine_noがあるかをチェックしあればtrue
-		return Arrays.binarySearch(old_machines, skill)>=0;
+		for(OldSkillMachines old_machine:old_machines){
+			if(old_machine.equals(skill)) return true;
+		}
+		return false;
 	}
 	/**
 	 * skillをタマゴ技で覚えるかどうか
@@ -1082,7 +1100,10 @@ public class PokeData extends BasicData implements Serializable{
 	 */
 	public boolean hasSkillByEggSkill(SkillData skill){
 		//this.egg_skillにskillがあるかをチェックしあればtrue
-		return Arrays.binarySearch(egg_skills, skill)>=0;
+		for(SkillData egg:egg_skills){
+			if(egg.equals(skill)) return true;
+		}
+		return false;
 	}
 	/**
 	 * skillを教え技で覚えるかどうか
@@ -1106,7 +1127,10 @@ public class PokeData extends BasicData implements Serializable{
 	 */
 	public boolean hasSkillByTeachSkillPt(SkillData skill){
 		//this.teach_skill_Ptにskillがあるかをチェックしあればtrue
-		return Arrays.binarySearch(teach_skills_Pt, skill)>=0;
+		for(SkillData teach:teach_skills_Pt){
+			if(teach.equals(skill)) return true;
+		}
+		return false;
 	}
 	/**
 	 * skillを教え技(HS)で覚えるかどうか
@@ -1115,7 +1139,10 @@ public class PokeData extends BasicData implements Serializable{
 	 */
 	public boolean hasSkillByTeachSkillHS(SkillData skill){
 		//this.teach_skills_HSにskillがあるかをチェックしあればtrue
-		return Arrays.binarySearch(teach_skills_HS, skill)>=0;
+		for(SkillData teach:teach_skills_HS){
+			if(teach.equals(skill)) return true;
+		}
+		return false;
 	}
 	/**
 	 * skillを教え技(BW)で覚えるかどうか
@@ -1124,7 +1151,10 @@ public class PokeData extends BasicData implements Serializable{
 	 */
 	public boolean hasSkillByTeachSkillBW(SkillData skill){
 		//this.teach_skill_BWにskillがあるかをチェックしあればtrue
-		return Arrays.binarySearch(teach_skills_BW, skill)>=0;
+		for(SkillData teach:teach_skills_BW){
+			if(teach.equals(skill)) return true;
+		}
+		return false;
 	}
 	/**
 	 * タイプにtypeが含まれているかどうか

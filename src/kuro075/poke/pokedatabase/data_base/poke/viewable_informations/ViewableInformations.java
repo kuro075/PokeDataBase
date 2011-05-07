@@ -355,7 +355,7 @@ public enum ViewableInformations {
 			};
 		}
 	},
-	EFF_DIFENSE("努力値(特防)"){
+	EFF_DEFENSE("努力値(特防)"){
 		private final int spec_index=4;
 		@Override
 		public String getInformation(PokeData poke){
@@ -727,7 +727,7 @@ public enum ViewableInformations {
 			};
 		}
 	},
-	KETAGURI_KUSAMUSUBI("けたぐりor草結びの威力"){
+	KETAGURI_KUSAMUSUBI("草結びの威力"){
 		@Override
 		public String getInformation(PokeData poke) {
 			// TODO Auto-generated method stub

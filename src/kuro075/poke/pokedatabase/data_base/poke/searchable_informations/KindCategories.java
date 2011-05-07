@@ -21,7 +21,7 @@ public enum KindCategories implements SearchIfCategory{
 	EVOLUTION("進化"){
 		private String[] EVOLUTION_KINDS={"たねポケモン","1進化後","2進化後","進化可","進化系列無し","最終進化"};
 		@Override
-		public void openDialog(Context context,final PokeData[] poke_array,
+		public void openDialog(Context context,
 				SearchTypes search_type,SearchIfListener listener) {
 			// TODO Auto-generated method stub
 			Utility.log(toString(),"openDialog");

@@ -434,6 +434,7 @@ public class SkillDataManager {
 	/  データ  / 
 	/========*/
 	private final SkillData[] skill_data;
+	private final String[] skill_name;
 	private final Map<String,SkillData> name2skill_map=new HashMap<String,SkillData>();
 	private final int num;
 	public static final SkillData NullData=new SkillData.Builder().build();
@@ -443,6 +444,7 @@ public class SkillDataManager {
 		for(SkillData skill:skill_data){
 			name2skill_map.put(skill.toString(), skill);
 		}
+		skill_name=Utility.changeToStringArray(skill_data);
 	}
 	//================================================================================
 	/*==========/
@@ -455,6 +457,20 @@ public class SkillDataManager {
 		return num;
 	}
 	
+	/**
+	 * 全ての技データを取得
+	 * @return
+	 */
+	public SkillData[] getAllSkillData(){
+		return skill_data;
+	}
+	/**
+	 * 技名配列を取得
+	 * @return
+	 */
+	public String[] getAllSkillName(){
+		return skill_name;
+	}
 	/**
 	 * SkillDataをインデックスから取得
 	 * @param index　インデックス

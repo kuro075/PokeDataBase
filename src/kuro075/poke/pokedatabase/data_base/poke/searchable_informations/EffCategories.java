@@ -1,6 +1,7 @@
 package kuro075.poke.pokedatabase.data_base.poke.searchable_informations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import kuro075.poke.pokedatabase.R;
@@ -8,6 +9,7 @@ import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Statuses;
+import kuro075.poke.pokedatabase.data_base.poke.viewable_informations.ViewableInformations;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -18,14 +20,14 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-public enum SpecCategories implements SearchIfCategory{
-	H("種族値 HP"){
+public enum EffCategories implements SearchIfCategory{
+	H("努力値 HP"){
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
 			// TODO Auto-generated method stub
 			if(toString().equals(category)){
-				return searchWithOneSpec(poke_array,_case,Statuses.H.getIndex());
+				return searchWithOneEff(poke_array,_case,Statuses.H.getIndex());
 			}
 			return new PokeData[0];
 		}
@@ -34,16 +36,16 @@ public enum SpecCategories implements SearchIfCategory{
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
-			createIntInputDialogBuilder(context, search_type, listener, this,1,255).create().show();
+			createIntInputDialogBuilder(context,  search_type, listener, this).create().show();
 		}
 	},
-	A("種族値 攻撃"){
+	A("努力値 攻撃"){
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
 			// TODO Auto-generated method stub
 			if(toString().equals(category)){
-				return searchWithOneSpec(poke_array,_case,Statuses.A.getIndex());
+				return searchWithOneEff(poke_array,_case,Statuses.A.getIndex());
 			}
 			return new PokeData[0];
 		}
@@ -52,17 +54,17 @@ public enum SpecCategories implements SearchIfCategory{
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
-			createIntInputDialogBuilder(context, search_type, listener, this, 5,180).create().show();
+			createIntInputDialogBuilder(context,search_type, listener, this).create().show();
 		}
 	},
-	B("種族値 防御"){
+	B("努力値 防御"){
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
 			// TODO Auto-generated method stub
 			if(toString().equals(category)){
-				return searchWithOneSpec(poke_array,_case,Statuses.B.getIndex());
+				return searchWithOneEff(poke_array,_case,Statuses.B.getIndex());
 			}
 			return new PokeData[0];
 		}
@@ -71,18 +73,18 @@ public enum SpecCategories implements SearchIfCategory{
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
-			createIntInputDialogBuilder(context, search_type, listener, this, 5,230).create().show();
+			createIntInputDialogBuilder(context, search_type, listener, this).create().show();
 			
 		}
 	},
-	C("種族値 特攻"){
+	C("努力値 特攻"){
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
 			// TODO Auto-generated method stub
 			if(toString().equals(category)){
-				return searchWithOneSpec(poke_array,_case,Statuses.C.getIndex());
+				return searchWithOneEff(poke_array,_case,Statuses.C.getIndex());
 			}
 			return new PokeData[0];
 		}
@@ -91,18 +93,18 @@ public enum SpecCategories implements SearchIfCategory{
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
-			createIntInputDialogBuilder(context, search_type, listener, this, 10,180).create().show();
+			createIntInputDialogBuilder(context, search_type, listener, this).create().show();
 			
 		}
 	},
-	D("種族値 特防"){
+	D("努力値 特防"){
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
 			// TODO Auto-generated method stub
 			if(toString().equals(category)){
-				return searchWithOneSpec(poke_array,_case,Statuses.D.getIndex());
+				return searchWithOneEff(poke_array,_case,Statuses.D.getIndex());
 			}
 			return new PokeData[0];
 		}
@@ -111,16 +113,16 @@ public enum SpecCategories implements SearchIfCategory{
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
-			createIntInputDialogBuilder(context, search_type, listener, this,20,230).create().show();
+			createIntInputDialogBuilder(context, search_type, listener, this).create().show();
 		}
 	},
-	S("種族値 素早"){
+	S("努力値 素早"){
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
 			// TODO Auto-generated method stub
 			if(toString().equals(category)){
-				return searchWithOneSpec(poke_array,_case,Statuses.S.getIndex());
+				return searchWithOneEff(poke_array,_case,Statuses.S.getIndex());
 			}
 			return new PokeData[0];
 		}
@@ -129,17 +131,17 @@ public enum SpecCategories implements SearchIfCategory{
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
-			createIntInputDialogBuilder(context, search_type, listener, this,5,180).create().show();
+			createIntInputDialogBuilder(context, search_type, listener, this).create().show();
 		}
 	},
-	TOTAL("種族値 合計"){
+	TOTAL("努力値 合計"){
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
 			// TODO Auto-generated method stub
 			if(toString().equals(category)){
-				return searchWithOneSpec(poke_array,_case,-1);
+				return searchWithOneEff(poke_array,_case,-1);
 			}
 			return new PokeData[0];
 		}
@@ -148,10 +150,10 @@ public enum SpecCategories implements SearchIfCategory{
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
 			// TODO Auto-generated method stub
-			createIntInputDialogBuilder(context, search_type, listener, this, 180,720).create().show();
+			createIntInputDialogBuilder(context, search_type, listener, this).create().show();
 		}
 	},
-	COMPARE("種族値 比較"){
+	COMPARE("努力値 比較"){
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
@@ -164,7 +166,7 @@ public enum SpecCategories implements SearchIfCategory{
 				TwoCompareOptions center=TwoCompareOptions.fromString(status_option_status[1]);
 				List<PokeData> list=new ArrayList<PokeData>();
 				for(PokeData poke:poke_array){
-					if(center.compareOf(poke.getSpec(left), poke.getSpec(right))){
+					if(center.compareOf(poke.getEff(left), poke.getEff(right))){
 						list.add(poke);
 					}
 				}
@@ -227,16 +229,16 @@ public enum SpecCategories implements SearchIfCategory{
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
 					dialog.dismiss();
-					SearchableInformations.SPEC.openDialog(context,search_type, listener);
+					SearchableInformations.EFF.openDialog(context, search_type, listener);
 				}
 			});
 			builder.create().show();
 		}
 	};
 	
-	private static final String TAG="SpecCategories";
+	private static final String TAG="EffCategories";
 	private final String name;
-	SpecCategories(String name){this.name=name;}
+	EffCategories(String name){this.name=name;}
 	@Override
 	public String toString(){return name;}
 	
@@ -250,7 +252,7 @@ public enum SpecCategories implements SearchIfCategory{
 	 * @param max
 	 * @return
 	 */
-	public static AlertDialog.Builder createIntInputDialogBuilder(final Context context,final SearchTypes search_type,final SearchIfListener listener,final SearchIfCategory category,final int min,final int max){
+	public static AlertDialog.Builder createIntInputDialogBuilder(final Context context,final SearchTypes search_type,final SearchIfListener listener,final SearchIfCategory category){
 		Utility.log(TAG, "createIntInputDialogBuilder");
 		AlertDialog.Builder builder;
 		
@@ -260,7 +262,7 @@ public enum SpecCategories implements SearchIfCategory{
 		builder.setTitle(SearchableInformations.createDialogTitle(category, search_type));
 		builder.setView(layout);
 		final EditText edit=(EditText)layout.findViewById(R.id.edit);
-		edit.setHint(min+"~"+max);
+		edit.setHint(0+"~"+3);
 		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,Utility.changeToStringArray(OneCompareOptions.values()));
 		final Spinner spinner = (Spinner)layout.findViewById(R.id.spinner);
@@ -271,7 +273,7 @@ public enum SpecCategories implements SearchIfCategory{
 				// TODO Auto-generated method stub
 				try{
 					int input=Integer.valueOf(edit.getText().toString());
-					if(min<=input && input<=max){
+					if(0<=input && input<=3){
 						StringBuilder sb=new StringBuilder();
 						sb.append(input);
 						sb.append(" ");
@@ -291,20 +293,20 @@ public enum SpecCategories implements SearchIfCategory{
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
-				SearchableInformations.SPEC.openDialog(context, search_type, listener);
+				SearchableInformations.EFF.openDialog(context, search_type, listener);
 			}
 		});
 		return builder;
 	}
 	
 	/**
-	 * 文字列からSpecCategoriesを取得
+	 * 文字列からEffCategoriesを取得
 	 * @param name
 	 * @return
 	 */
-	public static SpecCategories fromString(String name){
-		for(SpecCategories spec:values()){
-			if(spec.toString().equals(name)) return spec;
+	public static EffCategories fromString(String name){
+		for(EffCategories eff:values()){
+			if(eff.toString().equals(name)) return eff;
 		}
 		return null;
 	}
@@ -316,14 +318,14 @@ public enum SpecCategories implements SearchIfCategory{
 	 * @param status
 	 * @return
 	 */
-	public static PokeData[] searchWithOneSpec(PokeData[] poke_array,String _case,int index){
-		String[] spec_option=_case.split(" ");
-		int spec=Integer.valueOf(spec_option[0]);
-		OneCompareOptions option=OneCompareOptions.fromString(spec_option[1]);
+	public static PokeData[] searchWithOneEff(PokeData[] poke_array,String _case,int index){
+		String[] eff_option=_case.split(" ");
+		int eff=Integer.valueOf(eff_option[0]);
+		OneCompareOptions option=OneCompareOptions.fromString(eff_option[1]);
 		
 		List<PokeData> list=new ArrayList<PokeData>();
 		for(PokeData poke:poke_array){
-			if(option.compareOf(poke.getSpec(index), spec)){
+			if(option.compareOf(poke.getEff(index), eff)){
 				list.add(poke);
 			}
 		}

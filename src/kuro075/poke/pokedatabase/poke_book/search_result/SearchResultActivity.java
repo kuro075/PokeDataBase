@@ -20,6 +20,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -106,7 +107,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					// TODO Auto-generated method stub
-					SearchableInformations.values()[position].openDialog(context, poke_list,search_type, listener);
+					SearchableInformations.values()[position].openDialog(context, search_type, listener);
 					switch(search_type){
 						case FILTER:filter_dialog.dismiss();break;
 						case ADD:	add_dialog.dismiss();	break;
@@ -608,6 +609,9 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	 * ポケモンリストをソート
 	 */
 	private void sortPokeList(){
+		this.text_no.setTextColor(Color.rgb(255,255,255));
+		this.text_name.setTextColor(Color.rgb(255,255,255));
+		this.text_info.setTextColor(Color.rgb(255,255,255));
 		switch(sort_type){
 			case NO:
 				Arrays.sort(poke_list, new Comparator<PokeData>(){
@@ -617,12 +621,16 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 						return p1.getNo()-p2.getNo();
 					}
 				});
+				this.text_no.setTextColor(Color.rgb(255,255,204));
+				
 				break;
 			case NAME:
 				Arrays.sort(poke_list);
+				this.text_name.setTextColor(Color.rgb(255,255,204));
 				break;
 			case INFO:
 				Arrays.sort(poke_list, view_info.getComparator());
+				this.text_info.setTextColor(Color.rgb(255,255,204));
 				break;
 		}
 		if(flag_reverse){//逆順にソート
