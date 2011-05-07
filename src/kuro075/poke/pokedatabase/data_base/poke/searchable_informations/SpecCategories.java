@@ -22,7 +22,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 public enum SpecCategories implements SearchIfCategory{
-	H("HP種族値"){
+	H("種族値 HP"){
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
@@ -41,7 +41,7 @@ public enum SpecCategories implements SearchIfCategory{
 			createIntInputDialogBuilder(context, poke_array, search_type, listener, this, poke_array[0].getSpec(Statuses.H), poke_array[poke_array.length-1].getSpec(Statuses.H)).create().show();
 		}
 	},
-	A("攻撃種族値"){
+	A("種族値 攻撃"){
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
@@ -60,7 +60,7 @@ public enum SpecCategories implements SearchIfCategory{
 			createIntInputDialogBuilder(context, poke_array, search_type, listener, this, poke_array[0].getSpec(Statuses.A), poke_array[poke_array.length-1].getSpec(Statuses.A)).create().show();
 		}
 	},
-	B("防御種族値"){
+	B("種族値 防御"){
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
@@ -81,7 +81,7 @@ public enum SpecCategories implements SearchIfCategory{
 			
 		}
 	},
-	C("特攻種族値"){
+	C("種族値 特攻"){
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
@@ -102,7 +102,7 @@ public enum SpecCategories implements SearchIfCategory{
 			
 		}
 	},
-	D("特防種族値"){
+	D("種族値 特防"){
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
@@ -122,7 +122,7 @@ public enum SpecCategories implements SearchIfCategory{
 			createIntInputDialogBuilder(context, poke_array, search_type, listener, this, poke_array[0].getSpec(Statuses.D), poke_array[poke_array.length-1].getSpec(Statuses.D)).create().show();
 		}
 	},
-	S("素早種族値"){
+	S("種族値 素早"){
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
@@ -141,7 +141,7 @@ public enum SpecCategories implements SearchIfCategory{
 			createIntInputDialogBuilder(context, poke_array, search_type, listener, this, poke_array[0].getSpec(Statuses.S), poke_array[poke_array.length-1].getSpec(Statuses.S)).create().show();
 		}
 	},
-	TOTAL("種族値合計"){
+	TOTAL("種族値 合計"){
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
@@ -161,20 +161,87 @@ public enum SpecCategories implements SearchIfCategory{
 			createIntInputDialogBuilder(context, poke_array, search_type, listener, this, poke_array[0].getSpec(6), poke_array[poke_array.length-1].getSpec(6)).create().show();
 		}
 	},
-	COMPARE("種族値比較"){
+	COMPARE("種族値 比較"){
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
 			// TODO Auto-generated method stub
-			return null;
+			if(toString().equals(category)){
+				String[] status_option_status=_case.split(" ");
+				Statuses left=Statuses.fromString(status_option_status[0]),
+						 right=Statuses.fromString(status_option_status[2]);
+				TwoCompareOptions center=TwoCompareOptions.fromString(status_option_status[1]);
+				List<PokeData> list=new ArrayList<PokeData>();
+				for(PokeData poke:poke_array){
+					if(center.compareOf(poke.getSpec(left), poke.getSpec(right))){
+						list.add(poke);
+					}
+				}
+				return list.toArray(new PokeData[0]);
+			}
+			return new PokeData[0];
 		}
 
+		/**
+		 * スピナーが三つ並んだダイアログ
+		 */
 		@Override
-		public void openDialog(Context context, PokeData[] poke_array,
-				SearchTypes search_type, SearchIfListener listener) {
+		public void openDialog(final Context context, final PokeData[] poke_array,
+				final SearchTypes search_type, final SearchIfListener listener) {
 			// TODO Auto-generated method stub
+			Utility.log(TAG, "createIntInputDialogBuilder");
+			AlertDialog.Builder builder;
 			
+			LayoutInflater factory=LayoutInflater.from(context);
+			final View layout = factory.inflate(R.layout.three_spinner_dialog,null);
+			builder = new AlertDialog.Builder(context);
+			builder.setTitle(SearchableInformations.createDialogTitle(this, search_type));
+			builder.setView(layout);
+			final EditText edit=(EditText)layout.findViewById(R.id.edit);
+			
+			//左右のスピナー
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,Utility.changeToStringArray(Statuses.values()));
+			final Spinner spinner_left = (Spinner)layout.findViewById(R.id.spinner_left);
+			spinner_left.setAdapter(adapter);
+			adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,Utility.changeToStringArray(Statuses.values()));
+			final Spinner spinner_right = (Spinner)layout.findViewById(R.id.spinner_right);
+			spinner_right.setAdapter(adapter);
+			
+			//真ん中のスピナー
+			adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,Utility.changeToStringArray(TwoCompareOptions.values()));
+			final Spinner spinner_center = (Spinner)layout.findViewById(R.id.spinner_center);
+			spinner_center.setAdapter(adapter);
+			
+			builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					final int left=spinner_left.getSelectedItemPosition(),
+							  center=spinner_center.getSelectedItemPosition(),
+							  right=spinner_right.getSelectedItemPosition();
+					if(left!=right){
+						StringBuilder sb=new StringBuilder();
+						sb.append(Statuses.values()[left].toString());
+						sb.append(" ");
+						sb.append(TwoCompareOptions.values()[center].toString());
+						sb.append(" ");
+						sb.append(Statuses.values()[right]);
+						listener.receiveSearchIf(SearchableInformations.createSearchIf(COMPARE, new String(sb), search_type));
+					}
+					
+					dialog.dismiss();
+				}
+			});
+			builder.setNegativeButton("戻る", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+					SearchableInformations.SPEC.openDialog(context,poke_array, search_type, listener);
+				}
+			});
+			builder.create().show();
 		}
 	};
 	
@@ -196,7 +263,6 @@ public enum SpecCategories implements SearchIfCategory{
 	 */
 	public static AlertDialog.Builder createIntInputDialogBuilder(final Context context,final PokeData[] poke_array,final SearchTypes search_type,final SearchIfListener listener,final SearchIfCategory category,final int min,final int max){
 		Utility.log(TAG, "createIntInputDialogBuilder");
-		Log.v(TAG,"openSpecInputDialog");
 		AlertDialog.Builder builder;
 		
 		LayoutInflater factory=LayoutInflater.from(context);
@@ -214,11 +280,19 @@ public enum SpecCategories implements SearchIfCategory{
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
-				String input=edit.getText().toString();
-				if(input.equals("")){
+				try{
+					int input=Integer.valueOf(edit.getText().toString());
+					if(min<=input && input<=max){
+						StringBuilder sb=new StringBuilder();
+						sb.append(input);
+						sb.append(" ");
+						sb.append(OneCompareOptions.fromIndex(spinner.getSelectedItemPosition()).toString());
+						listener.receiveSearchIf(SearchableInformations.createSearchIf(category, new String(sb), search_type));
+					}else{
+						Utility.popToast(context,"入力値が不正です");
+					}
+				}catch(NumberFormatException e){
 					Utility.popToast(context,"入力がありません");
-				}else{
-					listener.receiveSearchIf(SearchableInformations.createSearchIf(category, input+OneCompareOptions.fromIndex(spinner.getSelectedItemPosition()), search_type));
 				}
 				dialog.dismiss();
 			}
@@ -254,17 +328,9 @@ public enum SpecCategories implements SearchIfCategory{
 	 * @return
 	 */
 	public static PokeData[] searchWithOneSpec(PokeData[] poke_array,String _case,int index){
-		int spec=0;
-		StringBuilder option_builder=new StringBuilder();
-		for(int i=0,n=_case.length();i<n;i++){
-			final char tmp=_case.charAt(i);
-			if('0'<=tmp && tmp<='9'){
-				spec=spec*10+(tmp-'0');
-			}else{
-				option_builder.append(tmp);
-			}
-		}
-		OneCompareOptions option=OneCompareOptions.fromString(new String(option_builder));
+		String[] spec_option=_case.split(" ");
+		int spec=Integer.valueOf(spec_option[0]);
+		OneCompareOptions option=OneCompareOptions.fromString(spec_option[1]);
 		
 		List<PokeData> list=new ArrayList<PokeData>();
 		for(PokeData poke:poke_array){

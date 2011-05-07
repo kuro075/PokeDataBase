@@ -371,6 +371,13 @@ public class PokeData extends BasicData implements Serializable{
 		public int getIndex(){
 			return index;
 		}
+	
+		public static Statuses fromString(String name){
+			for(Statuses status:values()){
+				if(status.toString().equals(name)) return status;
+			}
+			return null;
+		}
 	}
 	/**
 	 * 性別

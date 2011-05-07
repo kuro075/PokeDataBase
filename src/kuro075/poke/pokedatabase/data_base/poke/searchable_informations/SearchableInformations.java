@@ -529,13 +529,13 @@ public enum SearchableInformations implements SearchIfCategory{
 	 * @param type　検索方法
 	 * @return category:_case(type)
 	 */
-	public static String createSearchIf(SearchIfCategory category,String _case,SearchTypes type){
+	public static String createSearchIf(SearchIfCategory category,String _case,SearchTypes search_type){
 		StringBuilder sb=new StringBuilder();
 		sb.append(category.toString());
 		sb.append(":");
 		sb.append(_case);
 		sb.append("(");
-		sb.append(type.toString());
+		sb.append(search_type.toString());
 		sb.append(")");
 		return new String(sb);
 	}
