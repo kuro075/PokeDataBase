@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -135,6 +136,32 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			return builder.create();
 		}
 		/**
+		 * ポケモンリストを長押しした時に表示するダイアログ
+		 * @return
+		 */
+		private AlertDialog getLongClickDialog(){
+			AlertDialog.Builder builder;
+			LayoutInflater factory=LayoutInflater.from(context);
+			
+			final View layout = factory.inflate(R.layout.simple_list_dialog,null);
+			builder = new AlertDialog.Builder(context);
+			builder.setView(layout);
+			
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,long_click_dialog_list_items);
+			list_view_for_long_click_dialog = (ListView) layout.findViewById(R.id.list_view);
+			list_view_for_long_click_dialog.setAdapter(adapter);
+			//閉じるボタン
+			builder.setPositiveButton("閉じる",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			});
+			return builder.create();
+		}
+		
+		/**
 		 * 操作ダイアログの作成・取得
 		 * @return
 		 */
@@ -170,7 +197,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			});
 			return builder.create();
 		}
-		
+
 		/**
 		 * 表示切替ダイアログを作成・取得
 		 * @return
@@ -206,32 +233,6 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			});
 			return builder.create();
 		}
-
-		/**
-		 * ポケモンリストを長押しした時に表示するダイアログ
-		 * @return
-		 */
-		private AlertDialog getLongClickDialog(){
-			AlertDialog.Builder builder;
-			LayoutInflater factory=LayoutInflater.from(context);
-			
-			final View layout = factory.inflate(R.layout.simple_list_dialog,null);
-			builder = new AlertDialog.Builder(context);
-			builder.setView(layout);
-			
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,long_click_dialog_list_items);
-			list_view_for_long_click_dialog = (ListView) layout.findViewById(R.id.list_view);
-			list_view_for_long_click_dialog.setAdapter(adapter);
-			//閉じるボタン
-			builder.setPositiveButton("閉じる",new DialogInterface.OnClickListener(){
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					dialog.dismiss();
-				}
-			});
-			return builder.create();
-		}
 		
 		/**
 		 * (絞込・追加・除外)ダイアログを開く
@@ -252,20 +253,6 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 					break;
 			}
 		}
-		/**
-		 * 操作ダイアログを開く
-		 */
-		private void openOperateDialog(){
-			operate_dialog.show();
-		}
-		/**
-		 * 表示切替ダイアログを開く
-		 */
-		private void openViewChangeDialog(){
-			Utility.log(TAG, "openViewChangeDialog");
-			view_change_dialog.show();
-		}
-		
 		/**
 		 * リストを長押しした時に表示するダイアログ
 		 * タイトル、リストを選択した時のリスナーを設定後、ダイアログを開く
@@ -315,7 +302,34 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			});
 			long_click_dialog.show();
 		}
+		/**
+		 * 操作ダイアログを開く
+		 */
+		private void openOperateDialog(){
+			operate_dialog.show();
+		}
+		
+		/**
+		 * 表示切替ダイアログを開く
+		 */
+		private void openViewChangeDialog(){
+			Utility.log(TAG, "openViewChangeDialog");
+			view_change_dialog.show();
+		}
 	}
+	
+	/**
+	 * 複数選択モード
+	 * @author sanogenma
+	 *
+	 */
+	enum ListChoiceModes{
+		MULTIPLE,SINGLE;
+	}
+	
+	/*=======/
+	/  enum  /
+	/=======*/
 	/**
 	 * ソート
 	 * @author sanogenma
@@ -328,6 +342,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		@Override
 		public String toString(){return name;}
 	}
+	
 	/*=========/
 	/  static  / 
 	/=========*/
@@ -419,9 +434,11 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	
 	private int prev_poke_num;//前回のポケモンの数,リストをリフレッシュするごとに更新
 	
-	private SortTypes sort_type=SortTypes.NO;
+	private SortTypes sort_type=SortTypes.NO;//ソートタイプ
 	private boolean flag_reverse=false;//逆順にソートするかどうか
 	private ViewableInformations view_info;//表示する情報
+	
+	private ListChoiceModes choice_mode=ListChoiceModes.SINGLE;//リストビュー選択モード
 	
 	private DialogManager dialog_manager;
 	
@@ -478,15 +495,17 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	 */
 	private void clickLabel(SortTypes sort_type){
 		Utility.log(TAG, "clickLabel");
-		flag_reverse=this.sort_type.equals(sort_type)?!flag_reverse:false;
-		this.sort_type=sort_type;
-		StringBuilder toast=new StringBuilder();
-		if(sort_type==SortTypes.INFO) toast.append(view_info.toString());
-		else /*図鑑No or 名前の場合*/	  toast.append(sort_type.toString());
-		toast.append("で");
-		if(flag_reverse)toast.append("逆順に");
-		toast.append("ソートしました");
-		refreshListView(new String(toast));
+		if(choice_mode==ListChoiceModes.SINGLE){
+			flag_reverse=this.sort_type.equals(sort_type)?!flag_reverse:false;
+			this.sort_type=sort_type;
+			StringBuilder toast=new StringBuilder();
+			if(sort_type==SortTypes.INFO) toast.append(view_info.toString());
+			else /*図鑑No or 名前の場合*/	  toast.append(sort_type.toString());
+			toast.append("で");
+			if(flag_reverse)toast.append("逆順に");
+			toast.append("ソートしました");
+			refreshListView(new String(toast));
+		}
 	}
 	
 	
@@ -512,6 +531,23 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		refreshListView(new String(sb));
 	}
 	
+	/**
+	 * 選択されたポケモンのリストを取得
+	 * @return
+	 */
+	private PokeData[] getSelectedPokeList(){
+		if(choice_mode==ListChoiceModes.MULTIPLE){
+			SparseBooleanArray checked =list_view_poke.getCheckedItemPositions();
+			List<PokeData> remove_list=new ArrayList<PokeData>();
+			for(int i=0,n=checked.size();i<n;i++){
+				if(checked.valueAt(i)){
+					remove_list.add(poke_list[checked.keyAt(i)]);
+				}
+			}
+			return remove_list.toArray(new PokeData[0]);
+		}
+		return new PokeData[0];
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -578,16 +614,21 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		}
 		refreshListView(title);
 	}
+	
 	/**
 	 * メニューを作成
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		MenuItems.SEARCH_RESULT_VIEW_CHANGE.addMenuItem(menu);
-		MenuItems.SEARCH_RESULT_OPERATE.addMenuItem(menu);
-		MenuItems.UNDO.addMenuItem(menu);
-		MenuItems.SAVE.addMenuItem(menu);
+		MenuItems.SEARCH_RESULT_VIEW_CHANGE.addMenuItem(menu);//表示切替
+		MenuItems.SEARCH_RESULT_OPERATE.addMenuItem(menu);//操作
+		MenuItems.UNDO.addMenuItem(menu);//元に戻す
+		MenuItems.SEARCH_RESULT_SAVE.addMenuItem(menu);//ショートカットに登録
+		MenuItems.PAGE_SAVE.addMenuItem(menu);//お気に入りに登録
+		MenuItems.SEARCH_RESULT_REMOVE.addMenuItem(menu);//除外
+		MenuItems.SEARCH_RESULT_MULTIPLE_SELECT.addMenuItem(menu);//複数選択
+		MenuItems.SEARCH_RESULT_SINGLE_SELECT.addMenuItem(menu);//複数選択 解除
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -604,11 +645,48 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			case SEARCH_RESULT_OPERATE://操作
 				dialog_manager.openOperateDialog();
 				break;
-			case UNDO:
+			case UNDO://元に戻す
 				undo();
 				break;
-			case SAVE://保存
+			case SEARCH_RESULT_SAVE://ショートカットに登録
 				DataStore.DataTypes.POKEMON.openSaveShortCutDialog(this, search_ifs.toArray(new String[0]));
+				break;
+			case PAGE_SAVE://お気に入りに登録
+				DataStore.DataTypes.POKEMON.openSaveStarDialog(this, Utility.changeToStringArray(getSelectedPokeList()));
+				//shiftSingleChoiceMode(null);
+				break;
+			case SEARCH_RESULT_REMOVE://除外
+				final PokeData[] remove_list=this.getSelectedPokeList();
+				StringBuilder sb=new StringBuilder();
+				for(int i=0,n=remove_list.length;i<n;i++){
+					sb.append(remove_list[i].toString());
+					if(i!=n-1){
+						sb.append("・");
+					}
+				}
+				//確認ダイアログを開く
+				Utility.openSimpleTextDialog(this,"除外しますか？", new String(sb), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						StringBuilder sb=new StringBuilder();
+						for(int i=0,n=remove_list.length;i<n;i++){
+							sb.append(remove_list[i].toString());
+							if(i!=n-1){
+								sb.append("・");
+							}
+						}
+						sb.append("を除外しました");
+						setSearchIf(SearchableInformations.getRemoveIf(remove_list));
+						shiftSingleChoiceMode(new String(sb));
+					}
+				});
+				break;
+			case SEARCH_RESULT_MULTIPLE_SELECT:
+				this.shiftMultipleChoiceMode();
+				break;
+			case SEARCH_RESULT_SINGLE_SELECT:
+				shiftSingleChoiceMode(null);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -617,8 +695,34 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		menu.findItem(MenuItems.UNDO.getId()).setVisible(this.prev_search_ifs.size()>0);
-		menu.findItem(MenuItems.SAVE.getId()).setVisible(this.prev_search_ifs.size()>0);
+		switch(choice_mode){
+			case SINGLE://通常時
+				menu.findItem(MenuItems.SEARCH_RESULT_VIEW_CHANGE.getId()).setVisible(true);//表示切替
+				menu.findItem(MenuItems.SEARCH_RESULT_OPERATE.getId()).setVisible(true);//操作
+				menu.findItem(MenuItems.UNDO.getId()).setVisible(this.prev_search_ifs.size()>0);//元に戻す
+				menu.findItem(MenuItems.SEARCH_RESULT_SAVE.getId()).setVisible(this.prev_search_ifs.size()>0);//ショートカットに登録
+				menu.findItem(MenuItems.PAGE_SAVE.getId()).setVisible(false);//お気に入りに登録
+				menu.findItem(MenuItems.SEARCH_RESULT_MULTIPLE_SELECT.getId()).setVisible(true);//複数選択
+				menu.findItem(MenuItems.SEARCH_RESULT_SINGLE_SELECT.getId()).setVisible(false);//複数選択 解除
+				menu.findItem(MenuItems.SEARCH_RESULT_REMOVE.getId()).setVisible(false);//除外
+				break;
+			case MULTIPLE://複数選択モード時
+				int count=0;
+				SparseBooleanArray checked = list_view_poke.getCheckedItemPositions();
+				for(int i=0,n=checked.size();i<n;i++){
+					if(checked.valueAt(i)) count++;
+				}
+				if(count==checked.size()) Utility.log(TAG,"count=checked.size");
+				menu.findItem(MenuItems.SEARCH_RESULT_VIEW_CHANGE.getId()).setVisible(false);//表示切替
+				menu.findItem(MenuItems.SEARCH_RESULT_OPERATE.getId()).setVisible(false);//操作
+				menu.findItem(MenuItems.UNDO.getId()).setVisible(false);//元に戻す
+				menu.findItem(MenuItems.SEARCH_RESULT_SAVE.getId()).setVisible(false);//ショートカットに登録
+				menu.findItem(MenuItems.PAGE_SAVE.getId()).setVisible(count>0);//お気に入りに登録
+				menu.findItem(MenuItems.SEARCH_RESULT_MULTIPLE_SELECT.getId()).setVisible(false);//複数選択
+				menu.findItem(MenuItems.SEARCH_RESULT_SINGLE_SELECT.getId()).setVisible(true);//複数選択 解除
+				menu.findItem(MenuItems.SEARCH_RESULT_REMOVE.getId()).setVisible(count>0);//除外
+				break;
+		}
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
@@ -627,60 +731,86 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	 */
 	private void refreshListView(String toast){
 		Utility.log(TAG,"refreshListView");
-		
 		sortPokeList();
-		
-		text_info.setText(view_info.toString());//情報のラベルのテキストをセット
-		//リストビューの項目を作成
-		List<ListItemBean> list = new ArrayList<ListItemBean>();
-		for(PokeData poke:poke_list){
-			ListItemBean item =new ListItemBean();
-			item.setNo(poke.getNo2String());
-			item.setName(poke.getName());
-			item.setInfo(view_info.getInformation(poke));
-			list.add(item);
+		switch(choice_mode){
+			case SINGLE://通常モード
+				text_info.setText(view_info.toString());//情報のラベルのテキストをセット
+				//リストビューの項目を作成
+				List<ListItemBean> list = new ArrayList<ListItemBean>();
+				for(PokeData poke:poke_list){
+					ListItemBean item =new ListItemBean();
+					item.setNo(poke.getNo2String());
+					item.setName(poke.getName());
+					item.setInfo(view_info.getInformation(poke));
+					list.add(item);
+				}
+				ListAdapter adapter = new ListAdapter(getApplicationContext(),list);
+				list_view_poke.setAdapter(adapter);
+				list_view_poke.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position,
+							long id) {
+						// TODO Auto-generated method stub
+						if(choice_mode==ListChoiceModes.SINGLE){
+							clickPokeListItem(position);
+						}
+					}
+				});
+				list_view_poke.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+					@Override
+					public boolean onItemLongClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						// TODO Auto-generated method stub
+						if(choice_mode==ListChoiceModes.SINGLE){
+							dialog_manager.openLongClickDialog(poke_list[position]);
+							return true;
+						}
+						return false;
+					}
+				});
+				
+				StringBuilder sb=new StringBuilder();
+				if(toast!=null){
+					sb.append(toast);
+				}
+				if(prev_poke_num!=poke_list.length){
+					if(toast!=null) sb.append(" ");
+					sb.append(prev_poke_num);
+					sb.append("匹→");
+					sb.append(poke_list.length);
+					sb.append("匹");
+				}
+				Utility.popToast(this, new String(sb));
+				prev_poke_num=poke_list.length;
+				refreshTitle(title);
+				break;
+				
+			case MULTIPLE://複数選択モード
+				text_info.setText("選択");
+				list_view_poke.setAdapter(new MultipleChoicePokeListAdapter(getApplicationContext(),Arrays.asList(poke_list)));
+
+				list_view_poke.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);  
+				
+			    for (int i=0,n=poke_list.length;i<n;i++) {  
+				      // 指定したアイテムがチェックされているかを設定  
+				      list_view_poke.setItemChecked(i, false);  
+			    } 
+				refreshTitle("複数選択モード");
+				if(toast!=null){
+					Utility.popToast(this, toast);
+				}
+				else{
+					Utility.popToast(this, "複数選択モード");
+				}
+				break;
 		}
-		ListAdapter adapter = new ListAdapter(getApplicationContext(),list);
-		list_view_poke.setAdapter(adapter);
-		list_view_poke.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				// TODO Auto-generated method stub
-				clickPokeListItem(position);
-			}
-		});
-		list_view_poke.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				dialog_manager.openLongClickDialog(poke_list[position]);
-				return true;
-			}
-		});
-		
-		StringBuilder sb=new StringBuilder();
-		if(toast!=null){
-			sb.append(toast);
-		}
-		if(prev_poke_num!=poke_list.length){
-			if(toast!=null) sb.append(" ");
-			sb.append(prev_poke_num);
-			sb.append("匹→");
-			sb.append(poke_list.length);
-			sb.append("匹");
-		}
-		Utility.popToast(this, new String(sb));
-		prev_poke_num=poke_list.length;
-		refreshTitle();
 	}
 	
 	/**
 	 * タイトルを更新
 	 * @param poke_num
 	 */
-	private void refreshTitle(){
+	private void refreshTitle(String title){
 		StringBuilder sb=new StringBuilder();
 		sb.append(title);
 		sb.append("(");
@@ -688,6 +818,16 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		sb.append("匹)");
 		text_title.setText(new String(sb));
 	}
+	/**
+	 * 選択モードを設定する
+	 * @param mode
+	 */
+	private void setChoiceMode(ListChoiceModes mode){
+		choice_mode=mode;
+	}
+	
+	
+	
 	/**
 	 * 検索条件を適用
 	 * @param search_if
@@ -700,12 +840,36 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	}
 	
 	/**
+	 * 複数選択モードに移行
+	 */
+	private void shiftMultipleChoiceMode(){
+		Utility.log(TAG,"shiftMultipleChoiceMode");
+		setChoiceMode(ListChoiceModes.MULTIPLE);
+		refreshListView("複数選択モード");
+	}
+	/**
+	 *　単一選択モードに移行
+	 */
+	private void shiftSingleChoiceMode(String toast){
+		Utility.log(TAG, "shiftSingleChoiceMode");
+		setChoiceMode(ListChoiceModes.SINGLE);
+		list_view_poke.setItemsCanFocus(true);
+		list_view_poke.setChoiceMode(ListView.CHOICE_MODE_NONE);
+		if(toast!=null){
+			refreshListView(toast);
+		}else{
+			refreshListView("複数選択モード 終了");
+		}
+	}
+	
+	/**
 	 * ポケモンリストをソート
 	 */
 	private void sortPokeList(){
-		this.text_no.setTextColor(Color.rgb(255,255,255));
-		this.text_name.setTextColor(Color.rgb(255,255,255));
-		this.text_info.setTextColor(Color.rgb(255,255,255));
+		int color=choice_mode==ListChoiceModes.SINGLE?Color.rgb(255,255,255):Color.rgb(200, 200, 200);
+		this.text_no.setTextColor(color);
+		this.text_name.setTextColor(color);
+		this.text_info.setTextColor(color);
 		switch(sort_type){
 			case NO:
 				Arrays.sort(poke_list, new Comparator<PokeData>(){

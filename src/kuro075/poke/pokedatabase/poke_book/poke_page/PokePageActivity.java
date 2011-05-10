@@ -329,14 +329,14 @@ public class PokePageActivity extends PokeBookMenuActivity{
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		MenuItems.SAVE.addMenuItem(menu);
+		MenuItems.PAGE_SAVE.addMenuItem(menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch(MenuItems.fromId(item.getItemId())){
-			case SAVE:
+			case PAGE_SAVE:
 				DataStore.DataTypes.POKEMON.openSaveStarDialog(this, poke.getName());
 				break;
 		}

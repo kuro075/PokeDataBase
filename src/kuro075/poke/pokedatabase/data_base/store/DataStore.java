@@ -73,15 +73,16 @@ public class DataStore {
 	
 		/**
 		 * お気に入り登録ダイアログ
+		 * Title:nameをお気に入りに登録しますか？
+		 * 登録 or Cancel
 		 * @param context
-		 * @param name
+		 * @param name 登録する名前
 		 */
 		public void openSaveStarDialog(final Context context,final String name){
 			if(star_store.indexPageOf(name)>=0){
 				Utility.popToast(context, "既に登録されています");
 			}else{
 				AlertDialog.Builder builder;
-				
 				//final View layout = factory.inflate(R.layout.simple_dialog, null);
 				builder = new AlertDialog.Builder(context);
 				StringBuilder sb=new StringBuilder();
@@ -113,6 +114,42 @@ public class DataStore {
 				});
 				builder.create().show();
 			}
+		}
+		
+		/**
+		 * お気に入り登録ダイアログを開く
+		 * Title:お気に入りに登録しますか？
+		 * 登録 or Cancel
+		 * @param context
+		 * @param names 登録する名前配列
+		 */
+		public void openSaveStarDialog(final Context context,final String[] names){
+			StringBuilder sb=new StringBuilder();
+			for(int i=0,n=names.length;i<n;i++){
+				sb.append(names[i]);
+				if(i!=n-1){
+					sb.append("・");
+				}
+			}
+			Utility.openSimpleTextDialog(context,"お気に入りに登録しますか？", new String(sb), 
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						getStarStore().addPageData(names);
+						StringBuilder sb=new StringBuilder();
+						sb.append("「");
+						for(int i=0,n=names.length;i<n;i++){
+							sb.append(names[i]);
+							if(i!=n-1){
+								sb.append("・");
+							}
+						}
+						sb.append("」をお気に入りに登録しました");
+						Utility.popToast(context, new String(sb));
+					}
+				}
+			);
 		}
 		/**
 		 * ショートカット登録ダイアログ
@@ -395,6 +432,7 @@ public class DataStore {
 					sb.append(search.getTitle());
 					sb.append("」をショートカットから削除しました");
 					Utility.popToast(context, new String(sb));
+					openShortCutDialog(context);
 					dialog.dismiss();
 				}
 			});
@@ -446,6 +484,20 @@ public class DataStore {
 	}
 	
 	/**
+	 * ページを複数追加
+	 * @param names
+	 */
+	public void addPageData(String[] names){
+		for(String name:names){
+			int index=indexPageOf(name);
+			if(index>=0){
+				page_data_list.remove(index);
+			}
+			page_data_list.add(new PageHistoryData(page_data_list.size(),name,getDate()));
+		}
+		writePageFile();
+	}
+	/**
 	 * 検索条件を追加
 	 * @param search_ifs
 	 */
@@ -454,7 +506,23 @@ public class DataStore {
 		if(index>=0){
 			search_data_list.remove(index);
 		}
-		search_data_list.add(new SearchHistoryData(search_data_list.size(),title,search_ifs));
+		String new_title=title;
+		int num=2;
+		boolean find_flag=false;
+		do{
+			find_flag=false;
+			for(SearchHistoryData search:search_data_list){
+				if(search.getTitle().equals(new_title)){
+					StringBuilder sb=new StringBuilder();
+					sb.append(title);
+					sb.append(num);
+					new_title=new String(sb);
+					num++;
+					find_flag=true;
+				}
+			}
+		}while(find_flag);
+		search_data_list.add(new SearchHistoryData(search_data_list.size(),new_title,search_ifs));
 		writeSearchFile();
 	}
 

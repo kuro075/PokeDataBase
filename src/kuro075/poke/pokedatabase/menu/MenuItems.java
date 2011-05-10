@@ -20,11 +20,18 @@ public enum MenuItems {
 	/===========================*/
 	SEARCH_RESULT_VIEW_CHANGE("表示切替",android.R.drawable.ic_menu_manage),
 	SEARCH_RESULT_OPERATE("操作",android.R.drawable.ic_menu_zoom),
-	//SEARCH_RESULT_SELECT("複数選択",android.R.drawable.),
+	SEARCH_RESULT_MULTIPLE_SELECT("複数選択",android.R.drawable.ic_menu_agenda),
+	SEARCH_RESULT_SINGLE_SELECT("複数選択 解除",android.R.drawable.ic_menu_close_clear_cancel),
+	SEARCH_RESULT_REMOVE("除外",android.R.drawable.ic_menu_delete),
+	SEARCH_RESULT_SAVE("ショートカットに登録",android.R.drawable.ic_menu_save),
+
+	/*===============/
+ 	/  PageActivity  /
+	/===============*/
+	PAGE_SAVE("お気に入りに登録",android.R.drawable.ic_menu_save),
 	/*
 	 * 汎用
 	 */
-	SAVE("登録",android.R.drawable.ic_menu_save),
 	UNDO("元に戻す",android.R.drawable.ic_menu_revert);
 	
 	

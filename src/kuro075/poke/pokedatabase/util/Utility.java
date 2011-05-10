@@ -137,4 +137,32 @@ public class Utility {
 		builder.create().show();
 	}
 
+	/**
+	 * テキストを表示するダイアログ
+	 * @param context
+	 * @param title
+	 * @param text
+	 * @param ok_listener OKボタンを押した時のリスナー
+	 */
+	public static void openSimpleTextDialog(Context context,String title,String text,DialogInterface.OnClickListener ok_listener){
+		AlertDialog.Builder builder;
+		
+		builder = new AlertDialog.Builder(context);
+		builder.setTitle(title);
+
+		LayoutInflater factory=LayoutInflater.from(context);
+		final View layout = factory.inflate(R.layout.simple_text_dialog,null);
+		builder.setView(layout);
+		((TextView)layout.findViewById(R.id.text)).setText(text);
+		
+		builder.setPositiveButton("OK",ok_listener);
+		builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		});
+		builder.create().show();
+	}
 }

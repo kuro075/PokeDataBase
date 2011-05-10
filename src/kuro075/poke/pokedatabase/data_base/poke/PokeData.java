@@ -234,6 +234,7 @@ public class PokeData extends BasicData implements Serializable{
 	
 	
 	//==No,タイプ、とくせい、種族値、努力値
+	private final String string_no;//文字列のNo
 	private final TypeData[] types;//タイプ
 	private final CharacterData[] characters;//とくせい
 	private final int[] specs,effs;//種族値,努力値
@@ -281,6 +282,15 @@ public class PokeData extends BasicData implements Serializable{
 	{
 		super(name,no);
 		// TODO Auto-generated constructor stub
+		//Noを文字列にして保存
+		StringBuilder sb=new StringBuilder();
+		if(no<10){
+			sb.append("00");
+		}else if(no<100){
+			sb.append("0");
+		}
+		sb.append(no);
+		string_no=new String(sb);
 		this.types=types;
 		this.characters=characters;
 		this.specs=specs;
@@ -591,15 +601,7 @@ public class PokeData extends BasicData implements Serializable{
 	 * @return
 	 */
 	public String getNo2String(){
-		int no=getNo();
-		StringBuilder sb=new StringBuilder();
-		if(no<10){
-			sb.append("00");
-		}else if(no<100){
-			sb.append("0");
-		}
-		sb.append(no);
-		return new String(sb);
+		return string_no;
 	}
 	
 	/**
