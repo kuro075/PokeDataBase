@@ -1,22 +1,12 @@
 package kuro075.poke.pokedatabase.data_base;
 
-import java.io.Serializable;
-
 /**
  * すべてのデータクラスのスーパークラス
  * 
  * @author sanogenma
  *
  */
-public class BasicData implements Comparable<BasicData>,Serializable{
-
-	/**
-	 * シリアルバージョンID
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	
-
+public class BasicData implements Comparable<BasicData>{
 	//名前
 	final private String Name;
 	final private int no;

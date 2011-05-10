@@ -12,6 +12,7 @@ import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
 import kuro075.poke.pokedatabase.data_base.poke.viewable_informations.ViewableInformations;
+import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.menu.MenuItems;
 import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.poke_page.PokePageActivity;
@@ -68,9 +69,16 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 						  filter_dialog,//絞込ダイアログ
 						  add_dialog,//追加ダイアログ
 						  remove_dialog,//除外ダイアログ
-						  view_change_dialog;//表示切替ダイアログ
+						  view_change_dialog,//表示切替ダイアログ
+						  long_click_dialog;//リストを長押ししたときのダイアログ
+		ListView list_view_for_long_click_dialog;//long_click_dialogのリストビュー
+		
 		SearchIfListener listener = new MySearchIfReceiver();
 		SearchTypes prev_open=SearchTypes.FILTER;
+
+		//除外or登録　選択ダイアログを表示
+		private final String[] long_click_dialog_list_items={"除外","登録"};
+		
 		/**
 		 * コンストラクタ
 		 * 全ダイアログを初期化
@@ -82,6 +90,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			add_dialog=getDialog(SearchTypes.ADD);
 			remove_dialog=getDialog(SearchTypes.REMOVE);
 			view_change_dialog=getViewChangeDialog();
+			long_click_dialog=getLongClickDialog();
 		}
 		/**
 		 * (絞込・追加・除外)ダイアログを作成・取得
@@ -197,6 +206,33 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			});
 			return builder.create();
 		}
+
+		/**
+		 * ポケモンリストを長押しした時に表示するダイアログ
+		 * @return
+		 */
+		private AlertDialog getLongClickDialog(){
+			AlertDialog.Builder builder;
+			LayoutInflater factory=LayoutInflater.from(context);
+			
+			final View layout = factory.inflate(R.layout.simple_list_dialog,null);
+			builder = new AlertDialog.Builder(context);
+			builder.setView(layout);
+			
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,long_click_dialog_list_items);
+			list_view_for_long_click_dialog = (ListView) layout.findViewById(R.id.list_view);
+			list_view_for_long_click_dialog.setAdapter(adapter);
+			//閉じるボタン
+			builder.setPositiveButton("閉じる",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			});
+			return builder.create();
+		}
+		
 		/**
 		 * (絞込・追加・除外)ダイアログを開く
 		 * @param type
@@ -228,6 +264,56 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		private void openViewChangeDialog(){
 			Utility.log(TAG, "openViewChangeDialog");
 			view_change_dialog.show();
+		}
+		
+		/**
+		 * リストを長押しした時に表示するダイアログ
+		 * タイトル、リストを選択した時のリスナーを設定後、ダイアログを開く
+		 * @param target
+		 */
+		private void openLongClickDialog(final PokeData target){
+			StringBuilder sb=new StringBuilder();
+			sb.append("「");
+			sb.append(target.toString());
+			sb.append("」をどうする?");
+			long_click_dialog.setTitle(new String(sb));
+			list_view_for_long_click_dialog.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+					// TODO Auto-generated method stub
+					Utility.log(TAG,"onItemClick");
+					if(long_click_dialog_list_items[position].equals("除外")){
+						StringBuilder sb=new StringBuilder();
+						sb.append("「");
+						sb.append(target.toString());
+						sb.append("」を除外しますか？");
+						Utility.openCheckDialog(context, new String(sb), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// TODO Auto-generated method stub
+								String search_if=SearchableInformations.getRemoveIf(target);
+								setSearchIf(search_if);
+								StringBuilder sb=new StringBuilder();
+								sb.append("「");
+								sb.append(target.toString());
+								sb.append("」を除外しました。");
+								
+								refreshListView(new String(sb));
+								dialog.dismiss();
+							}
+						});
+					}else
+						/*
+						 * お気に入りに登録or手持ち管理に登録
+						 */
+					if(long_click_dialog_list_items[position].equals("登録")){
+						//お気に入りに登録
+						DataStore.DataTypes.POKEMON.openSaveStarDialog(context, target.toString());
+					}
+					long_click_dialog.dismiss();
+				}
+			});
+			long_click_dialog.show();
 		}
 	}
 	/**
@@ -287,6 +373,9 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		intent.putExtra(KEY_TITLE, title);
 		intent.putExtra(KEY_SEARCH_IF, search_ifs);
 		context.startActivity(intent);
+		if(search_ifs.length>0){
+			DataStore.DataTypes.POKEMON.getHistoryStore().addSearchDataWithoutTitle(search_ifs);
+		}
 	}
 	/**
 	 * このアクティビティーをstartさせる
@@ -300,6 +389,20 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		String[] ifs=new String[1];
 		ifs[0]=info.getDefaultSearchIf(_case);
 		startThisActivity(context,info.getDefaultTitle(_case),ifs);
+	}
+	/**
+	 * このアクティビティーをstartさせる
+	 * 履歴を保存しない
+	 * @param context
+	 * @param title
+	 * @param search_ifs
+	 */
+	public static void startThisActivityWithoutHistory(Context context,String title,String[] search_ifs){
+		Utility.log(TAG, "startThisActivityWithoutHistory");
+		Intent intent = new Intent(context,SearchResultActivity.class);
+		intent.putExtra(KEY_TITLE, title);
+		intent.putExtra(KEY_SEARCH_IF, search_ifs);
+		context.startActivity(intent);
 	}
 	/*================/
 	/  インスタンス変数  /
@@ -345,7 +448,19 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			tv.setTextSize(17.0f);
 			linearlayout.addView(tv);
 		}
-		builder.setPositiveButton("閉じる", new DialogInterface.OnClickListener() {
+		final Context context=this;
+		if(search_ifs.size()>0){
+			builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					DataStore.DataTypes.POKEMON.openSaveShortCutDialog(context, search_ifs.toArray(new String[0]));
+					dialog.dismiss();
+				}
+			});
+		}
+		
+		builder.setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
@@ -396,14 +511,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		sb.append("に切り替えました。");
 		refreshListView(new String(sb));
 	}
-	/**
-	 * ポケモンリストを長押しした時の動作
-	 * @author sanogenma
-	 *
-	 */
-	private void longClickPokeListItem(int position){
-		Utility.log(TAG, "longClickPokeListItem");
-	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -476,27 +584,31 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		MenuItems.POKE_SEARCH_RESULT_VIEW_CHANGE.addMenuItem(menu);
-		MenuItems.POKE_SEARCH_RESULT_OPERATE.addMenuItem(menu);
+		MenuItems.SEARCH_RESULT_VIEW_CHANGE.addMenuItem(menu);
+		MenuItems.SEARCH_RESULT_OPERATE.addMenuItem(menu);
 		MenuItems.UNDO.addMenuItem(menu);
-		MenuItems.POKE_SEARCH_RESULT_SAVE.addMenuItem(menu);
+		MenuItems.SAVE.addMenuItem(menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
+	/**
+	 * メニューアイテムが選択された時の動作
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch(MenuItems.fromId(item.getItemId())){
-			case POKE_SEARCH_RESULT_VIEW_CHANGE://表示切替
+			case SEARCH_RESULT_VIEW_CHANGE://表示切替
 				dialog_manager.openViewChangeDialog();
 				break;
-			case POKE_SEARCH_RESULT_OPERATE://操作
+			case SEARCH_RESULT_OPERATE://操作
 				dialog_manager.openOperateDialog();
 				break;
 			case UNDO:
 				undo();
 				break;
-			case POKE_SEARCH_RESULT_SAVE://保存
+			case SAVE://保存
+				DataStore.DataTypes.POKEMON.openSaveShortCutDialog(this, search_ifs.toArray(new String[0]));
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -506,8 +618,10 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
 		menu.findItem(MenuItems.UNDO.getId()).setVisible(this.prev_search_ifs.size()>0);
+		menu.findItem(MenuItems.SAVE.getId()).setVisible(this.prev_search_ifs.size()>0);
 		return super.onPrepareOptionsMenu(menu);
 	}
+	
 	/**
 	 * リストビューを更新
 	 */
@@ -541,7 +655,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				longClickPokeListItem(position);
+				dialog_manager.openLongClickDialog(poke_list[position]);
 				return true;
 			}
 		});
@@ -586,26 +700,6 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	}
 	
 	/**
-	 * undoを行う
-	 */
-	private void undo(){
-		Utility.log(TAG,"undo");
-		//データ初期化
-		poke_list=PokeDataManager.INSTANCE.getAllPokeData();//poke_list初期化
-		for(int i=0,n=search_ifs.size();i<n;i++){
-			search_ifs.remove(0);
-		}
-		final int last_index=prev_search_ifs.size()-1;//最新undoデータのインデックスを取得
-		//最新undoデータを適用
-		for(String _if:prev_search_ifs.get(last_index)){
-			poke_list=SearchableInformations.searchBySearchIf(poke_list, _if);
-			search_ifs.add(_if);
-		}
-		prev_search_ifs.remove(last_index);//最新undoデータを削除
-		
-		this.refreshListView("undoを実行");
-	}
-	/**
 	 * ポケモンリストをソート
 	 */
 	private void sortPokeList(){
@@ -636,5 +730,25 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		if(flag_reverse){//逆順にソート
 			Utility.reverseArray(poke_list);
 		}
+	}
+	/**
+	 * undoを行う
+	 */
+	private void undo(){
+		Utility.log(TAG,"undo");
+		//データ初期化
+		poke_list=PokeDataManager.INSTANCE.getAllPokeData();//poke_list初期化
+		for(int i=0,n=search_ifs.size();i<n;i++){
+			search_ifs.remove(0);
+		}
+		final int last_index=prev_search_ifs.size()-1;//最新undoデータのインデックスを取得
+		//最新undoデータを適用
+		for(String _if:prev_search_ifs.get(last_index)){
+			poke_list=SearchableInformations.searchBySearchIf(poke_list, _if);
+			search_ifs.add(_if);
+		}
+		prev_search_ifs.remove(last_index);//最新undoデータを削除
+		
+		this.refreshListView("undoを実行");
 	}
 }

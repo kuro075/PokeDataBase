@@ -12,6 +12,11 @@ import kuro075.poke.pokedatabase.data_base.BasicData;
  */
 public class ItemData extends BasicData{
 
+	@Override
+	public int compareTo(BasicData another) {
+		// TODO Auto-generated method stub
+		return this.getNo()-another.getNo();
+	}
 	/**
 	 * 
 	 */
@@ -19,7 +24,7 @@ public class ItemData extends BasicData{
 	
 	protected static class Builder{
 		private String name="-";//名前
-		private int no=-1;//管理ナンバー
+		private int no=999;//管理ナンバー
 		private ItemClasses item_class=null;//分類
 		private ItemSubClasses item_sub_class=null;//サブ分類
 		private int buy_value=-1;//買値

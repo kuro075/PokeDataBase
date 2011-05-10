@@ -1,6 +1,7 @@
 package kuro075.poke.pokedatabase.poke_book;
 
 import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -41,6 +42,8 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 	/================*/
 	private Button button_all_pokes;//全ポケモン
 	private Button button_detail_search;//詳細検索
+	private Button button_star;//お気に入り
+	private Button button_short_cut;//ショートカット
 	private Button button_free_word;//フリーワード検索
 	private EditText edit_free_word;//フリーワード検索のワード
 	
@@ -98,6 +101,25 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				clickButtonDetailSearch();
+			}
+		});
+		final Context context=this;
+		//お気に入り
+		button_star=(Button)findViewById(R.id.button_star);
+		button_star.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				DataStore.DataTypes.POKEMON.openStarDialog(context);
+			}
+		});
+		//ショートカット
+		button_short_cut=(Button)findViewById(R.id.button_short_cut);
+		button_short_cut.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				DataStore.DataTypes.POKEMON.openShortCutDialog(context);
 			}
 		});
 		//フリーワード検索

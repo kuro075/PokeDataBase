@@ -3,8 +3,22 @@ package kuro075.poke.pokedatabase.util;
 import java.util.Arrays;
 import java.util.List;
 
+import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -99,4 +113,28 @@ public class Utility {
 		}
 		return string_array;
 	}
+
+	
+	/**
+	 * OK・Cancelボタンのついた確認ダイアログを開く
+	 * @param context
+	 * @param title
+	 * @param listener
+	 */
+	public static void openCheckDialog(Context context,String title,DialogInterface.OnClickListener listener){
+		AlertDialog.Builder builder;
+		
+		builder = new AlertDialog.Builder(context);
+		builder.setTitle(title);
+		builder.setPositiveButton("OK",listener);
+		builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		});
+		builder.create().show();
+	}
+
 }
