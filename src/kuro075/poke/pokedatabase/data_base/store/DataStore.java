@@ -199,6 +199,9 @@ public class DataStore {
 			}
 		}
 		
+		/*======/
+		/  履歴  /
+		/======*/
 		/**
 		 * 履歴ダイアログを開く
 		 * @param context
@@ -250,27 +253,42 @@ public class DataStore {
 					sb.append("「");
 					sb.append(histories[position]);
 					sb.append("」");
-					sb.append("を削除しますか？");
-					Utility.openCheckDialog(context, new String(sb),new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							getHistoryStore().removePageData(histories[position]);
-							openHistoryDialog(context);
-							StringBuilder sb=new StringBuilder();
-							sb.append("「");
-							sb.append(histories[position]);
-							sb.append("」を削除しました");
-							Utility.popToast(context, new String(sb));
-							dialog.dismiss();
+					sb.append("を履歴から削除しますか？");
+					
+					Utility.openCheckDialog(context, new String(sb),
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// TODO Auto-generated method stub
+								getHistoryStore().removePageData(histories[position]);
+								StringBuilder sb=new StringBuilder();
+								sb.append("「");
+								sb.append(histories[position]);
+								sb.append("」を履歴から削除しました");
+								Utility.popToast(context, new String(sb));
+								openHistoryDialog(context);
+								dialog.dismiss();
+							}
+						},
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// TODO Auto-generated method stub
+								openHistoryDialog(context);
+								dialog.dismiss();
+							}
 						}
-					});
+					);
 					return true;
 				}
 			});
 			dialog.show();
 		}
 		
+		
+		/*===========/
+		/  お気に入り  /
+		/===========*/
 		/**
 		 * お気に入りダイアログを開く
 		 * @param context
@@ -309,37 +327,47 @@ public class DataStore {
 				}
 			});
 			//リストを長押しした時の動作
-			//削除確認ダイアログを表示して削除
+			//お気に入り編集ダイアログを開く
 			listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 				@Override
 				public boolean onItemLongClick(AdapterView<?> parent, View view,
 						final int position, long id) {
 					// TODO Auto-generated method stub
+					Utility.openSimpleTextDialog(context, "お気に入りから削除しますか？", stars[position].getName(), 
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									getStarStore().removePageData(stars[position]);
+									StringBuilder sb=new StringBuilder();
+									sb.append("「");
+									sb.append(stars[position].getName());
+									sb.append("」をお気に入りから削除しました");
+									Utility.popToast(context, new String(sb));
+									openStarDialog(context);
+									dialog.dismiss();
+								}
+							},
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									openStarDialog(context);
+									dialog.dismiss();
+								}
+							}
+					);
 					dialog.dismiss();
-					StringBuilder sb=new StringBuilder();
-					sb.append("「");
-					sb.append(stars[position]);
-					sb.append("」");
-					sb.append("を削除しますか？");
-					Utility.openCheckDialog(context, new String(sb),new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							getStarStore().removePageData(stars[position]);
-							openStarDialog(context);
-							StringBuilder sb=new StringBuilder();
-							sb.append("「");
-							sb.append(stars[position]);
-							sb.append("」をお気に入りから削除しました");
-							Utility.popToast(context, new String(sb));
-							dialog.dismiss();
-						}
-					});
 					return true;
 				}
 			});
 			dialog.show();
 		}
+		
+		
+		/*==============/
+		/  ショートカット  /
+		/==============*/
 		/**
 		 * ショートカットダイアログを開く
 		 * @param context
@@ -390,8 +418,8 @@ public class DataStore {
 			dialog.show();
 		}
 		/**
-		 * 検索条件詳細表示ダイアログ
-		 * 「表示・削除」ボタン
+		 * 検索条件詳細表示ダイアログ(←ShortCutDialogの長押しから
+		 * 「編集・削除・戻る」ボタン
 		 * @param context
 		 * @param search
 		 */
@@ -412,8 +440,8 @@ public class DataStore {
 				tv.setTextSize(17.0f);
 				linearlayout.addView(tv);
 			}
-			
-			//表示ボタン
+			/*
+			//表示ボタン(検索結果アクティビティーに
 			builder.setPositiveButton("表示", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -421,17 +449,53 @@ public class DataStore {
 					startSearchResultActivity(context,search.getTitle(),search.getSearchIfs());
 					dialog.dismiss();
 				}
-			});
-			//削除ボタン
-			builder.setNegativeButton("削除",new DialogInterface.OnClickListener(){
+			});*/
+			
+			//編集ボタン
+			builder.setPositiveButton("編集", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					getStarStore().removeSearchData(search);
-					StringBuilder sb=new StringBuilder();
-					sb.append("「");
-					sb.append(search.getTitle());
-					sb.append("」をショートカットから削除しました");
-					Utility.popToast(context, new String(sb));
+					// TODO Auto-generated method stub
+					openEditShortCutTitleDialog(context,search);
+					dialog.dismiss();
+				}
+			});
+			//削除ボタン
+			//ショートカット削除確認ダイアログを開く
+			builder.setNeutralButton("削除", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					Utility.openSimpleTextDialog(context, "ショートカットから削除しますか？", search.getTitle(), 
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									getStarStore().removeSearchData(search);
+									StringBuilder sb=new StringBuilder();
+									sb.append("「");
+									sb.append(search.getTitle());
+									sb.append("」をショートカットから削除しました");
+									Utility.popToast(context, new String(sb));
+									openShortCutDialog(context);
+									dialog.dismiss();
+								}
+							},
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									openSearchIfDetailViewDialog(context,search);
+									dialog.dismiss();
+								}
+							}
+					);
+				}
+			});
+			//戻るボタン
+			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
 					openShortCutDialog(context);
 					dialog.dismiss();
 				}
@@ -439,6 +503,55 @@ public class DataStore {
 			builder.create().show();
 		}
 		
+		/**
+		 * ショートカットタイトル編集ダイアログを開く（←SearchIfDetailViewDialogの編集ボタンから
+		 * 「編集・削除・戻る」ボタン
+		 * @param context
+		 * @param search
+		 */
+		private void openEditShortCutTitleDialog(final Context context,final SearchHistoryData search){
+			AlertDialog.Builder builder=new AlertDialog.Builder(context);
+			LayoutInflater factory=LayoutInflater.from(context);
+			
+			final View layout = factory.inflate(R.layout.simple_edit_dialog, null);
+			builder = new AlertDialog.Builder(context);
+			builder.setTitle("タイトルを入力してください");
+			builder.setView(layout);
+			final EditText edit_text=((EditText)layout.findViewById(R.id.edit));
+			edit_text.setHint("ショートカット");
+			edit_text.setText(search.getTitle());
+			//変更ボタン
+			//タイトルを変更する
+			builder.setPositiveButton("変更",new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					String title=edit_text.getText().toString();
+					if(title.equals("")){
+						title=edit_text.getHint().toString();
+					}
+					getStarStore().addSearchData(title, search);
+					StringBuilder sb=new StringBuilder();
+					sb.append("タイトルを「");
+					sb.append(title);
+					sb.append("」");
+					sb.append("に変更しました");
+					Utility.popToast(context, new String(sb));
+					openShortCutDialog(context);
+				}
+			});
+			
+			//戻るボタン（詳細ビューダイアログを開く
+			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					openSearchIfDetailViewDialog(context,search);
+					dialog.dismiss();
+				}
+			});
+			builder.create().show();
+		}
 		
 		abstract void startSearchResultActivity(Context context,String title,String[] search_ifs);
 		abstract void startPageActivity(Context context,String name);
@@ -526,6 +639,15 @@ public class DataStore {
 		writeSearchFile();
 	}
 
+	/**
+	 * 検索条件を新しいタイトルで追加
+	 * （検索条件のタイトル変更
+	 * @param new_title　新しいタイトル
+	 * @param search　前のデータ
+	 */
+	public void addSearchData(String new_title,SearchHistoryData search){
+		addSearchData(new_title,search.getSearchIfs());
+	}
 	/**
 	 * タイトル無しで検索条件を追加(タイトルには日時が保存される
 	 * @param search_ifs

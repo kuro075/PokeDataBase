@@ -121,22 +121,26 @@ public class Utility {
 	 * @param title
 	 * @param listener
 	 */
-	public static void openCheckDialog(Context context,String title,DialogInterface.OnClickListener listener){
-		AlertDialog.Builder builder;
-		
-		builder = new AlertDialog.Builder(context);
-		builder.setTitle(title);
-		builder.setPositiveButton("OK",listener);
-		builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener(){
+	public static void openCheckDialog(Context context,String title,DialogInterface.OnClickListener ok_listener){
+		openCheckDialog(context,title,ok_listener,new DialogInterface.OnClickListener(){
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
 			}
 		});
-		builder.create().show();
 	}
 
+	public static void openCheckDialog(Context context,String title,DialogInterface.OnClickListener ok_listener,DialogInterface.OnClickListener cancel_listener){
+		AlertDialog.Builder builder;
+		
+		builder = new AlertDialog.Builder(context);
+		builder.setTitle(title);
+		builder.setPositiveButton("OK",ok_listener);
+		builder.setNegativeButton("Cancel",cancel_listener);
+		builder.create().show();
+	}
+	
 	/**
 	 * テキストを表示するダイアログ
 	 * @param context
@@ -145,6 +149,23 @@ public class Utility {
 	 * @param ok_listener OKボタンを押した時のリスナー
 	 */
 	public static void openSimpleTextDialog(Context context,String title,String text,DialogInterface.OnClickListener ok_listener){
+		openSimpleTextDialog(context,title,text,ok_listener,new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		});
+	}
+	/**
+	 * テキストを表示するダイアログ
+	 * @param context
+	 * @param title
+	 * @param text
+	 * @param ok_listener OKボタンを押した時のリスナー
+	 * @param cancel_listener Cancelボタンを押した時のリスナー
+	 */
+	public static void openSimpleTextDialog(Context context,String title,String text,DialogInterface.OnClickListener ok_listener,DialogInterface.OnClickListener cancel_listener){
 		AlertDialog.Builder builder;
 		
 		builder = new AlertDialog.Builder(context);
@@ -156,13 +177,7 @@ public class Utility {
 		((TextView)layout.findViewById(R.id.text)).setText(text);
 		
 		builder.setPositiveButton("OK",ok_listener);
-		builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener(){
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				dialog.dismiss();
-			}
-		});
+		builder.setNegativeButton("Cancel",cancel_listener);
 		builder.create().show();
 	}
 }

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -41,7 +42,9 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 	/  インスタンス変数  /
 	/================*/
 	private Button button_all_pokes;//全ポケモン
+	private Button button_aiueo;//あいうえお順
 	private Button button_detail_search;//詳細検索
+	private Button button_history;//履歴
 	private Button button_star;//お気に入り
 	private Button button_short_cut;//ショートカット
 	private Button button_free_word;//フリーワード検索
@@ -56,8 +59,16 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 		Utility.log(TAG, "clickButtonAllPokes");
 		SearchResultActivity.startThisActivity(this);
 	}
+	
 	/**
-	 * button_detail_searchがクリックされた時のリスナー
+	 * button_aiueoがクリックされたとき
+	 */
+	private void clickButtonAiueo(){
+		Utility.log(TAG,"clickButtonAiueo");
+		
+	}
+	/**
+	 * button_detail_searchがクリックされた時
 	 * @author sanogenma
 	 *
 	 */
@@ -67,7 +78,7 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 	}
 	
 	/**
-	 * button_free_wordがクリックされた時のリスナー
+	 * button_free_wordがクリックされた時
 	 * @author sanogenma
 	 *
 	 */
@@ -75,10 +86,12 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 		Utility.log(TAG, "clickButtonFreeWord");
 	}
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);  
 		setContentView(R.layout.poke_book_layout);
 		Utility.log(TAG, "onCreate");
 		
@@ -94,6 +107,15 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 				clickButtonAllPokes();
 			}
 		});
+		//あいうえお順
+		button_aiueo=(Button)findViewById(R.id.button_aiueo);
+		button_aiueo.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				clickButtonAiueo();
+			}
+		});
 		//詳細検索
 		button_detail_search=(Button)findViewById(R.id.button_detail_search);
 		button_detail_search.setOnClickListener(new OnClickListener(){
@@ -104,6 +126,15 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 			}
 		});
 		final Context context=this;
+		//履歴
+		button_history=(Button)findViewById(R.id.button_history);
+		button_history.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				DataStore.DataTypes.POKEMON.openHistoryDialog(context);
+			}
+		});
 		//お気に入り
 		button_star=(Button)findViewById(R.id.button_star);
 		button_star.setOnClickListener(new OnClickListener(){
