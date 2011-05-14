@@ -383,6 +383,7 @@ public class DataStore {
 			builder.setView(layout);
 			
 			final SearchHistoryData[] short_cuts=this.getStarStore().getSearchDataList();
+			Arrays.sort(short_cuts);
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,Utility.changeToStringArray(short_cuts));
 			final ListView listView = (ListView) layout.findViewById(R.id.list_view);
 			listView.setAdapter(adapter);
