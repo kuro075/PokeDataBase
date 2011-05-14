@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 /**
  * 絞り込み、追加、除外を行える情報のenum
@@ -42,6 +43,109 @@ import android.widget.Spinner;
  *
  */
 public enum SearchableInformations implements SearchIfCategory{
+	NAME("名前"){
+		private final String HIRA="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉゃゅょっ-";
+		private final String KATA="アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォャュョッーｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｧｨｩｪｫｬｭｮｯ";
+		
+		/**
+		 * 平仮名を含む文字列を全てカタカナの文字列に変換して返す
+		 * 平仮名、カタカナ以外を含む場合は空の文字列("")を返す
+		 * @param text
+		 * @return
+		 */
+		public String changeHiraToKata(String text){
+			StringBuilder sb=new StringBuilder();
+			for(int i=0,n=text.length();i<n;i++){
+				char c=text.charAt(i);
+				//カタカナの場合
+				if(KATA.indexOf(c)>=0){
+					sb.append(c);
+					continue;
+				}
+				
+				int index=HIRA.indexOf(c);
+				//平仮名の場合
+				if(index>=0){
+					sb.append(KATA.charAt(index));
+					continue;
+				}
+				//それ以外
+				return "";
+			}
+			return new String(sb);
+		}
+		@Override
+		public void openDialog(final Context context, final SearchTypes search_type,
+				final SearchIfListener listener) {
+			// TODO Auto-generated method stub
+			Utility.log(toString(),"openDialog");
+			AlertDialog.Builder builder;
+			LayoutInflater factory=LayoutInflater.from(context);
+			
+			final View layout = factory.inflate(R.layout.string_input_dialog,null);
+			builder = new AlertDialog.Builder(context);
+			builder.setTitle(createDialogTitle(this, search_type));
+			builder.setView(layout);
+			
+			
+			final EditText edit=(EditText)layout.findViewById(R.id.edit);
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,Utility.changeToStringArray(NameSearchOptions.values()));
+			final Spinner spinner = (Spinner) layout.findViewById(R.id.spinner);
+			spinner.setAdapter(adapter);
+			((TextView)layout.findViewById(R.id.text)).setText("※ひらがな、カタカナのみ有効(ひらがなは、カタカナに自動変換されます)");
+
+			builder.setPositiveButton("検索",new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					String text=changeHiraToKata(edit.getText().toString());
+					if(text.equals("")){
+						Utility.popToast(context, "無効な文字列です");
+						listener.receiveSearchIf(null);
+					}else{
+						StringBuilder sb=new StringBuilder();
+						sb.append(text);
+						sb.append(" ");
+						sb.append(NameSearchOptions.values()[spinner.getSelectedItemPosition()]);
+						listener.receiveSearchIf(createSearchIf(NAME,new String(sb),search_type));
+					}
+				}
+			});
+			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					listener.receiveSearchIf(null);
+				}
+			});
+			
+			builder.create().show();
+		}
+
+		/**
+		 * @param poke_array
+		 * @param category
+		 * @param _case : "カタカナの文字列 NameSearchOption"
+		 * 
+		 */
+		@Override
+		public PokeData[] search(PokeData[] poke_array, String category,
+				String _case) {
+			// TODO Auto-generated method stub
+			if(toString().equals(category)){
+					String[] text_option=_case.split(" ");
+				NameSearchOptions option=NameSearchOptions.fromString(text_option[1]);
+				List<PokeData> poke_list=new ArrayList<PokeData>();
+				for(PokeData poke:poke_array){
+					if(option.compareOf(poke, text_option[0])){
+						poke_list.add(poke);
+					}
+				}
+				return poke_list.toArray(new PokeData[0]);
+			}
+			return new PokeData[0];
+		}
+	},
 	REGION("地方") {
 		/*===================================/
 		 * 地方で検索
