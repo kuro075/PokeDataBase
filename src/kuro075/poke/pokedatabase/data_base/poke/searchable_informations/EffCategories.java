@@ -325,7 +325,7 @@ public enum EffCategories implements SearchIfCategory{
 		
 		List<PokeData> list=new ArrayList<PokeData>();
 		for(PokeData poke:poke_array){
-			if(option.compareOf(poke.getEff(index), eff)){
+			if(option.compareOf(poke.getEff(Statuses.values()[index]), eff)){
 				list.add(poke);
 			}
 		}

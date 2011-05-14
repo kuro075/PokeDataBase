@@ -12,11 +12,7 @@ import kuro075.poke.pokedatabase.data_base.BasicData;
  */
 public class ItemData extends BasicData{
 
-	@Override
-	public int compareTo(BasicData another) {
-		// TODO Auto-generated method stub
-		return this.getNo()-another.getNo();
-	}
+
 	/**
 	 * 
 	 */
@@ -191,5 +187,11 @@ public class ItemData extends BasicData{
 	}
 	public String getGettingPlace() {
 		return getting_place;
+	}
+
+	@Override
+	public int compareTo(BasicData another) {
+		// TODO Auto-generated method stub
+		return this.getNo()-another.getNo();
 	}
 }

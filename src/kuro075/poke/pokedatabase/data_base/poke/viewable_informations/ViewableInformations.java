@@ -1,6 +1,8 @@
 package kuro075.poke.pokedatabase.data_base.poke.viewable_informations;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import kuro075.poke.pokedatabase.data_base.item.ItemData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
@@ -8,6 +10,7 @@ import kuro075.poke.pokedatabase.data_base.poke.PokeData.CharacterTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.EggGroups;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.ItemRarities;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Sexes;
+import kuro075.poke.pokedatabase.data_base.poke.PokeData.Statuses;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 /**
@@ -48,7 +51,7 @@ public enum ViewableInformations {
 			return new Comparator<PokeData>(){
 				@Override
 				public int compare(PokeData p1,PokeData p2){
-					return p1.getCharacter(CharacterTypes.FIRST).getNo()-p2.getCharacter(CharacterTypes.FIRST).getNo();
+					return p1.getCharacter(CharacterTypes.FIRST).compareTo(p2.getCharacter(CharacterTypes.FIRST));
 				}
 			};
 		}
@@ -64,7 +67,7 @@ public enum ViewableInformations {
 			return new Comparator<PokeData>(){
 				@Override
 				public int compare(PokeData p1,PokeData p2){
-					return p1.getCharacter(CharacterTypes.SECOND).getNo()-p2.getCharacter(CharacterTypes.SECOND).getNo();
+					return p1.getCharacter(CharacterTypes.SECOND).compareTo(p2.getCharacter(CharacterTypes.SECOND));
 				}
 			};
 		}
@@ -80,7 +83,7 @@ public enum ViewableInformations {
 			return new Comparator<PokeData>(){
 				@Override
 				public int compare(PokeData p1,PokeData p2){
-					return p1.getCharacter(CharacterTypes.DREAM).getNo()-p2.getCharacter(CharacterTypes.DREAM).getNo();
+					return p1.getCharacter(CharacterTypes.DREAM).compareTo(p2.getCharacter(CharacterTypes.DREAM));
 				}
 			};
 		}
@@ -90,7 +93,7 @@ public enum ViewableInformations {
 		public String getInformation(PokeData poke){
 			StringBuilder sb=new StringBuilder();
 			for(int i=0;i<6;i++){
-				sb.append(poke.getSpec(i));
+				sb.append(poke.getSpec(Statuses.values()[i]));
 				if(i<5) sb.append(",");
 			}
 			return new String(sb);
@@ -108,10 +111,10 @@ public enum ViewableInformations {
 		}
 	},
 	SPEC_HP("種族値(HP)"){
-		private final int spec_index=0;
+		private final Statuses status=Statuses.H;
 		@Override
 		public String getInformation(PokeData poke){
-			return String.valueOf(poke.getSpec(spec_index));
+			return String.valueOf(poke.getSpec(status));
 		}
 
 		@Override
@@ -120,16 +123,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getSpec(spec_index)-p2.getSpec(spec_index);
+					return p1.getSpec(status)-p2.getSpec(status);
 				}
 			};
 		}
 	},
 	SPEC_ATTACK("種族値(攻撃)"){
-		private final int spec_index=1;
+		private final Statuses status=Statuses.A;
 		@Override
 		public String getInformation(PokeData poke){
-			return String.valueOf(poke.getSpec(spec_index));
+			return String.valueOf(poke.getSpec(status));
 		}
 
 		@Override
@@ -138,16 +141,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getSpec(spec_index)-p2.getSpec(spec_index);
+					return p1.getSpec(status)-p2.getSpec(status);
 				}
 			};
 		}
 	},
 	SPEC_BLOCK("種族値(防御)"){
-		private final int spec_index=2;
+		private final Statuses status=Statuses.B;
 		@Override
 		public String getInformation(PokeData poke){
-			return String.valueOf(poke.getSpec(spec_index));
+			return String.valueOf(poke.getSpec(status));
 		}
 
 		@Override
@@ -156,16 +159,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getSpec(spec_index)-p2.getSpec(spec_index);
+					return p1.getSpec(status)-p2.getSpec(status);
 				}
 			};
 		}
 	},
 	SPEC_CONTACT("種族値(特殊)"){
-		private final int spec_index=3;
+		private final Statuses status=Statuses.C;
 		@Override
 		public String getInformation(PokeData poke){
-			return String.valueOf(poke.getSpec(spec_index));
+			return String.valueOf(poke.getSpec(status));
 		}
 
 		@Override
@@ -174,16 +177,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getSpec(spec_index)-p2.getSpec(spec_index);
+					return p1.getSpec(status)-p2.getSpec(status);
 				}
 			};
 		}
 	},
 	SPEC_DEFENSE("種族値(特防)"){
-		private final int spec_index=4;
+		private final Statuses status=Statuses.D;
 		@Override
 		public String getInformation(PokeData poke){
-			return String.valueOf(poke.getSpec(spec_index));
+			return String.valueOf(poke.getSpec(status));
 		}
 
 		@Override
@@ -192,16 +195,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getSpec(spec_index)-p2.getSpec(spec_index);
+					return p1.getSpec(status)-p2.getSpec(status);
 				}
 			};
 		}
 	},
 	SPEC_SPEED("種族値(素早)"){
-		private final int spec_index=5;
+		private final Statuses status=Statuses.S;
 		@Override
 		public String getInformation(PokeData poke){
-			return String.valueOf(poke.getSpec(spec_index));
+			return String.valueOf(poke.getSpec(status));
 		}
 
 		@Override
@@ -210,16 +213,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getSpec(spec_index)-p2.getSpec(spec_index);
+					return p1.getSpec(status)-p2.getSpec(status);
 				}
 			};
 		}
 	},
 	SPEC_TOTAL("種族値(合計)"){
-		private final int spec_index=6;
+		private final Statuses status=Statuses.TOTAL;
 		@Override
 		public String getInformation(PokeData poke){
-			return String.valueOf(poke.getSpec(spec_index));
+			return String.valueOf(poke.getSpec(status));
 		}
 
 		@Override
@@ -228,21 +231,95 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getSpec(spec_index)-p2.getSpec(spec_index);
+					return p1.getSpec(status)-p2.getSpec(status);
 				}
 			};
 		}
 	},
+	SPEC_MIN("種族値(最小)"){
+		private final Statuses status=Statuses.MIN;
+		@Override
+		public String getInformation(PokeData poke) {
+			// TODO Auto-generated method stub
+			List<Statuses> min_list=new ArrayList<Statuses>();
+			int min=poke.getSpec(status);
+			for(int i=0;i<6;i++){
+				if(min==poke.getSpec(Statuses.values()[i])){
+					min_list.add(Statuses.values()[i]);
+				}
+			}
+			StringBuilder sb=new StringBuilder();
+			sb.append(min);
+			sb.append(" (");
+			sb.append(min_list.get(0).toString());
+			for(int i=1,n=min_list.size();i<n;i++){
+				sb.append(",");
+				sb.append(min_list.get(i).toString());
+			}
+			sb.append(")");
+			return String.valueOf(new String(sb));
+		}
+
+		@Override
+		public Comparator<PokeData> getComparator() {
+			// TODO Auto-generated method stub
+			return new Comparator<PokeData>(){
+				@Override
+				public int compare(PokeData p1, PokeData p2) {
+					// TODO Auto-generated method stub
+					return p1.getSpec(status)-p2.getSpec(status);
+				}
+			};
+		}
+	},
+	SPEC_MAX("種族値(最大)"){
+		private final Statuses status=Statuses.MAX;
+		@Override
+		public String getInformation(PokeData poke) {
+			// TODO Auto-generated method stub
+			List<Statuses> max_list=new ArrayList<Statuses>();
+			int max=poke.getSpec(status);
+			for(int i=0;i<6;i++){
+				if(max==poke.getSpec(Statuses.values()[i])){
+					max_list.add(Statuses.values()[i]);
+				}
+			}
+			StringBuilder sb=new StringBuilder();
+			sb.append(max);
+			sb.append(" (");
+			sb.append(max_list.get(0).toString());
+			for(int i=1,n=max_list.size();i<n;i++){
+				sb.append(",");
+				sb.append(max_list.get(i).toString());
+			}
+			sb.append(")");
+			return String.valueOf(new String(sb));
+		}
+
+		@Override
+		public Comparator<PokeData> getComparator() {
+			// TODO Auto-generated method stub
+			return new Comparator<PokeData>(){
+				@Override
+				public int compare(PokeData p1, PokeData p2) {
+					// TODO Auto-generated method stub
+					return p1.getSpec(status)-p2.getSpec(status);
+				}
+			};
+		}
+	},
+	
+	
 	EFF_ALL("努力値(全て)"){
 		@Override
 		public String getInformation(PokeData poke){
 			StringBuilder sb=new StringBuilder();
 			for(int i=0;i<6;i++){
-				final int eff=poke.getEff(i);
+				final int eff=poke.getEff(Statuses.values()[i]);
 				if(eff>0){
 					sb.append("+");
 				}
-				sb.append(poke.getEff(i));
+				sb.append(poke.getEff(Statuses.values()[i]));
 				if(i<5) sb.append(",");
 			}
 			return new String(sb);
@@ -260,10 +337,10 @@ public enum ViewableInformations {
 		}
 	},
 	EFF_HP("努力値(HP)"){
-		private final int spec_index=0;
+		private final Statuses status = Statuses.H;
 		@Override
 		public String getInformation(PokeData poke){
-			final int eff=poke.getEff(spec_index);
+			final int eff=poke.getEff(status);
 			StringBuilder sb=new StringBuilder();
 			if(eff>0){
 				sb.append("+");
@@ -278,16 +355,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getEff(spec_index)-p2.getEff(spec_index);
+					return p1.getEff(status)-p2.getEff(status);
 				}
 			};
 		}
 	},
 	EFF_ATTACK("努力値(攻撃)"){
-		private final int spec_index=1;
+		private final Statuses status = Statuses.A;
 		@Override
 		public String getInformation(PokeData poke){
-			final int eff=poke.getEff(spec_index);
+			final int eff=poke.getEff(status);
 			StringBuilder sb=new StringBuilder();
 			if(eff>0){
 				sb.append("+");
@@ -302,16 +379,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getEff(spec_index)-p2.getEff(spec_index);
+					return p1.getEff(status)-p2.getEff(status);
 				}
 			};
 		}
 	},
 	EFF_BLOCK("努力値(防御)"){
-		private final int spec_index=2;
+		private final Statuses status = Statuses.B;
 		@Override
 		public String getInformation(PokeData poke){
-			final int eff=poke.getEff(spec_index);
+			final int eff=poke.getEff(status);
 			StringBuilder sb=new StringBuilder();
 			if(eff>0){
 				sb.append("+");
@@ -326,16 +403,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getEff(spec_index)-p2.getEff(spec_index);
+					return p1.getEff(status)-p2.getEff(status);
 				}
 			};
 		}
 	},
 	EFF_CONTACT("努力値(特殊)"){
-		private final int spec_index=3;
+		private final Statuses status = Statuses.C;
 		@Override
 		public String getInformation(PokeData poke){
-			final int eff=poke.getEff(spec_index);
+			final int eff=poke.getEff(status);
 			StringBuilder sb=new StringBuilder();
 			if(eff>0){
 				sb.append("+");
@@ -350,16 +427,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getEff(spec_index)-p2.getEff(spec_index);
+					return p1.getEff(status)-p2.getEff(status);
 				}
 			};
 		}
 	},
 	EFF_DEFENSE("努力値(特防)"){
-		private final int spec_index=4;
+		private final Statuses status = Statuses.H;
 		@Override
 		public String getInformation(PokeData poke){
-			final int eff=poke.getEff(spec_index);
+			final int eff=poke.getEff(status);
 			StringBuilder sb=new StringBuilder();
 			if(eff>0){
 				sb.append("+");
@@ -374,16 +451,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getEff(spec_index)-p2.getEff(spec_index);
+					return p1.getEff(status)-p2.getEff(status);
 				}
 			};
 		}
 	},
 	EFF_SPEED("努力値(素早)"){
-		private final int spec_index=5;
+		private final Statuses status = Statuses.S;
 		@Override
 		public String getInformation(PokeData poke){
-			final int eff=poke.getEff(spec_index);
+			final int eff=poke.getEff(status);
 			StringBuilder sb=new StringBuilder();
 			if(eff>0){
 				sb.append("+");
@@ -398,16 +475,16 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getEff(spec_index)-p2.getEff(spec_index);
+					return p1.getEff(status)-p2.getEff(status);
 				}
 			};
 		}
 	},
 	EFF_TOTAL("努力値(合計)"){
-		private final int spec_index=6;
+		private final Statuses status = Statuses.TOTAL;
 		@Override
 		public String getInformation(PokeData poke){
-			final int eff=poke.getEff(spec_index);
+			final int eff=poke.getEff(status);
 			StringBuilder sb=new StringBuilder();
 			if(eff>0){
 				sb.append("+");
@@ -422,7 +499,55 @@ public enum ViewableInformations {
 				@Override
 				public int compare(PokeData p1, PokeData p2) {
 					// TODO Auto-generated method stub
-					return p1.getEff(spec_index)-p2.getEff(spec_index);
+					return p1.getEff(status)-p2.getEff(status);
+				}
+			};
+		}
+	},
+	EFF_MIN("努力値(最小)"){
+		private final Statuses status = Statuses.MIN;
+		@Override
+		public String getInformation(PokeData poke){
+			final int eff=poke.getEff(status);
+			StringBuilder sb=new StringBuilder();
+			if(eff>0){
+				sb.append("+");
+			}
+			sb.append(eff);
+			return new String(sb);
+		}
+
+		@Override
+		public Comparator<PokeData> getComparator() {
+			return new Comparator<PokeData>(){
+				@Override
+				public int compare(PokeData p1, PokeData p2) {
+					// TODO Auto-generated method stub
+					return p1.getEff(status)-p2.getEff(status);
+				}
+			};
+		}
+	},
+	EFF_MAX("努力値(最大)"){
+		private final Statuses status = Statuses.MAX;
+		@Override
+		public String getInformation(PokeData poke){
+			final int eff=poke.getEff(status);
+			StringBuilder sb=new StringBuilder();
+			if(eff>0){
+				sb.append("+");
+			}
+			sb.append(eff);
+			return new String(sb);
+		}
+
+		@Override
+		public Comparator<PokeData> getComparator() {
+			return new Comparator<PokeData>(){
+				@Override
+				public int compare(PokeData p1, PokeData p2) {
+					// TODO Auto-generated method stub
+					return p1.getEff(status)-p2.getEff(status);
 				}
 			};
 		}
@@ -623,9 +748,7 @@ public enum ViewableInformations {
 				public int compare(PokeData p1,PokeData p2){
 					final ItemData item1=p1.getItem(ItemRarities.COMMON);
 					final ItemData item2=p2.getItem(ItemRarities.COMMON);
-					final String name1=item1==null?"-":item1.toString();
-					final String name2=item2==null?"-":item2.toString();
-					return name1.compareTo(name2);
+					return item1.compareTo(item2);
 				}
 			};
 		}
@@ -648,9 +771,7 @@ public enum ViewableInformations {
 				public int compare(PokeData p1,PokeData p2){
 					final ItemData item1=p1.getItem(ItemRarities.RARE);
 					final ItemData item2=p2.getItem(ItemRarities.RARE);
-					final String name1=item1==null?"-":item1.toString();
-					final String name2=item2==null?"-":item2.toString();
-					return name1.compareTo(name2);
+					return item1.compareTo(item2);
 				}
 			};
 		}

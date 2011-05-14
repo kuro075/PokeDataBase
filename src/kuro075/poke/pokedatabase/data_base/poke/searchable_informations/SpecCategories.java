@@ -158,14 +158,24 @@ public enum SpecCategories implements SearchIfCategory{
 				String _case) {
 			// TODO Auto-generated method stub
 			if(toString().equals(category)){
-				String[] status_option_status=_case.split(" ");
-				Statuses left=Statuses.fromString(status_option_status[0]),
-						 right=Statuses.fromString(status_option_status[2]);
-				TwoCompareOptions center=TwoCompareOptions.fromString(status_option_status[1]);
 				List<PokeData> list=new ArrayList<PokeData>();
-				for(PokeData poke:poke_array){
-					if(center.compareOf(poke.getSpec(left), poke.getSpec(right))){
-						list.add(poke);
+				String[] status_option_status=_case.split(" ");
+				Statuses left=Statuses.fromString(status_option_status[0]);
+				TwoCompareOptions center=TwoCompareOptions.fromString(status_option_status[1]);
+				
+				try{
+					int right=Integer.parseInt(status_option_status[2]);
+					for(PokeData poke:poke_array){
+						if(center.compareOf(poke.getSpec(left), right)){
+							list.add(poke);
+						}
+					}
+				}catch(NumberFormatException e){
+					Statuses right=Statuses.fromString(status_option_status[2]);
+					for(PokeData poke:poke_array){
+						if(center.compareOf(poke.getSpec(left), poke.getSpec(right))){
+							list.add(poke);
+						}
 					}
 				}
 				return list.toArray(new PokeData[0]);
@@ -220,6 +230,86 @@ public enum SpecCategories implements SearchIfCategory{
 					}
 					
 					dialog.dismiss();
+				}
+			});
+			builder.setNeutralButton("切替",new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					openDialog2(context,search_type,listener);
+				}
+			});
+			builder.setNegativeButton("戻る", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+					SearchableInformations.SPEC.openDialog(context,search_type, listener);
+				}
+			});
+			builder.create().show();
+		}
+		
+		/**
+		 * スピナー二つとEditText一つのダイアログ
+		 * @param context
+		 * @param search_type
+		 * @param listener
+		 */
+		public void openDialog2(final Context context,
+				final SearchTypes search_type,final SearchIfListener listener){
+			Utility.log(TAG, "createIntInputDialogBuilder");
+			AlertDialog.Builder builder;
+			
+			LayoutInflater factory=LayoutInflater.from(context);
+			final View layout = factory.inflate(R.layout.two_spinner_one_edit_dialog,null);
+			builder = new AlertDialog.Builder(context);
+			builder.setTitle(SearchableInformations.createDialogTitle(this, search_type));
+			builder.setView(layout);
+			
+			//左のスピナー
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,Utility.changeToStringArray(Statuses.values()));
+			final Spinner spinner_left = (Spinner)layout.findViewById(R.id.spinner_left);
+			spinner_left.setAdapter(adapter);
+			
+			//真ん中のスピナー
+			adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,Utility.changeToStringArray(TwoCompareOptions.values()));
+			final Spinner spinner_center = (Spinner)layout.findViewById(R.id.spinner_center);
+			spinner_center.setAdapter(adapter);
+			
+			//右のエディットテキスト
+			final EditText edit_text=(EditText)layout.findViewById(R.id.edit);
+			
+			builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					final int left=spinner_left.getSelectedItemPosition(),
+							  center=spinner_center.getSelectedItemPosition();
+					int right=-1;
+					try{
+						right=Integer.parseInt(edit_text.getText().toString());
+					}catch(NumberFormatException e){
+						e.printStackTrace();
+					}
+					if(right>=0){
+						StringBuilder sb=new StringBuilder();
+						sb.append(Statuses.values()[left].toString());
+						sb.append(" ");
+						sb.append(TwoCompareOptions.values()[center].toString());
+						sb.append(" ");
+						sb.append(right);
+						listener.receiveSearchIf(SearchableInformations.createSearchIf(COMPARE, new String(sb), search_type));
+					}
+					
+					dialog.dismiss();
+				}
+			});
+			builder.setNeutralButton("切替",new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					openDialog(context,search_type,listener);
 				}
 			});
 			builder.setNegativeButton("戻る", new DialogInterface.OnClickListener() {
@@ -323,7 +413,7 @@ public enum SpecCategories implements SearchIfCategory{
 		
 		List<PokeData> list=new ArrayList<PokeData>();
 		for(PokeData poke:poke_array){
-			if(option.compareOf(poke.getSpec(index), spec)){
+			if(option.compareOf(poke.getSpec(Statuses.values()[index]), spec)){
 				list.add(poke);
 			}
 		}

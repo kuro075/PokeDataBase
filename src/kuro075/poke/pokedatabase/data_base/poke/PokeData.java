@@ -370,7 +370,7 @@ public class PokeData extends BasicData implements Serializable{
 	 *
 	 */
 	public enum Statuses implements Serializable{
-		H("HP",0),A("攻撃",1),B("防御",2),C("特攻",3),D("特防",4),S("素早",5);
+		H("HP",0),A("攻撃",1),B("防御",2),C("特攻",3),D("特防",4),S("素早",5),TOTAL("合計",6),MIN("最小",7),MAX("最大",8);
 		final private String name;
 		final private int index;
 		Statuses(String name,int index){this.name=name;this.index=index;}
@@ -636,19 +636,62 @@ public class PokeData extends BasicData implements Serializable{
 	 * @param index:H=0,A=1,B=2,C=3,D=4,S=5
 	 * @return
 	 */
-	public int getSpec(int index) {
+/*	public int getSpec(int index) {
 		if(index<0 || Statuses.values().length<=index){
 			return getTotalSpec();
 		}
 		return specs[index];
-	}
+	}*/
 	/**
 	 * 種族値を取得
 	 * @param status:H,A,B,C,D,S
 	 * @return
 	 */
 	public int getSpec(Statuses status){
-		return specs[status.getIndex()];
+		switch(status){
+		case H:
+		case A:
+		case B:
+		case C:
+		case D:
+		case S:
+			return specs[status.getIndex()];
+		case TOTAL://合計
+			return getTotalSpec();
+		case MIN://最小
+			return getMinSpec();
+		case MAX://最大
+			return getMaxSpec();
+		}
+		return 0;
+	}
+	
+	/**
+	 * 最小の種族値を返す
+	 * @return
+	 */
+	public int getMinSpec(){
+		int min=255;
+		for(int spec:specs){
+			if(spec<min){
+				min=spec;
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 最大の種族値を返す
+	 * @return
+	 */
+	public int getMaxSpec(){
+		int max=0;
+		for(int spec:specs){
+			if(spec>max){
+				max=spec;
+			}
+		}
+		return max;
 	}
 	/**
 	 * 種族値の合計値を取得
@@ -666,19 +709,62 @@ public class PokeData extends BasicData implements Serializable{
 	 * 努力値を取得
 	 * @return:H=0,A=1,B=2,C=3,D=4,S=5
 	 */
-	public int getEff(int index) {
+/*	public int getEff(int index) {
 		if(index<0 || Statuses.values().length<=index){
 			return getTotalEff();
 		}
 		return effs[index];
-	}
+	}*/
 	/**
 	 * 努力値を取得
 	 * @param status:H,A,B,C,D,S
 	 * @return
 	 */
 	public int getEff(Statuses status){
-		return effs[status.index];
+		switch(status){
+			case H:
+			case A:
+			case B:
+			case C:
+			case D:
+			case S:
+				return effs[status.index];
+			case TOTAL:
+				return getTotalEff();
+			case MIN://最小
+				return getMinEff();
+			case MAX://最大
+				return getMaxEff();
+		}
+		return 0;
+	}
+	
+	/**
+	 * 努力値の最小値を返す
+	 * @return
+	 */
+	public int getMinEff(){
+		int min=3;
+		for(int eff:effs){
+			if(eff>0 && eff<min){
+				min=eff;
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 努力値の最大値を返す
+	 * @return
+	 */
+	public int getMaxEff(){
+		int max=0;
+		for(int eff:effs){
+			if(eff>max){
+				max=eff;
+			}
+		}
+		return max;
 	}
 
 	public int getTotalEff(){

@@ -5,6 +5,7 @@ import kuro075.poke.pokedatabase.data_base.character.CharacterData;
 import kuro075.poke.pokedatabase.data_base.item.ItemData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Sexes;
+import kuro075.poke.pokedatabase.data_base.poke.PokeData.Statuses;
 import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
 import kuro075.poke.pokedatabase.data_base.poke.viewable_informations.ViewableInformations;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
@@ -156,8 +157,8 @@ public class BasicInformationLayout extends LinearLayout{
     	
     	//種族値//努力値
     	for(int i=0,n=6;i<n;i++){
-    		Spec[i].setText(String.valueOf(poke.getSpec(i)));
-    		final int eff=poke.getEff(i);
+    		Spec[i].setText(String.valueOf(poke.getSpec(Statuses.values()[i])));
+    		final int eff=poke.getEff(Statuses.values()[i]);
     		if(eff>0){
         		Eff[i].setText("+"+eff);
     		}else{

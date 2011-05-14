@@ -789,7 +789,6 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 				text_info.setText("選択");
 				list_view_poke.setAdapter(new MultipleChoicePokeListAdapter(getApplicationContext(),Arrays.asList(poke_list)));
 
-				list_view_poke.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);  
 				
 			    for (int i=0,n=poke_list.length;i<n;i++) {  
 				      // 指定したアイテムがチェックされているかを設定  
@@ -845,6 +844,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	private void shiftMultipleChoiceMode(){
 		Utility.log(TAG,"shiftMultipleChoiceMode");
 		setChoiceMode(ListChoiceModes.MULTIPLE);
+		list_view_poke.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		refreshListView("複数選択モード");
 	}
 	/**
