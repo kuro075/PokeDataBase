@@ -23,7 +23,6 @@ public enum KindCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type,SearchIfListener listener) {
-			// TODO Auto-generated method stub
 			Utility.log(toString(),"openDialog");
 			AlertDialog.Builder builder;
 			LayoutInflater factory=LayoutInflater.from(context);
@@ -43,7 +42,7 @@ public enum KindCategories implements SearchIfCategory{
 			builder.setPositiveButton("戻る",new DialogInterface.OnClickListener(){
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					// 
 					final_listener.receiveSearchIf(null);
 				}
 			});
@@ -52,7 +51,7 @@ public enum KindCategories implements SearchIfCategory{
 			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
-					// TODO Auto-generated method stub
+					// 
 					Utility.log(toString(),"onItemClick");
 					final_listener.receiveSearchIf(SearchableInformations.createSearchIf(EVOLUTION,EVOLUTION_KINDS[position],final_search_type));
 					dialog.dismiss();
@@ -64,7 +63,7 @@ public enum KindCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String kind) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				List<PokeData> list=new ArrayList<PokeData>();
 				for(int i=0,n=EVOLUTION_KINDS.length;i<n;i++){
@@ -107,6 +106,16 @@ public enum KindCategories implements SearchIfCategory{
 				return list.toArray(new PokeData[0]);
 			}
 			return new PokeData[0];
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	};
 	private final String name;

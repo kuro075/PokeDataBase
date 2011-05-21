@@ -23,7 +23,6 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
 			if(toString().equals(category)){
 				return searchWithOneSpec(poke_array,_case,Statuses.H.getIndex());
 			}
@@ -33,15 +32,25 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this,1,255).create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	A("種族値 攻撃"){
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneSpec(poke_array,_case,Statuses.A.getIndex());
 			}
@@ -51,8 +60,18 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this, 5,180).create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	B("種族値 防御"){
@@ -60,7 +79,7 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneSpec(poke_array,_case,Statuses.B.getIndex());
 			}
@@ -70,9 +89,19 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this, 5,230).create().show();
 			
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	C("種族値 特攻"){
@@ -80,7 +109,7 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneSpec(poke_array,_case,Statuses.C.getIndex());
 			}
@@ -90,9 +119,19 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this, 10,180).create().show();
 			
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	D("種族値 特防"){
@@ -100,7 +139,7 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneSpec(poke_array,_case,Statuses.D.getIndex());
 			}
@@ -110,15 +149,25 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this,20,230).create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	S("種族値 素早"){
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneSpec(poke_array,_case,Statuses.S.getIndex());
 			}
@@ -128,8 +177,18 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this,5,180).create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	TOTAL("種族値 合計"){
@@ -137,7 +196,7 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneSpec(poke_array,_case,-1);
 			}
@@ -147,8 +206,18 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this, 180,720).create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	COMPARE("種族値 比較"){
@@ -156,7 +225,7 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				List<PokeData> list=new ArrayList<PokeData>();
 				String[] status_option_status=_case.split(" ");
@@ -189,7 +258,7 @@ public enum SpecCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(final Context context,
 				final SearchTypes search_type, final SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			Utility.log(TAG, "createIntInputDialogBuilder");
 			AlertDialog.Builder builder;
 			
@@ -215,7 +284,7 @@ public enum SpecCategories implements SearchIfCategory{
 			builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					// 
 					final int left=spinner_left.getSelectedItemPosition(),
 							  center=spinner_center.getSelectedItemPosition(),
 							  right=spinner_right.getSelectedItemPosition();
@@ -235,14 +304,12 @@ public enum SpecCategories implements SearchIfCategory{
 			builder.setNeutralButton("切替",new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					openDialog2(context,search_type,listener);
 				}
 			});
 			builder.setNegativeButton("戻る", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					dialog.dismiss();
 					SearchableInformations.SPEC.openDialog(context,search_type, listener);
 				}
@@ -283,7 +350,7 @@ public enum SpecCategories implements SearchIfCategory{
 			builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					// 
 					final int left=spinner_left.getSelectedItemPosition(),
 							  center=spinner_center.getSelectedItemPosition();
 					int right=-1;
@@ -308,19 +375,28 @@ public enum SpecCategories implements SearchIfCategory{
 			builder.setNeutralButton("切替",new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					openDialog(context,search_type,listener);
 				}
 			});
 			builder.setNegativeButton("戻る", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					// 
 					dialog.dismiss();
 					SearchableInformations.SPEC.openDialog(context,search_type, listener);
 				}
 			});
 			builder.create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	};
 	
@@ -358,7 +434,6 @@ public enum SpecCategories implements SearchIfCategory{
 		builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				try{
 					int input=Integer.valueOf(edit.getText().toString());
 					if(min<=input && input<=max){
@@ -379,7 +454,6 @@ public enum SpecCategories implements SearchIfCategory{
 		builder.setNegativeButton("戻る", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				dialog.dismiss();
 				SearchableInformations.SPEC.openDialog(context, search_type, listener);
 			}

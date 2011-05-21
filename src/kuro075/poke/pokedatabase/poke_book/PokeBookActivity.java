@@ -1,6 +1,7 @@
 package kuro075.poke.pokedatabase.poke_book;
 
 import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
@@ -65,7 +66,7 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 	 */
 	private void clickButtonAiueo(){
 		Utility.log(TAG,"clickButtonAiueo");
-		
+		AiueoSearchActivity.startThisActivity(this);
 	}
 	/**
 	 * button_detail_searchがクリックされた時
@@ -84,6 +85,12 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 	 */
 	private void clickButtonFreeWord(){
 		Utility.log(TAG, "clickButtonFreeWord");
+		//フリーワードを取得
+		String free_word=this.edit_free_word.getText().toString();
+		//フリーワードから検索条件を取得
+		String[] search_ifs=SearchableInformations.getSearchIfByFreeWord(free_word);
+		//検索結果アクティビティーを開始
+		SearchResultActivity.startThisActivity(this, "フリーワード検索", search_ifs);
 	}
 	
 	

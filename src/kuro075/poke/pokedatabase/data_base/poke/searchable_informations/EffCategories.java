@@ -25,7 +25,7 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneEff(poke_array,_case,Statuses.H.getIndex());
 			}
@@ -35,15 +35,25 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context,  search_type, listener, this).create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	A("努力値 攻撃"){
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneEff(poke_array,_case,Statuses.A.getIndex());
 			}
@@ -53,8 +63,18 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context,search_type, listener, this).create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	B("努力値 防御"){
@@ -62,7 +82,7 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneEff(poke_array,_case,Statuses.B.getIndex());
 			}
@@ -72,9 +92,19 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this).create().show();
 			
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	C("努力値 特攻"){
@@ -82,7 +112,7 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneEff(poke_array,_case,Statuses.C.getIndex());
 			}
@@ -92,9 +122,19 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this).create().show();
 			
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	D("努力値 特防"){
@@ -102,7 +142,7 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneEff(poke_array,_case,Statuses.D.getIndex());
 			}
@@ -112,15 +152,25 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this).create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	S("努力値 素早"){
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneEff(poke_array,_case,Statuses.S.getIndex());
 			}
@@ -130,8 +180,18 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this).create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	TOTAL("努力値 合計"){
@@ -139,7 +199,7 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				return searchWithOneEff(poke_array,_case,-1);
 			}
@@ -149,8 +209,18 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			createIntInputDialogBuilder(context, search_type, listener, this).create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	},
 	COMPARE("努力値 比較"){
@@ -158,7 +228,7 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String _case) {
-			// TODO Auto-generated method stub
+			// 
 			if(toString().equals(category)){
 				String[] status_option_status=_case.split(" ");
 				Statuses left=Statuses.fromString(status_option_status[0]),
@@ -181,7 +251,7 @@ public enum EffCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(final Context context,
 				final SearchTypes search_type, final SearchIfListener listener) {
-			// TODO Auto-generated method stub
+			// 
 			Utility.log(TAG, "createIntInputDialogBuilder");
 			AlertDialog.Builder builder;
 			
@@ -207,7 +277,7 @@ public enum EffCategories implements SearchIfCategory{
 			builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					// 
 					final int left=spinner_left.getSelectedItemPosition(),
 							  center=spinner_center.getSelectedItemPosition(),
 							  right=spinner_right.getSelectedItemPosition();
@@ -227,12 +297,22 @@ public enum EffCategories implements SearchIfCategory{
 			builder.setNegativeButton("戻る", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					// 
 					dialog.dismiss();
 					SearchableInformations.EFF.openDialog(context, search_type, listener);
 				}
 			});
 			builder.create().show();
+		}
+
+		/**
+		 * フリーワードから検索条件(_case)を返す
+		 * 該当文字列)
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	};
 	
@@ -270,7 +350,6 @@ public enum EffCategories implements SearchIfCategory{
 		builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				try{
 					int input=Integer.valueOf(edit.getText().toString());
 					if(0<=input && input<=3){
@@ -291,7 +370,6 @@ public enum EffCategories implements SearchIfCategory{
 		builder.setNegativeButton("戻る", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				dialog.dismiss();
 				SearchableInformations.EFF.openDialog(context, search_type, listener);
 			}

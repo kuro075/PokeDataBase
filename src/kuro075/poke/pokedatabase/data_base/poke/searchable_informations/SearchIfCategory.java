@@ -5,6 +5,11 @@ import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import android.content.Context;
 
+/**
+ * ポケモン図鑑の検索条件カテゴリーインターフェース
+ * @author sanogenma
+ *
+ */
 public interface SearchIfCategory {
 	/**
 	 * 検索ダイアログを表示するメソッド
@@ -29,4 +34,12 @@ public interface SearchIfCategory {
 	 * @return 検索後のポケモンリスト
 	 */
 	public PokeData[] search(PokeData[] poke_array,String category,String _case);
+
+	/**
+	 * フリーワードから検索条件(_case)を取得
+	 * 検索不可の場合,""を返す
+	 * @param free_word
+	 * @return
+	 */
+	public String getCaseByFreeWord(String free_word);
 }

@@ -99,11 +99,11 @@ public class LvSkillInformationLayout extends FrameLayout{
         
         //進化系トグルボタン
         LinearLayout ll_tmp=(LinearLayout)layout.findViewById(R.id.layout_evolution);
-        if(poke.hasForm()){//フォルムチェンジがあって、自分の次の進化系だけがフォルムのときの処理
+       /* if(poke.hasForm()){//フォルムチェンジがあって、自分の次の進化系だけがフォルムのときの処理
         	tb=new ToggleButton[poke.getEvolutions().length];
-        }else{
+        }else{*/
         	tb=new ToggleButton[poke.getPositionOfEvolution()];
-        }
+        //}
         int evoindex=0;
         for(int i=0,n=tb.length;i<n;i++,evoindex++){
         	tb[i]=new ToggleButton(ll_tmp.getContext());

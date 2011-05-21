@@ -28,7 +28,6 @@ enum TypeCategories implements SearchIfCategory{
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
 			Utility.log(TAG, "openDialog");
 			AlertDialog.Builder builder;
 			LayoutInflater factory=LayoutInflater.from(context);
@@ -47,7 +46,6 @@ enum TypeCategories implements SearchIfCategory{
 			builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					Utility.log(toString(), "onClickSearchButton");
 					final_listener.receiveSearchIf(SearchableInformations.createSearchIf(MYSELF,spinner.getSelectedItem().toString(),final_search_type));
 					dialog.dismiss();
@@ -56,7 +54,6 @@ enum TypeCategories implements SearchIfCategory{
 			builder.setNeutralButton("切替", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					dialog.dismiss();
 					RELATION.openDialog(final_context,final_search_type, final_listener);
 				}
@@ -64,7 +61,6 @@ enum TypeCategories implements SearchIfCategory{
 			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					final_listener.receiveSearchIf(null);
 				}
 			});
@@ -77,7 +73,6 @@ enum TypeCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String type) {
-			// TODO Auto-generated method stub
 			if(toString().equals(category)){
 				Utility.log(TAG, toString()+".search");
 				List<PokeData> searched_list=new ArrayList<PokeData>();
@@ -90,13 +85,26 @@ enum TypeCategories implements SearchIfCategory{
 			}
 			return new PokeData[0];
 		}
+
+		/**
+		 * フリーワードから_caseを取得
+		 * 該当文字列)タイプ名のみ、タイプ名＋"タイプ"
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			//語尾に「タイプ」がついていたら取り除く
+			//free_wordがタイプ名かどうかをチェックし、タイプ名なら_caseを返す
+			
+			//それ以外
+			return "";
+		}
 	},
 	RELATION("タイプ相性"){
 		private final String[] RELATION_KINDS = {"弱点","半減以下","無効","1/4倍","1/2倍","等倍","2倍","4倍"};
 		@Override
 		public void openDialog(Context context,
 				SearchTypes search_type, SearchIfListener listener) {
-			// TODO Auto-generated method stub
 			Utility.log(toString(), "openDialog");
 			AlertDialog.Builder builder;
 			LayoutInflater factory=LayoutInflater.from(context);
@@ -120,7 +128,6 @@ enum TypeCategories implements SearchIfCategory{
 			builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					Utility.log(toString(), "onClickSearchButton");
 					final_listener.receiveSearchIf(SearchableInformations.createSearchIf(RELATION,createCase(spinner_type.getSelectedItem().toString(),spinner_class.getSelectedItem().toString()),final_search_type));
 					dialog.dismiss();
@@ -129,7 +136,6 @@ enum TypeCategories implements SearchIfCategory{
 			builder.setNeutralButton("切替", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					dialog.dismiss();
 					MYSELF.openDialog(final_context,final_search_type, final_listener);
 				}
@@ -137,7 +143,6 @@ enum TypeCategories implements SearchIfCategory{
 			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					final_listener.receiveSearchIf(null);
 				}
 			});
@@ -161,7 +166,6 @@ enum TypeCategories implements SearchIfCategory{
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
 				String type_and_relation) {
-			// TODO Auto-generated method stub
 			if(toString().equals(category)){
 				String[] _case=type_and_relation.split("が");
 				TypeData type=TypeData.fromString(_case[0]);
@@ -205,6 +209,21 @@ enum TypeCategories implements SearchIfCategory{
 			return new PokeData[0];
 		}
 
+
+		/**
+		 * フリーワードから_caseを取得
+		 * 該当文字列)タイプ名+"が"+相性、タイプ名+"タイプが"+相性
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			//"タイプ"含まれていたら、取り除く
+			//タイプ名+相性の形になっていたら_caseを返す
+			
+			//それ以外
+			return "";
+		}
+
 	};
 	private static final String TAG="TypeCategories";
 	private final String name;
@@ -213,7 +232,6 @@ enum TypeCategories implements SearchIfCategory{
 	}
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return name;
 	}
 	
