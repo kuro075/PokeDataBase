@@ -62,7 +62,11 @@ public class PokePageActivity extends PokeBookMenuActivity{
 	 */
 	public static void startThisActivity(Context context,int no){
 		Utility.log(TAG, "startThisActivity with PokeNo");
-		startThisActivity(context,PokeDataManager.INSTANCE.getPokeData(no).toString());
+		if(0<no && no<=PokeDataManager.INSTANCE.getNum()){
+			startThisActivity(context,PokeDataManager.INSTANCE.getPokeData(no).toString());
+		}else{
+			Utility.popToast(context, "図鑑Noが不正です");
+		}
 	}
 	/**
 	 * このアクティビティーをstartさせる

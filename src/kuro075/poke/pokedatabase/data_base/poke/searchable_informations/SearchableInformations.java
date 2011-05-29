@@ -162,12 +162,32 @@ public enum SearchableInformations implements SearchIfCategory{
 		@Override
 		public String getCaseByFreeWord(String free_word) {
 			// TODO Auto-generated method stub
+			int length=free_word.length();
 			//free_wordが「から始まる」「からはじまる」「を含む」「をふくむ」「で終わる」「でおわる」を含むかどうかチェック(NameSearchOptionsの各項目のtoString(),getHiraganaName()と一致するか)
+			NameSearchOptions option=NameSearchOptions.fromString(free_word);
 			//含まない場合はデフォルトとして「を含む」とする
-			
+			if(option==null){
+				option=NameSearchOptions.INVOLVE;
+			}else{
+				length=free_word.indexOf(option.toString());
+				if(length<=0){
+					length=free_word.indexOf(option.getHiraganaName());
+				}
+			}
 			//検索ワードが５文字以下か、平仮名・カタカナのみかをチェック　該当しない場合""を返す
-			
-			//_caseを返す
+			if(0<length && length<=5){
+				StringBuilder sb=new StringBuilder();
+				for(int i=0;i<length;i++){
+					sb.append(free_word.charAt(i));
+				}
+				String text=this.changeHiraToKata(new String(sb));
+				sb=new StringBuilder();
+				sb.append(text);
+				sb.append(" ");
+				sb.append(option);
+				//_caseを返す
+				return new String(sb);
+			}
 			return "";
 		}
 	},
@@ -1049,7 +1069,7 @@ public enum SearchableInformations implements SearchIfCategory{
 	public static String[] getSearchIfByFreeWord(String free_word){
 		List<String> search_ifs=new ArrayList<String>();
 		
-		final String PERTITION="[,¥(¥)¥/¥s]";
+		final String PERTITION="[,¥(¥)¥/ ]";
 		//free_wordをパーティションで配列に分割
 		String[] words=free_word.split(PERTITION);
 		for(String word:words){

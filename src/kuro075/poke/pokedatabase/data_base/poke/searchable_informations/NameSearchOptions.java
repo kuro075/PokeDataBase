@@ -45,7 +45,10 @@ public enum NameSearchOptions {
 		for(NameSearchOptions nso:values()){
 			if(nso.toString().equals(name)){return nso;}
 			if(nso.getHiraganaName().equals(name)){return nso;}
+			if(name.indexOf(nso.toString())>=0){return nso;}
+			if(name.indexOf(nso.getHiraganaName())>=0){return nso;}
 		}
 		return null;
 	}
+
 }

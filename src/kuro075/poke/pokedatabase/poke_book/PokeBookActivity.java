@@ -4,6 +4,7 @@ import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
+import kuro075.poke.pokedatabase.poke_book.poke_page.PokePageActivity;
 import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
@@ -87,10 +88,24 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 		Utility.log(TAG, "clickButtonFreeWord");
 		//フリーワードを取得
 		String free_word=this.edit_free_word.getText().toString();
-		//フリーワードから検索条件を取得
-		String[] search_ifs=SearchableInformations.getSearchIfByFreeWord(free_word);
-		//検索結果アクティビティーを開始
-		SearchResultActivity.startThisActivity(this, "フリーワード検索", search_ifs);
+		//図鑑Noの場合
+		try{
+			int no=Integer.parseInt(free_word);
+			PokePageActivity.startThisActivity(this, no);
+		}catch(NumberFormatException e){
+			//フリーワードから検索条件を取得
+			String[] search_ifs=SearchableInformations.getSearchIfByFreeWord(free_word);
+			//検索条件がある場合
+			if(search_ifs.length>0){	
+				//検索条件が一つなら　検索結果アクティビティーを開始
+				if(search_ifs.length==1) SearchResultActivity.startThisActivity(this, "フリーワード検索", search_ifs);
+				//検索条件が複数なら　検索条件確認画面を表示
+				else CheckFreeWordSearchIfActivity.startThisActivity(this, search_ifs);
+			}
+			else{
+				Utility.popToast(this, "検索できません");
+			}
+		}
 	}
 	
 	
