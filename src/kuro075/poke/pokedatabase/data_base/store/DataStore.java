@@ -31,7 +31,7 @@ import kuro075.poke.pokedatabase.util.Utility;
 
 public class DataStore {
 	public enum DataTypes{
-		POKEMON("poke") {
+		POKEMON("ポケモン") {
 			@Override
 			void startSearchResultActivity(Context context, String title,
 					String[] search_ifs) {
@@ -43,6 +43,20 @@ public class DataStore {
 			void startPageActivity(Context context, String name) {
 				// TODO Auto-generated method stub
 				kuro075.poke.pokedatabase.poke_book.poke_page.PokePageActivity.startThisActivity(context, name);
+			}
+		},
+		SKILL("わざ"){
+			@Override
+			void startSearchResultActivity(Context context, String title,
+					String[] search_ifs) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			void startPageActivity(Context context, String name) {
+				// TODO Auto-generated method stub
+				
 			}
 		};
 		private final String name;

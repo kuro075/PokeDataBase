@@ -1,11 +1,12 @@
 package kuro075.poke.pokedatabase.poke_book;
 
+import kuro075.poke.pokedatabase.BookActivity;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
-import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
+import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.poke_page.PokePageActivity;
 import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -23,14 +24,12 @@ import android.widget.EditText;
  * @author sanogenma
  *
  */
-public class PokeBookActivity extends PokeBookMenuActivity{
+public class PokeBookActivity extends BookActivity{
 	
 	/*=========/
 	/  static  /
 	/=========*/
-	private static final String PACKAGE="kuro075.poke.pokedatabase.poke_book";
 	private static final String TAG="PokeBookActivity";
-	private static final String KEY_FREE_WORD=PACKAGE+"."+TAG+".free_word";
 
 	/**
 	 * このアクティビティーをstartさせる
@@ -42,24 +41,8 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 		context.startActivity(intent);
 	}
 	
-	/*================/
-	/  インスタンス変数  /
-	/================*/
-	private Button button_all_pokes;//全ポケモン
-	private Button button_aiueo;//あいうえお順
-	private Button button_detail_search;//詳細検索
-	private Button button_history;//履歴
-	private Button button_star;//お気に入り
-	private Button button_short_cut;//ショートカット
-	private Button button_free_word;//フリーワード検索
-	private EditText edit_free_word;//フリーワード検索のワード
-	
-	/**
-	 * button_all_pokesがクリックされたとき
-	 * @author sanogenma
-	 *
-	 */
-	private void clickButtonAllPokes(){
+	@Override
+	protected void clickButtonAll(){
 		Utility.log(TAG, "clickButtonAllPokes");
 		SearchResultActivity.startThisActivity(this);
 	}
@@ -67,7 +50,8 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 	/**
 	 * button_aiueoがクリックされたとき
 	 */
-	private void clickButtonAiueo(){
+	@Override
+	protected void clickButtonAiueo(){
 		Utility.log(TAG,"clickButtonAiueo");
 		AiueoSearchActivity.startThisActivity(this);
 	}
@@ -76,7 +60,8 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 	 * @author sanogenma
 	 *
 	 */
-	private void clickButtonDetailSearch(){
+	@Override
+	protected void clickButtonDetailSearch(){
 		Utility.log(TAG, "clickButtonDetailSearch");
 		DetailSearchActivity.startThisActivity(this);
 	}
@@ -86,10 +71,11 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 	 * @author sanogenma
 	 *
 	 */
-	private void clickButtonFreeWord(){
+	@Override
+	protected void clickButtonFreeWord(){
 		Utility.log(TAG, "clickButtonFreeWord");
 		//フリーワードを取得
-		String free_word=this.edit_free_word.getText().toString();
+		String free_word=getFreeWord();
 		//図鑑Noの場合
 		try{
 			int no=Integer.parseInt(free_word);
@@ -118,107 +104,5 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 				Utility.popToast(this, "検索できません");
 			}
 		}
-	}
-	
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);  
-		setContentView(R.layout.poke_book_layout);
-		Utility.log(TAG, "onCreate");
-		
-		/*=================/
-		/  ウィジェットの登録  /
-		/=================*/
-		//全ポケモン
-		button_all_pokes=(Button)findViewById(R.id.button_all_pokes);
-		button_all_pokes.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				clickButtonAllPokes();
-			}
-		});
-		//あいうえお順
-		button_aiueo=(Button)findViewById(R.id.button_aiueo);
-		button_aiueo.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				clickButtonAiueo();
-			}
-		});
-		//詳細検索
-		button_detail_search=(Button)findViewById(R.id.button_detail_search);
-		button_detail_search.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				clickButtonDetailSearch();
-			}
-		});
-		final Context context=this;
-		//履歴
-		button_history=(Button)findViewById(R.id.button_history);
-		button_history.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				DataStore.DataTypes.POKEMON.openHistoryDialog(context);
-			}
-		});
-		//お気に入り
-		button_star=(Button)findViewById(R.id.button_star);
-		button_star.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				DataStore.DataTypes.POKEMON.openStarDialog(context);
-			}
-		});
-		//ショートカット
-		button_short_cut=(Button)findViewById(R.id.button_short_cut);
-		button_short_cut.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				DataStore.DataTypes.POKEMON.openShortCutDialog(context);
-			}
-		});
-		//フリーワード検索
-		edit_free_word=(EditText)findViewById(R.id.edit_free_word);
-		button_free_word=(Button)findViewById(R.id.button_search);
-		button_free_word.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				clickButtonFreeWord();
-			}
-		});
-		
-	}
-
-	/**
-	 * 状態復元
-	 * edit_free_word
-	 */
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onRestoreInstanceState(savedInstanceState);
-		edit_free_word.setText(savedInstanceState.getString(KEY_FREE_WORD));
-	}
-
-	/**
-	 * 状態保存
-	 * edit_free_word
-	 */
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
-		super.onSaveInstanceState(outState);
-		outState.putString(KEY_FREE_WORD, edit_free_word.getText().toString());
 	}
 }

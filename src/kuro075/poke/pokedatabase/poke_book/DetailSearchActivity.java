@@ -7,7 +7,7 @@ import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
-import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
+import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;

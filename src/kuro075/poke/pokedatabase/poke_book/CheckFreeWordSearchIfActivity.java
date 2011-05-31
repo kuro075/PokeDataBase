@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import kuro075.poke.pokedatabase.R;
-import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
+import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 

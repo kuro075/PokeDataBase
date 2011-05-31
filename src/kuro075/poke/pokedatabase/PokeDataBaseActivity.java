@@ -9,6 +9,7 @@ import kuro075.poke.pokedatabase.menu.DefaultMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.DetailSearchActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeBookActivity;
 import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
+import kuro075.poke.pokedatabase.skill_book.SkillBookActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import kuro075.poke.pokedatabase.util.Utility.FileNames;
 
@@ -43,7 +44,7 @@ public class PokeDataBaseActivity extends DefaultMenuActivity {
 			@Override
 			public void startActivity(Context context) {
 				// TODO Auto-generated method stub
-				
+				SkillBookActivity.startThisActivity(context);
 			}
 		},CHARACTER("とくせい図鑑") {
 			@Override

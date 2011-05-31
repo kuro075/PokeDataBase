@@ -7,7 +7,7 @@ import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.Searchab
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 import kuro075.poke.pokedatabase.menu.MenuItems;
-import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
+import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.poke_page.basic.BasicInformationLayout;
 import kuro075.poke.pokedatabase.poke_book.poke_page.egg_skill.EggSkillInformationLayout;
 import kuro075.poke.pokedatabase.poke_book.poke_page.lv_skill.LvSkillInformationLayout;
