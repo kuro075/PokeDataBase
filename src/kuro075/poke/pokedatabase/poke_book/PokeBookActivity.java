@@ -1,6 +1,8 @@
 package kuro075.poke.pokedatabase.poke_book;
 
 import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.data_base.poke.PokeData;
+import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.menu.poke_book.PokeBookMenuActivity;
@@ -97,8 +99,18 @@ public class PokeBookActivity extends PokeBookMenuActivity{
 			String[] search_ifs=SearchableInformations.getSearchIfByFreeWord(free_word);
 			//検索条件がある場合
 			if(search_ifs.length>0){	
-				//検索条件が一つなら　検索結果アクティビティーを開始
-				if(search_ifs.length==1) SearchResultActivity.startThisActivity(this, "フリーワード検索", search_ifs);
+				//検索条件が一つのとき
+				if(search_ifs.length==1){
+					//ポケモンの名前のみの場合、そのポケモンのページを開く
+					PokeData poke=PokeDataManager.INSTANCE.getPokeData(free_word);
+					if(poke!=PokeDataManager.NullData){
+						PokePageActivity.startThisActivity(this, poke);
+					}
+					//ポケモンの名前でないなら検索結果アクティビティーを開始
+					else{
+						SearchResultActivity.startThisActivity(this, "フリーワード検索", search_ifs);
+					}
+				}
 				//検索条件が複数なら　検索条件確認画面を表示
 				else CheckFreeWordSearchIfActivity.startThisActivity(this, search_ifs);
 			}

@@ -354,6 +354,7 @@ public class PokeDataManager implements Serializable{
 	}
 	/**
 	 * PokeDataを図鑑ナンバーから取得
+	 * 該当しない場合はNullDataを返す
 	 * @param no 図鑑ナンバー
 	 * @return PokeData
 	 */
@@ -366,11 +367,16 @@ public class PokeDataManager implements Serializable{
 	
 	/**
 	 * PokeDataを名前から取得
+	 * 該当しない場合はNullDataを返す
 	 * @param name　名前
 	 * @return　PokeData
 	 */
 	public PokeData getPokeData(String name){
-		return name2poke_map.get(name);
+		PokeData poke=name2poke_map.get(name);
+		if(poke==null){
+			return NullData;
+		}
+		return poke;
 	}
 
 	//=========================================================================

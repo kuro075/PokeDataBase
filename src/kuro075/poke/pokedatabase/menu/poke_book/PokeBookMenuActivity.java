@@ -13,9 +13,9 @@ public class PokeBookMenuActivity extends DefaultMenuActivity{
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		MenuItems.HISTORY.addMenuItem(menu);
-		MenuItems.STAR.addMenuItem(menu);
-		MenuItems.SHORT_CUT.addMenuItem(menu);
+		MenuItems.HISTORY.addMenuItem(menu);//履歴
+		MenuItems.STAR.addMenuItem(menu);//お気に入り
+		MenuItems.SHORT_CUT.addMenuItem(menu);//ショートカット
 		return super.onCreateOptionsMenu(menu);
 	}
 

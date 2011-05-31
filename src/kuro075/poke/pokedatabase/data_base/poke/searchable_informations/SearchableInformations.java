@@ -196,6 +196,9 @@ public enum SearchableInformations implements SearchIfCategory{
 		 * 地方で検索
 		/==================================*/
 		private final String[] REGION_NAMES={"カントー","ジョウト","ホウエン","シンオウ","イッシュ"};
+		private final String[] GENERATION_NAMES={"第一世代","第二世代","第三世代","第四世代","第五世代"};
+		private final String[] GENERATION_NAMES2={"第1世代","第2世代","第3世代","第4世代","第5世代"};
+		private final String[] GENERATION_NAMES3={"第１世代","第２世代","第３世代","第４世代","第５世代"};
 		private final int[] FIRST_NO={1,152,252,387,494,650};
 		
 		@Override
@@ -264,9 +267,27 @@ public enum SearchableInformations implements SearchIfCategory{
 		@Override
 		public String getCaseByFreeWord(String free_word) {
 			// TODO Auto-generated method stub
+			int index=free_word.indexOf("地方");
+			String word=null;
+			if(index>0){
+				StringBuilder sb=new StringBuilder();
+				for(int i=0;i<index;i++){
+					sb.append(free_word.charAt(i));
+				}
+				word=new String(sb);
+			}else{
+				word=free_word;
+			}
 			//free_wordがREGION_NAMEにあるかどうかをチェックしてあったら_caseを返す
 			//free_wordが第一世代〜第五世代のいずれかである場合_caseを返す
-			
+			for(int i=0;i<REGION_NAMES.length;i++){
+				if(word.equals(REGION_NAMES[i]) ||
+				   word.equals(GENERATION_NAMES[i]) ||
+				   word.equals(GENERATION_NAMES2[i]) ||
+				   word.equals(GENERATION_NAMES3[i])){
+					return REGION_NAMES[i];
+				}
+			}
 			//それ以外
 			return "";
 		}
