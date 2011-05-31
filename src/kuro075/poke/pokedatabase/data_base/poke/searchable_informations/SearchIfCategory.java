@@ -19,12 +19,6 @@ public interface SearchIfCategory {
 	 * @param listener 検索後ポケを送るリスナー
 	 */
 	public void openDialog(final Context context,final SearchTypes search_type,final SearchIfListener listener);
-	/**
-	 * poke_arrayから検索条件(文字列)似合うポケモンを検索して返すメソッド
-	 * @param poke_array ポケモンリスト
-	 * @param condition　検索条件
-	 * @return　条件に合ったポケモンのリスト
-	 */
 	
 	/**
 	 * poke_arrayから検索条件(_case)に合うポケモンを検索して返すメソッド

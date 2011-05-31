@@ -47,24 +47,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	/  ダイアログ  /
 	/===========*/
 	private class DialogManager{
-		/**
-		 * 検索条件受信クラス
-		 * @author sanogenma
-		 *
-		 */
-		private class MySearchIfReceiver implements SearchIfListener{
-			@Override
-			public void receiveSearchIf(String search_if) {
-				// TODO Auto-generated method stub
-				Utility.log(TAG, "receiveSearchIf");
-				if(search_if==null){
-					openDialog(prev_open);
-				}else{
-					setSearchIf(search_if);
-					refreshListView(search_if);
-				}
-			}
-		}
+
 		final Context context;
 		final AlertDialog operate_dialog,//操作ダイアログ
 						  filter_dialog,//絞込ダイアログ
@@ -74,7 +57,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 						  long_click_dialog;//リストを長押ししたときのダイアログ
 		ListView list_view_for_long_click_dialog;//long_click_dialogのリストビュー
 		
-		SearchIfListener listener = new MySearchIfReceiver();
+		SearchIfListener listener;
 		SearchTypes prev_open=SearchTypes.FILTER;
 
 		//除外or登録　選択ダイアログを表示
@@ -84,7 +67,8 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		 * コンストラクタ
 		 * 全ダイアログを初期化
 		 */
-		private DialogManager(Context context){
+		private DialogManager(Context context,SearchIfListener listener){
+			this.listener=listener;
 			this.context=context;
 			operate_dialog=getOperateDialog();
 			filter_dialog=getDialog(SearchTypes.FILTER);
@@ -253,6 +237,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 					break;
 			}
 		}
+		
 		/**
 		 * リストを長押しした時に表示するダイアログ
 		 * タイトル、リストを選択した時のリスナーを設定後、ダイアログを開く
@@ -308,6 +293,12 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		private void openOperateDialog(){
 			operate_dialog.show();
 		}
+		/**
+		 * 直前に開いていたダイアログを開く
+		 */
+		private void openPrevDialog(){
+			openDialog(prev_open);
+		}
 		
 		/**
 		 * 表示切替ダイアログを開く
@@ -317,7 +308,6 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			view_change_dialog.show();
 		}
 	}
-	
 	/**
 	 * 複数選択モード
 	 * @author sanogenma
@@ -325,6 +315,25 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	 */
 	enum ListChoiceModes{
 		MULTIPLE,SINGLE;
+	}
+	
+	/**
+	 * 検索条件受信クラス
+	 * @author sanogenma
+	 *
+	 */
+	private class MySearchIfReceiver implements SearchIfListener{
+		@Override
+		public void receiveSearchIf(String search_if) {
+			// TODO Auto-generated method stub
+			Utility.log(TAG, "receiveSearchIf");
+			if(search_if==null){
+				dialog_manager.openPrevDialog();
+			}else{
+				setSearchIf(search_if);
+				refreshListView(search_if);
+			}
+		}
 	}
 	
 	/*=======/
@@ -549,12 +558,32 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		return new PokeData[0];
 	}
 	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		switch(choice_mode){
+			case SINGLE://通常時
+				Utility.openCheckDialog(this, "検索結果を終了してよろしいですか？", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						finish();
+					}
+				});
+				//super.onBackPressed();
+				break;
+			case MULTIPLE://複数選択モード時
+				this.shiftSingleChoiceMode(null);
+				break;
+		}
+	}
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_result_layout);
 		Utility.log(TAG, "onCreate");
-		dialog_manager=new DialogManager(this);
+		dialog_manager=new DialogManager(this,new MySearchIfReceiver());
 		/*=================/
 		/  ウィジェットの登録  /
 		/=================*/
@@ -649,10 +678,10 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 				undo();
 				break;
 			case SEARCH_RESULT_SAVE://ショートカットに登録
-				DataStore.DataTypes.POKEMON.openSaveShortCutDialog(this, search_ifs.toArray(new String[0]));
+				getDataType().openSaveShortCutDialog(this, search_ifs.toArray(new String[0]));
 				break;
 			case PAGE_SAVE://お気に入りに登録
-				DataStore.DataTypes.POKEMON.openSaveStarDialog(this, Utility.changeToStringArray(getSelectedPokeList()));
+				getDataType().openSaveStarDialog(this, Utility.changeToStringArray(getSelectedPokeList()));
 				//shiftSingleChoiceMode(null);
 				break;
 			case SEARCH_RESULT_REMOVE://除外
@@ -691,7 +720,6 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
@@ -788,8 +816,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			case MULTIPLE://複数選択モード
 				text_info.setText("選択");
 				list_view_poke.setAdapter(new MultipleChoicePokeListAdapter(getApplicationContext(),Arrays.asList(poke_list)));
-
-				
+			
 			    for (int i=0,n=poke_list.length;i<n;i++) {  
 				      // 指定したアイテムがチェックされているかを設定  
 				      list_view_poke.setItemChecked(i, false);  
@@ -849,6 +876,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 	}
 	/**
 	 *　単一選択モードに移行
+	 *	@param toast:モード変更時に表示するテキスト　nullの場合"複数選択モード 終了"
 	 */
 	private void shiftSingleChoiceMode(String toast){
 		Utility.log(TAG, "shiftSingleChoiceMode");
