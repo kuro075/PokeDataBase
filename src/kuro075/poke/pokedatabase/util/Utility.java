@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import kuro075.poke.pokedatabase.R;
-import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
+import kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations;
 
 import android.app.AlertDialog;
 import android.content.Context;

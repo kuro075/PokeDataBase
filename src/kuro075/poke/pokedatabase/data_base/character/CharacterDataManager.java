@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +12,10 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
-import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager.SearchableInformations;
 import kuro075.poke.pokedatabase.util.Utility;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
 
 /**
  * 特性データマネージャー

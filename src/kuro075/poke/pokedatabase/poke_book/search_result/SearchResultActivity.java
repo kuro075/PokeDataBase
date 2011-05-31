@@ -10,8 +10,9 @@ import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
-import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
 import kuro075.poke.pokedatabase.data_base.poke.viewable_informations.ViewableInformations;
+import kuro075.poke.pokedatabase.data_base.search.SearchIf;
+import kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.menu.MenuItems;
 import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
@@ -263,7 +264,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								// TODO Auto-generated method stub
-								String search_if=SearchableInformations.getRemoveIf(target);
+								String search_if=SearchIf.getRemoveIf(target);
 								setSearchIf(search_if);
 								StringBuilder sb=new StringBuilder();
 								sb.append("「");
@@ -706,7 +707,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 							}
 						}
 						sb.append("を除外しました");
-						setSearchIf(SearchableInformations.getRemoveIf(remove_list));
+						setSearchIf(SearchIf.getRemoveIf(remove_list));
 						shiftSingleChoiceMode(new String(sb));
 					}
 				});

@@ -4,7 +4,7 @@ import kuro075.poke.pokedatabase.BookActivity;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
-import kuro075.poke.pokedatabase.data_base.poke.searchable_informations.SearchableInformations;
+import kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.poke_page.PokePageActivity;
