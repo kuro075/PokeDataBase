@@ -28,13 +28,4 @@ public interface SearchIfCategory {
 	 * @return
 	 */
 	public String getCaseByFreeWord(String free_word);
-	/**
-	 * data_arrayから検索条件(_case)に合うポケモンを検索して返すメソッド
-	 * @param data_array
-	 * @param category 検索カテゴリー
-	 * @param _case 検索条件
-	 * @return 検索後のポケモンリスト
-	 */
-	//public BasicData[] search(BasicData[] data_array,String category,String _case);
-
 }

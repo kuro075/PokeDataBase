@@ -1,5 +1,6 @@
 package kuro075.poke.pokedatabase.data_base.skill;
 
+import kuro075.poke.pokedatabase.data_base.viewable_informations.SkillViewableInformations;
 import android.util.Log;
 
 
@@ -15,7 +16,7 @@ public class Test {
        		sb.append(" ");
        		sb.append(skill.toString());
        		sb.append("\n");
-       		for(kuro075.poke.pokedatabase.data_base.skill.SkillDataManager.ViewableInformations vi:kuro075.poke.pokedatabase.data_base.skill.SkillDataManager.ViewableInformations.values()){
+       		for(SkillViewableInformations vi:SkillViewableInformations.values()){
        			sb.append(vi.toString());
        			sb.append(":");
        			sb.append(vi.getInformation(skill));

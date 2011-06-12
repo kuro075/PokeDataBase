@@ -4,6 +4,7 @@ import kuro075.poke.pokedatabase.BookActivity;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.data_base.store.DataStore.DataTypes;
+import kuro075.poke.pokedatabase.skill_book.search_result.SkillSearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +38,7 @@ public class SkillBookActivity extends BookActivity{
 
 	@Override
 	protected void clickButtonAll() {
-		// TODO Auto-generated method stub
+		SkillSearchResultActivity.startThisActivity(this);
 	}
 
 	@Override

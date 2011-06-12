@@ -10,9 +10,19 @@ public class BasicData implements Comparable<BasicData>{
 	//名前
 	final private String Name;
 	final private int no;
+	private final String string_no;//文字列のNo
 	protected BasicData(String name,int no){
 		Name=name;
 		this.no=no;
+		//Noを文字列にして保存
+		StringBuilder sb=new StringBuilder();
+		if(no<10){
+			sb.append("00");
+		}else if(no<100){
+			sb.append("0");
+		}
+		sb.append(no);
+		string_no=new String(sb);
 	}
 	
 	public String getName(){
@@ -57,5 +67,11 @@ public class BasicData implements Comparable<BasicData>{
 		return Name;
 	}
 	
-	
+	/**
+	 * Noを文字列で取得(001,015など)
+	 * @return
+	 */
+	public String getNo2String(){
+		return string_no;
+	}
 }

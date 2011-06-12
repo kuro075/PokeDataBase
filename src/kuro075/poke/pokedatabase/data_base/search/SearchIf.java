@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.data_base.BasicData;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
@@ -57,7 +58,7 @@ public class SearchIf {
 	 * @param remove_poke
 	 * @return
 	 */
-	public static String getRemoveIf(PokeData remove_poke){
+	public static String getRemoveIf(BasicData remove_poke){
 		return SearchTypes.REMOVE+":"+remove_poke.getName();
 	}
 	
@@ -66,7 +67,7 @@ public class SearchIf {
 	 * @param remove_pokes
 	 * @return
 	 */
-	public static String getRemoveIf(PokeData[] remove_pokes){
+	public static String getRemoveIf(BasicData[] remove_pokes){
 		StringBuilder sb=new StringBuilder();
 		sb.append(SearchTypes.REMOVE.toString());
 		sb.append(":");
