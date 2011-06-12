@@ -36,7 +36,7 @@ public class DataStore {
 			void startSearchResultActivity(Context context, String title,
 					String[] search_ifs) {
 				// TODO Auto-generated method stub
-				kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity.startThisActivity(context,title,search_ifs);
+				kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity.startThisActivity(context,title,search_ifs);
 			}
 
 			@Override

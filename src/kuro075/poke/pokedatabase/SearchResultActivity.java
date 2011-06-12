@@ -27,6 +27,7 @@ import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
+import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.menu.MenuItems;
 import kuro075.poke.pokedatabase.menu.book.BookMenuActivity;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -84,6 +85,7 @@ public class SearchResultActivity extends BookMenuActivity{
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
+					openSearchDialog(position,context,search_type,listener);
 					switch(search_type){
 						case FILTER:filter_dialog.dismiss();break;
 						case ADD:	add_dialog.dismiss();	break;
@@ -511,7 +513,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	 * @return
 	 */
 	protected String[] getSearchableInformationTitles(){
-		return Utility.changeToStringArray(kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations.values());
+		return Utility.changeToStringArray(PokeSearchableInformations.values());
 	}
 	/**
 	 * 複数選択モードで選択された項目を取得
@@ -859,7 +861,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	 * @return
 	 */
 	protected BasicData[] search(BasicData[] data_array,String search_if){
-		return kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations.searchBySearchIf((PokeData[])data_array, search_if);
+		return kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations.searchBySearchIf((PokeData[])data_array, search_if);
 	}
 	/**
 	 * 複数選択モードに移行

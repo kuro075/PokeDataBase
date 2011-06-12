@@ -7,8 +7,7 @@ import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.poke.NameSearchOptions;
-import kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations;
-import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
+import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.Activity;
 import android.content.Context;
@@ -110,7 +109,7 @@ public class AiueoSearchActivity extends Activity{
 	 */
 	private void pushButtonName(String head){
 		List<String> if_list=new ArrayList<String>();
-		if_list.add(SearchableInformations.NAME.getDefaultSearchIf(head));
+		if_list.add(PokeSearchableInformations.NAME.getDefaultSearchIf(head));
 		//濁音かどうか
 		int index=has_dakuon.indexOf(head);
 		if(index>=0){
@@ -118,7 +117,7 @@ public class AiueoSearchActivity extends Activity{
 			sb.append(dakuon.charAt(index));
 			sb.append(" ");
 			sb.append(NameSearchOptions.START);
-			if_list.add(SearchIf.createSearchIf(SearchableInformations.NAME, new String(sb), SearchTypes.ADD));
+			if_list.add(SearchIf.createSearchIf(PokeSearchableInformations.NAME, new String(sb), SearchTypes.ADD));
 		}
 		//半濁音かどうか
 		index=has_handakuon.indexOf(head);
@@ -127,9 +126,9 @@ public class AiueoSearchActivity extends Activity{
 			sb.append(handakuon.charAt(index));
 			sb.append(" ");
 			sb.append(NameSearchOptions.START);
-			if_list.add(SearchIf.createSearchIf(SearchableInformations.NAME, new String(sb), SearchTypes.ADD));
+			if_list.add(SearchIf.createSearchIf(PokeSearchableInformations.NAME, new String(sb), SearchTypes.ADD));
 		}
-		SearchResultActivity.startThisActivity(this, SearchableInformations.NAME.getDefaultTitle(head), if_list.toArray(new String[0]));
+		PokeSearchResultActivity.startThisActivity(this, PokeSearchableInformations.NAME.getDefaultTitle(head), if_list.toArray(new String[0]));
 	}
 	
 	/**

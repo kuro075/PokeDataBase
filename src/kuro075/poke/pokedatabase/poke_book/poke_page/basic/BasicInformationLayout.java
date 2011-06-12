@@ -2,16 +2,14 @@ package kuro075.poke.pokedatabase.poke_book.poke_page.basic;
 
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.character.CharacterData;
-import kuro075.poke.pokedatabase.data_base.item.ItemData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Sexes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Statuses;
-import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
-import kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations;
+import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 import kuro075.poke.pokedatabase.data_base.viewable_informations.ViewableInformations;
-import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
+import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -74,7 +72,7 @@ public class BasicInformationLayout extends LinearLayout{
 	private void clickEggGroup(PokeData.EggGroups egg_group){
 		Utility.log(TAG, "clickEggGroup");
 		//タマゴグループで検索結果を開く
-		SearchResultActivity.startThisActivityWithDefaultSearch(getContext(), SearchableInformations.EGG_GROUP, egg_group.toString());
+		PokeSearchResultActivity.startThisActivityWithDefaultSearch(getContext(), PokeSearchableInformations.EGG_GROUP, egg_group.toString());
 	}
 	/**
 	 * 最終経験値をクリックした時の動作
@@ -82,7 +80,7 @@ public class BasicInformationLayout extends LinearLayout{
 	private void clickFinalEx(){
 		Utility.log(TAG, "clickFinalEx");
 		//検索結果を開く
-		SearchResultActivity.startThisActivityWithDefaultSearch(getContext(), SearchableInformations.FINAL_EX, poke.getFinalEx().toString());
+		PokeSearchResultActivity.startThisActivityWithDefaultSearch(getContext(), PokeSearchableInformations.FINAL_EX, poke.getFinalEx().toString());
 	}
 	/*
 	 * 孵化歩数を押した時の動作
@@ -90,12 +88,12 @@ public class BasicInformationLayout extends LinearLayout{
 	private void clickHatchingStep(){
 		Utility.log(TAG, "clickHatchingStep");
 		//検索結果を開く
-		SearchResultActivity.startThisActivityWithDefaultSearch(getContext(), SearchableInformations.HATCHING_STEP, poke.getHatchingStep().toString());
+		PokeSearchResultActivity.startThisActivityWithDefaultSearch(getContext(), PokeSearchableInformations.HATCHING_STEP, poke.getHatchingStep().toString());
 	}
 	private void clickTextItem(PokeData.ItemRarities rarity){
 		Utility.log(TAG, "clickTextItem");
 		//検索結果を開く
-		SearchResultActivity.startThisActivityWithDefaultSearch(getContext(), SearchableInformations.ITEM, poke.getItem(rarity).toString());
+		PokeSearchResultActivity.startThisActivityWithDefaultSearch(getContext(), PokeSearchableInformations.ITEM, poke.getItem(rarity).toString());
 	}
 	/**
 	 * layout初期化

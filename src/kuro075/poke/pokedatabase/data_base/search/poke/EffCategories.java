@@ -301,7 +301,7 @@ public enum EffCategories implements PokeSearchIfCategory{
 				public void onClick(DialogInterface dialog, int which) {
 					// 
 					dialog.dismiss();
-					SearchableInformations.EFF.openDialog(context, search_type, listener);
+					PokeSearchableInformations.EFF.openDialog(context, search_type, listener);
 				}
 			});
 			builder.create().show();
@@ -373,7 +373,7 @@ public enum EffCategories implements PokeSearchIfCategory{
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				SearchableInformations.EFF.openDialog(context, search_type, listener);
+				PokeSearchableInformations.EFF.openDialog(context, search_type, listener);
 			}
 		});
 		return builder;

@@ -4,11 +4,10 @@ import kuro075.poke.pokedatabase.BookActivity;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
-import kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations;
+import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.poke_page.PokePageActivity;
-import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +43,7 @@ public class PokeBookActivity extends BookActivity{
 	@Override
 	protected void clickButtonAll(){
 		Utility.log(TAG, "clickButtonAllPokes");
-		SearchResultActivity.startThisActivity(this);
+		PokeSearchResultActivity.startThisActivity(this);
 	}
 	
 	/**
@@ -82,7 +81,7 @@ public class PokeBookActivity extends BookActivity{
 			PokePageActivity.startThisActivity(this, no);
 		}catch(NumberFormatException e){
 			//フリーワードから検索条件を取得
-			String[] search_ifs=SearchableInformations.getSearchIfByFreeWord(free_word);
+			String[] search_ifs=PokeSearchableInformations.getSearchIfByFreeWord(free_word);
 			//検索条件がある場合
 			if(search_ifs.length>0){	
 				//検索条件が一つのとき
@@ -94,7 +93,7 @@ public class PokeBookActivity extends BookActivity{
 					}
 					//ポケモンの名前でないなら検索結果アクティビティーを開始
 					else{
-						SearchResultActivity.startThisActivity(this, "フリーワード検索", search_ifs);
+						PokeSearchResultActivity.startThisActivity(this, "フリーワード検索", search_ifs);
 					}
 				}
 				//検索条件が複数なら　検索条件確認画面を表示

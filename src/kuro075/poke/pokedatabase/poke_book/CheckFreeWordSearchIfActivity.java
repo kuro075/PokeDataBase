@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
-import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 
 public class CheckFreeWordSearchIfActivity extends PokeBookMenuActivity{
@@ -65,7 +64,7 @@ public class CheckFreeWordSearchIfActivity extends PokeBookMenuActivity{
 						list.add(((TextView)view.findViewById(R.id.text)).getText().toString());
 					}
 				}
-				SearchResultActivity.startThisActivity(context, "フリーワード検索", list.toArray(new String[0]));
+				PokeSearchResultActivity.startThisActivity(context, "フリーワード検索", list.toArray(new String[0]));
 			}
 		});
 	}

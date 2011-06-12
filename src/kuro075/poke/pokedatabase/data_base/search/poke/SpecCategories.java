@@ -313,7 +313,7 @@ public enum SpecCategories implements PokeSearchIfCategory{
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
-					SearchableInformations.SPEC.openDialog(context,search_type, listener);
+					PokeSearchableInformations.SPEC.openDialog(context,search_type, listener);
 				}
 			});
 			builder.create().show();
@@ -385,7 +385,7 @@ public enum SpecCategories implements PokeSearchIfCategory{
 				public void onClick(DialogInterface dialog, int which) {
 					// 
 					dialog.dismiss();
-					SearchableInformations.SPEC.openDialog(context,search_type, listener);
+					PokeSearchableInformations.SPEC.openDialog(context,search_type, listener);
 				}
 			});
 			builder.create().show();
@@ -457,7 +457,7 @@ public enum SpecCategories implements PokeSearchIfCategory{
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				SearchableInformations.SPEC.openDialog(context, search_type, listener);
+				PokeSearchableInformations.SPEC.openDialog(context, search_type, listener);
 			}
 		});
 		return builder;

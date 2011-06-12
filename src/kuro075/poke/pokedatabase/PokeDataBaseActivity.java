@@ -8,7 +8,6 @@ import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.menu.DefaultMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.DetailSearchActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeBookActivity;
-import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.skill_book.SkillBookActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import kuro075.poke.pokedatabase.util.Utility.FileNames;
@@ -26,7 +25,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class PokeDataBaseActivity extends DefaultMenuActivity {
 	private static final String PACKAGE="kuro075.poke.pokedatabase";

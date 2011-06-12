@@ -6,9 +6,8 @@ import java.util.List;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
-import kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations;
+import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
-import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -101,7 +100,7 @@ public class DetailSearchActivity extends PokeBookMenuActivity{
 		Utility.log(TAG, "onCreate");
 		final Context context=this;
 		//画面上部
-		final int length=SearchableInformations.values().length;
+		final int length=PokeSearchableInformations.values().length;
 		linear_layout=(LinearLayout)findViewById(R.id.linear_layout);
 		text_if_name=new TextView[length];
 		toggle_view_if=new ToggleButton[length];
@@ -138,7 +137,7 @@ public class DetailSearchActivity extends PokeBookMenuActivity{
 			button_add_if[i].setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-					SearchableInformations.values()[index].openDialog(context, SearchTypes.FILTER, new MySearchIfListener(context,index));
+					PokeSearchableInformations.values()[index].openDialog(context, SearchTypes.FILTER, new MySearchIfListener(context,index));
 				}
 			});
 			//条件テキスト
@@ -156,7 +155,7 @@ public class DetailSearchActivity extends PokeBookMenuActivity{
 				for(List<String> al:search_ifs_list){
 					list.addAll(al);
 				}
-				SearchResultActivity.startThisActivity(context, getString(R.string.searched_result), list.toArray(new String[0]));
+				PokeSearchResultActivity.startThisActivity(context, getString(R.string.searched_result), list.toArray(new String[0]));
 			}
 		});
 		//条件表示ボタン
@@ -184,7 +183,7 @@ public class DetailSearchActivity extends PokeBookMenuActivity{
 	 */
 	private void refreshIfName(int index){
 		StringBuilder sb=new StringBuilder();
-		sb.append(SearchableInformations.values()[index].toString());
+		sb.append(PokeSearchableInformations.values()[index].toString());
 		int size=search_ifs_list[index].size();
 		if(size>0){
 			sb.append(" (");

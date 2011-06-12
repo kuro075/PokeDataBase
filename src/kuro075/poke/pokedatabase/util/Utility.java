@@ -1,10 +1,8 @@
 package kuro075.poke.pokedatabase.util;
 
-import java.util.Arrays;
 import java.util.List;
 
 import kuro075.poke.pokedatabase.R;
-import kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,12 +10,6 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 

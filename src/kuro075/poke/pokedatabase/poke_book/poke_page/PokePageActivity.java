@@ -3,17 +3,17 @@ package kuro075.poke.pokedatabase.poke_book.poke_page;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
-import kuro075.poke.pokedatabase.data_base.search.poke.SearchableInformations;
+import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 import kuro075.poke.pokedatabase.menu.MenuItems;
 import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
+import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
 import kuro075.poke.pokedatabase.poke_book.poke_page.basic.BasicInformationLayout;
 import kuro075.poke.pokedatabase.poke_book.poke_page.egg_skill.EggSkillInformationLayout;
 import kuro075.poke.pokedatabase.poke_book.poke_page.lv_skill.LvSkillInformationLayout;
 import kuro075.poke.pokedatabase.poke_book.poke_page.machine.MachineInformationLayout;
 import kuro075.poke.pokedatabase.poke_book.poke_page.other.OtherInformationLayout;
-import kuro075.poke.pokedatabase.poke_book.search_result.SearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
 import android.content.Intent;
@@ -182,7 +182,7 @@ public class PokePageActivity extends PokeBookMenuActivity{
 	private void clickTextType(TypeData type){
 		Utility.log(TAG,"clickTextType");
 		//検索結果アクティビティーを起動
-		SearchResultActivity.startThisActivityWithDefaultSearch(this, SearchableInformations.TYPE, type.toString());
+		PokeSearchResultActivity.startThisActivityWithDefaultSearch(this, PokeSearchableInformations.TYPE, type.toString());
 	}
     /**
 	 * 一番上のNo.名前　タイプ　のところをセット
