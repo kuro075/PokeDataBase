@@ -52,7 +52,7 @@ public class PokeBookActivity extends BookActivity{
 	@Override
 	protected void clickButtonAiueo(){
 		Utility.log(TAG,"clickButtonAiueo");
-		AiueoSearchActivity.startThisActivity(this);
+		PokeAiueoSearchActivity.startThisActivity(this);
 	}
 	/**
 	 * button_detail_searchがクリックされた時
@@ -62,7 +62,7 @@ public class PokeBookActivity extends BookActivity{
 	@Override
 	protected void clickButtonDetailSearch(){
 		Utility.log(TAG, "clickButtonDetailSearch");
-		DetailSearchActivity.startThisActivity(this);
+		PokeDetailSearchActivity.startThisActivity(this);
 	}
 	
 	/**

@@ -8,6 +8,7 @@ import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Statuses;
+import kuro075.poke.pokedatabase.data_base.search.PokeSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.SearchIfCategory;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -494,5 +495,14 @@ public enum SpecCategories implements PokeSearchIfCategory{
 			}
 		}
 		return list.toArray(new PokeData[0]);
+	}
+
+	/**
+	 * 検索条件文字列の種類が一致するかどうか
+	 * @param category
+	 * @return
+	 */
+	public boolean isCategory(String category){
+		return toString().equals(category);
 	}
 }

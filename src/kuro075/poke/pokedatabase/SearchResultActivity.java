@@ -28,6 +28,7 @@ import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
+import kuro075.poke.pokedatabase.data_base.viewable_informations.PokeViewableInformations;
 import kuro075.poke.pokedatabase.menu.MenuItems;
 import kuro075.poke.pokedatabase.menu.book.BookMenuActivity;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -465,7 +466,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	 * @return
 	 */
 	protected BasicData[] getAllDatas(){
-		return PokeDataManager.INSTANCE.getAllPokeData();
+		return new BasicData[0];
 	}
 	/**
 	 * ViewableInformationのComparatorを取得
@@ -473,7 +474,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	 * @return
 	 */
 	protected Comparator getComparatorByViewableInformation(int index){
-		return kuro075.poke.pokedatabase.data_base.viewable_informations.ViewableInformations.values()[index].getComparator();
+		return null;
 	}
 	
 	/**
@@ -513,7 +514,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	 * @return
 	 */
 	protected String[] getSearchableInformationTitles(){
-		return Utility.changeToStringArray(PokeSearchableInformations.values());
+		return new String[0];
 	}
 	/**
 	 * 複数選択モードで選択された項目を取得
@@ -540,7 +541,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	 * @return
 	 */
 	protected String getViewableInformation(int index,BasicData data){
-		return kuro075.poke.pokedatabase.data_base.viewable_informations.ViewableInformations.values()[index].getInformation((PokeData)data);
+		return "";
 	}
 	/**
 	 * ViewableInformationsのタイトルを取得
@@ -548,14 +549,14 @@ public class SearchResultActivity extends BookMenuActivity{
 	 * @return
 	 */
 	protected String getViewableInformationTitle(int index){
-		return kuro075.poke.pokedatabase.data_base.viewable_informations.ViewableInformations.values()[index].toString();
+		return "";
 	}
 	/**
 	 * ViewableInformationsのタイトルの配列を返す
 	 * @return
 	 */
 	protected String[] getViewableInformationTitles(){
-		return Utility.changeToStringArray(kuro075.poke.pokedatabase.data_base.viewable_informations.ViewableInformations.values());
+		return new String[0];
 	}
 	
 	/**
@@ -762,7 +763,6 @@ public class SearchResultActivity extends BookMenuActivity{
 	 */
 	protected void openSearchDialog(int index,Context context,SearchTypes search_type,SearchIfListener listener){
 		Utility.log(TAG, "openSearchDialog");
-		//SearchableInformations.values()[index].openDialog(context, search_type, listener);
 	}
 	
 	/**
@@ -861,7 +861,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	 * @return
 	 */
 	protected BasicData[] search(BasicData[] data_array,String search_if){
-		return kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations.searchBySearchIf((PokeData[])data_array, search_if);
+		return new BasicData[0];
 	}
 	/**
 	 * 複数選択モードに移行

@@ -137,7 +137,7 @@ public class ItemData extends BasicData{
 	 * @author sanogenma
 	 *
 	 */
-	enum ItemSubClasses{
+	public enum ItemSubClasses{
 		HP("HP回復"),PP("PP回復"),STATE("状態回復"),EFF("努力値"),OKOU("おこう"),
 		REINFORCEMENT("能力変化"),EVOLUTION("進化アイテム"),EXCLUSIVE("専用アイテム"),PLATE("プレート"),
 		JEWEL("ジュエル"),FOSSIL("化石"),WEATHER("天候岩"),HALF("半減の実"),

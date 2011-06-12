@@ -43,12 +43,12 @@ public class SkillBookActivity extends BookActivity{
 
 	@Override
 	protected void clickButtonAiueo() {
-		// TODO Auto-generated method stub
+		SkillAiueoSearchActivity.startThisActivity(this);
 	}
 
 	@Override
 	protected void clickButtonDetailSearch() {
-		// TODO Auto-generated method stub
+		SkillDetailSearchActivity.startThisActivity(this);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package kuro075.poke.pokedatabase.data_base.search.skill;
+package kuro075.poke.pokedatabase.data_base.search.character;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,11 +9,11 @@ import java.util.Set;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
+import kuro075.poke.pokedatabase.data_base.search.CharacterSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
-import kuro075.poke.pokedatabase.data_base.search.SkillSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.poke.NameSearchOptions;
-import kuro075.poke.pokedatabase.data_base.skill.SkillData;
-import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
+import kuro075.poke.pokedatabase.data_base.character.CharacterData;
+import kuro075.poke.pokedatabase.data_base.character.CharacterDataManager;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,12 +25,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-/**
- * SkillDataの検索可能情報
- * @author sanogenma
- *
- */
-public enum SkillSearchableInformations implements SkillSearchIfCategory{
+public enum CharacterSearchableInformations implements CharacterSearchIfCategory{
 	NAME("名前") {
 		private final String HIRA="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉゃゅょっ-";
 		private final String KATA="アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォャュョッーｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｧｨｩｪｫｬｭｮｯ";
@@ -120,26 +115,26 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 		}
 
 		/**
-		 * @param skill_array
+		 * @param character_array
 		 * @param category
 		 * @param _case : "カタカナの文字列 NameSearchOption"
 		 * 
 		 */
 		@Override
-		public SkillData[] search(SkillData[] skill_array, String category,
+		public CharacterData[] search(CharacterData[] character_array, String category,
 				String _case) {
 			if(toString().equals(category)){
 				String[] text_option=_case.split(" ");
 				NameSearchOptions option=NameSearchOptions.fromString(text_option[1]);
-				List<SkillData> skill_list=new ArrayList<SkillData>();
-				for(SkillData poke:skill_array){
+				List<CharacterData> character_list=new ArrayList<CharacterData>();
+				for(CharacterData poke:character_array){
 					if(option.compareOf(poke, text_option[0])){
-						skill_list.add(poke);
+						character_list.add(poke);
 					}
 				}
-				return skill_list.toArray(new SkillData[0]);
+				return character_list.toArray(new CharacterData[0]);
 			}
-			return new SkillData[0];
+			return new CharacterData[0];
 		}
 		/**
 		 * フリーワードから検索条件を取得
@@ -178,11 +173,10 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 			}
 			return "";
 		}
-	
 	};
 	
-	public static SkillSearchableInformations fromCategory(String category){
-		for(SkillSearchableInformations info:values()){
+	public static CharacterSearchableInformations fromCategory(String category){
+		for(CharacterSearchableInformations info:values()){
 			if(info.isCategory(category)) return info;
 		}
 		return null;
@@ -198,24 +192,24 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 	public static String[] getSearchIfByFreeWord(String free_word){
 		return null;
 	}
-	public static SkillData[] searchBySearchIf(SkillData[] skill_array,String search_if){
+	public static CharacterData[] searchBySearchIf(CharacterData[] chara_array,String search_if){
 		Utility.log(TAG, "searchBySearchIf");
 		String[] tmp=search_if.split("[:¥(¥)/]");//category , case(SearchTypes)に分けられる
 		Utility.log(TAG, tmp.length+":"+Arrays.deepToString(tmp));
-		SkillData[] searched_array=null;
-		Set<SkillData> searched_set=new HashSet<SkillData>();
-		SkillSearchableInformations si=fromCategory(tmp[0]);
+		CharacterData[] searched_array=null;
+		Set<CharacterData> searched_set=new HashSet<CharacterData>();
+		CharacterSearchableInformations si=fromCategory(tmp[0]);
 		if(si!=null){//検索であった場合
 			switch(SearchTypes.fromString(tmp[2])){
 				case FILTER:
-					searched_array=si.search(skill_array,tmp[0], tmp[1]);
+					searched_array=si.search(chara_array,tmp[0], tmp[1]);
 					searched_set.addAll(Arrays.asList(searched_array));
 					break;
 				case REMOVE:
-					searched_array=si.search(skill_array,tmp[0], tmp[1]);
-					for(SkillData poke:skill_array){
+					searched_array=si.search(chara_array,tmp[0], tmp[1]);
+					for(CharacterData poke:chara_array){
 						boolean flag=true;
-						for(SkillData target:searched_array){
+						for(CharacterData target:searched_array){
 							if(poke.equals(target)){ 
 								flag=false;
 								break;
@@ -226,45 +220,45 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 					}
 					break;
 				case ADD:
-					searched_array=si.search(SkillDataManager.INSTANCE.getAllData(),tmp[0], tmp[1]);
-					searched_set.addAll(Arrays.asList(skill_array));
+					searched_array=si.search(CharacterDataManager.INSTANCE.getAllData(),tmp[0], tmp[1]);
+					searched_set.addAll(Arrays.asList(chara_array));
 					searched_set.addAll(Arrays.asList(searched_array));
 					break;
 				default:
-					searched_set.addAll(Arrays.asList(skill_array));
+					searched_set.addAll(Arrays.asList(chara_array));
 					break;
 			}
 		}
 		else{//検索以外(除外、追加)
 			SearchTypes st=SearchTypes.fromString(tmp[0]);
-			searched_set.addAll(Arrays.asList(skill_array));
+			searched_set.addAll(Arrays.asList(chara_array));
 			switch(st){
 				case REMOVE:
 					for(int i=1,n=tmp.length;i<n;i++){
-						searched_set.remove(SkillDataManager.INSTANCE.getSkillData(tmp[i]));
+						searched_set.remove(CharacterDataManager.INSTANCE.getCharacterData(tmp[i]));
 					}
 					break;
 				case ADD:
 					for(int i=1,n=tmp.length;i<n;i++){
-						searched_set.add(SkillDataManager.INSTANCE.getSkillData(tmp[i]));
+						searched_set.add(CharacterDataManager.INSTANCE.getCharacterData(tmp[i]));
 					}
 					break;
 				default:
 			}
 		}
-		return searched_set.toArray(new SkillData[0]);
+		return searched_set.toArray(new CharacterData[0]);
 	}
 	private final String name;
 
 
-	private static final String TAG="SkillSearchableInformations";
+	private static final String TAG="CharacterSearchableInformations";
 	/**
 	 * 文字列からSearchableInformationsを取得
 	 * @param step
 	 * @return
 	 */
-	public static SkillSearchableInformations fromString(String name){
-		for(SkillSearchableInformations info:values()){
+	public static CharacterSearchableInformations fromString(String name){
+		for(CharacterSearchableInformations info:values()){
 			if(info.toString().equals(name)){
 				return info;
 			}
@@ -273,10 +267,10 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 	}
 	
 	
-	SkillSearchableInformations(String name){this.name=name;}
+	CharacterSearchableInformations(String name){this.name=name;}
 
 	/**
-	 * わざのページでタイプをクリックしたときなど
+	 * 特性のページでタイプをクリックしたときなど
 	 * デフォルトの検索条件を返す
 	 * @param search_if
 	 * @return
@@ -295,7 +289,7 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 		StringBuilder sb = new StringBuilder();
 		sb.append("「");
 		sb.append(_case);
-		sb.append("」のわざ");
+		sb.append("」の特性");
 		return new String(sb);
 	}
 	

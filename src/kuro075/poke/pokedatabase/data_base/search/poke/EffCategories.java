@@ -9,9 +9,9 @@ import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Statuses;
+import kuro075.poke.pokedatabase.data_base.search.PokeSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.SearchIfCategory;
-import kuro075.poke.pokedatabase.data_base.viewable_informations.ViewableInformations;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -410,5 +410,8 @@ public enum EffCategories implements PokeSearchIfCategory{
 			}
 		}
 		return list.toArray(new PokeData[0]);
+	}
+	public boolean isCategory(String category){
+		return toString().equals(category);
 	}
 }

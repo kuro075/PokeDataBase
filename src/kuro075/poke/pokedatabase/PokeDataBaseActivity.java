@@ -6,7 +6,6 @@ import java.io.InputStream;
 
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.menu.DefaultMenuActivity;
-import kuro075.poke.pokedatabase.poke_book.DetailSearchActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeBookActivity;
 import kuro075.poke.pokedatabase.skill_book.SkillBookActivity;
 import kuro075.poke.pokedatabase.util.Utility;

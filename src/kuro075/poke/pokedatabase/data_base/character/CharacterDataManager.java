@@ -81,140 +81,6 @@ public class CharacterDataManager {
 			return new CharacterDataManager(chara_list.toArray(new CharacterData[0]));
 		}
 	}
-	
-	//================================================================================
-	/*=======/
-	/  enum  / 
-	/=======*/
-	public enum ViewableInformations{
-		BATTLE_EFFECT("戦闘中の効果") {
-			@Override
-			public String getInformation(CharacterData chara) {
-				// TODO Auto-generated method stub
-				return chara.getBattleEffect();
-			}
-
-			@Override
-			public Comparator<CharacterData> getComparator() {
-				// TODO Auto-generated method stub
-				return new Comparator<CharacterData>(){
-					@Override
-					public int compare(CharacterData c1, CharacterData c2) {
-						// TODO Auto-generated method stub
-						return c1.getBattleEffect().compareTo(c2.getBattleEffect());
-					}
-				};
-			}
-		},
-		FIELD_EFFECT("フィールド上の効果") {
-			@Override
-			public String getInformation(CharacterData chara) {
-				// TODO Auto-generated method stub
-				return chara.getFieldEffect();
-			}
-
-			@Override
-			public Comparator<CharacterData> getComparator() {
-				// TODO Auto-generated method stub
-				return new Comparator<CharacterData>(){
-					@Override
-					public int compare(CharacterData c1, CharacterData c2) {
-						// TODO Auto-generated method stub
-						return c1.getFieldEffect().compareTo(c2.getFieldEffect());
-					}
-				};
-			}
-		};
-		
-		/*========/
-		/  メンバ  /
-		/========*/
-		private final String name;
-		ViewableInformations(String name){this.name=name;}
-		@Override
-		public String toString(){return name;}
-		
-		/**
-		 * 表示する情報を取得
-		 * @param chara
-		 * @return
-		 */
-		abstract public String getInformation(CharacterData chara);
-		/**
-		 * ソートに使うComparatorを取得
-		 * @return
-		 */
-		abstract public Comparator<CharacterData> getComparator();
-	}
-	
-	public enum SearchableInformations{
-		NAME("名前") {
-			@Override
-			public AlertDialog getDialog(Context context,
-					CharacterData[] charas, SearchTypes search_type,
-					SearchedCharacterListener listener) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public CharacterData[] search(CharacterData[] chara_array,
-					String condition) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-		
-		private final String name;
-		SearchableInformations(String name){this.name=name;}
-		@Override
-		public String toString(){
-			return name;
-		}
-		/**
-		 * ダイアログを取得するメソッド
-		 * @param context
-		 * @param charas
-		 * @param search_type
-		 * @param listener
-		 * @return
-		 */
-		abstract public AlertDialog getDialog(Context context,CharacterData[] charas,SearchTypes search_type,SearchedCharacterListener listener);
-		/**
-		 * 検索条件(文字列)からわざを検索して返すメソッド
-		 * @param chara_array
-		 * @param condition
-		 * @return
-		 */
-		abstract public CharacterData[] search(CharacterData[] chara_array,String condition);
-		/**
-		 * condition=種類:hoge(SearchTypes)
-		 * @param chara_array
-		 * @param condition
-		 * @return
-		 */
-		public static CharacterData[] searchByCondition(CharacterData[] chara_array,String condition){
-			String[] tmp=condition.split(":()");
-			return fromString(tmp[0]).search(chara_array,tmp[1]);
-		}
-		
-		private static final Map<String,SearchableInformations>
-			stringToEnum = new HashMap<String,SearchableInformations>();//文字列からenumへ
-		static { //定数名からenum定数へのマップを初期化
-			for(SearchableInformations si : values()){
-				stringToEnum.put(si.toString(), si);
-			}
-		}
-		/**
-		 * 文字列からSearchableInformationsを取得
-		 * @param step
-		 * @return
-		 */
-		public static SearchableInformations fromString(String name){
-			return stringToEnum.get(name);
-		}
-	}
-	
 	//================================================================================
 	/*========/
 	/  データ  / 
@@ -247,7 +113,7 @@ public class CharacterDataManager {
 	 * 全てのCharacterDataを取得
 	 * @return
 	 */
-	public CharacterData[] getAllCharaData(){
+	public CharacterData[] getAllData(){
 		return chara_data.clone();
 	}
 	/**

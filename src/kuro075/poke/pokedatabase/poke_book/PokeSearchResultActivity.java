@@ -100,7 +100,7 @@ public class PokeSearchResultActivity extends SearchResultActivity{
 
 	@Override
 	protected BasicData[] getAllDatas() {
-		return PokeDataManager.INSTANCE.getAllPokeData();
+		return PokeDataManager.INSTANCE.getAllData();
 	}
 
 	@Override

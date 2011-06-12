@@ -8,7 +8,7 @@ import kuro075.poke.pokedatabase.data_base.poke.PokeData.Statuses;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
-import kuro075.poke.pokedatabase.data_base.viewable_informations.ViewableInformations;
+import kuro075.poke.pokedatabase.data_base.viewable_informations.PokeViewableInformations;
 import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
@@ -201,7 +201,7 @@ public class BasicInformationLayout extends LinearLayout{
     		((TextView)layout.findViewById(TEXT_NUM_TYPERELATION_ID[i])).setText(String.valueOf(weaktype[i].length));
     	}
     	//持っている道具
-    	final String common_item=ViewableInformations.ITEM_COMMON.getInformation(poke);
+    	final String common_item=PokeViewableInformations.ITEM_COMMON.getInformation(poke);
     	Item[0].setText(common_item);
     	if(!common_item.equals("-")){
     		Item[0].setOnClickListener(new OnClickListener(){
@@ -212,7 +212,7 @@ public class BasicInformationLayout extends LinearLayout{
 				}
     		});
     	}
-    	final String rare_item=ViewableInformations.ITEM_RARE.getInformation(poke);
+    	final String rare_item=PokeViewableInformations.ITEM_RARE.getInformation(poke);
     	Item[1].setText(rare_item);
     	if(!rare_item.equals("-")){
     		Item[1].setOnClickListener(new OnClickListener(){
@@ -253,16 +253,16 @@ public class BasicInformationLayout extends LinearLayout{
     	
     	
     	//高さ重さ
-		Height.setText(ViewableInformations.HEIGHT.getInformation(poke));
-    	Weight.setText(ViewableInformations.WEIGHT.getInformation(poke));
+		Height.setText(PokeViewableInformations.HEIGHT.getInformation(poke));
+    	Weight.setText(PokeViewableInformations.WEIGHT.getInformation(poke));
     	//けたぐりの威力
     	StringBuilder sb=new StringBuilder();
     	sb.append("(けたぐり:");
-    	sb.append(ViewableInformations.KETAGURI_KUSAMUSUBI.getInformation(poke));
+    	sb.append(PokeViewableInformations.KETAGURI_KUSAMUSUBI.getInformation(poke));
     	sb.append(")");
     	Ketaguri.setText(new String(sb));
     	//孵化歩数
-    	HatchingStep.setText(ViewableInformations.HATCHING_STEP.getInformation(poke));
+    	HatchingStep.setText(PokeViewableInformations.HATCHING_STEP.getInformation(poke));
     	HatchingStep.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -285,7 +285,7 @@ public class BasicInformationLayout extends LinearLayout{
     		Female.setText(String.valueOf(female));
     	}
     	//その他データ
-    	FinalEx.setText(ViewableInformations.FINAL_EX.getInformation(poke));
+    	FinalEx.setText(PokeViewableInformations.FINAL_EX.getInformation(poke));
     	FinalEx.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -293,8 +293,8 @@ public class BasicInformationLayout extends LinearLayout{
 				clickFinalEx();
 			}
 		});
-    	EGet.setText(ViewableInformations.EASE_GET.getInformation(poke));
-    	BasicEx.setText(ViewableInformations.BASIC_EX.getInformation(poke));
-    	Natsuki.setText(ViewableInformations.INITIAL_NATSUKI.getInformation(poke));
+    	EGet.setText(PokeViewableInformations.EASE_GET.getInformation(poke));
+    	BasicEx.setText(PokeViewableInformations.BASIC_EX.getInformation(poke));
+    	Natsuki.setText(PokeViewableInformations.INITIAL_NATSUKI.getInformation(poke));
     }
 }

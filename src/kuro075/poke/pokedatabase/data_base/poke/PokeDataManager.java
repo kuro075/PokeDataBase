@@ -349,7 +349,7 @@ public class PokeDataManager implements Serializable{
 		return num;
 	}
 	
-	public PokeData[] getAllPokeData(){
+	public PokeData[] getAllData(){
 		return poke_data.clone();
 	}
 	/**

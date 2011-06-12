@@ -157,7 +157,7 @@ public class SkillDataManager {
 	 * 全ての技データを取得
 	 * @return
 	 */
-	public SkillData[] getAllSkillData(){
+	public SkillData[] getAllData(){
 		return skill_data;
 	}
 	/**

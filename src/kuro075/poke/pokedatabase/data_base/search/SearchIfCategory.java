@@ -28,4 +28,11 @@ public interface SearchIfCategory {
 	 * @return
 	 */
 	public String getCaseByFreeWord(String free_word);
+	
+	/**
+	 * categoryであるかどうか検査
+	 * @param category
+	 * @return
+	 */
+	public boolean isCategory(String category);
 }

@@ -79,6 +79,33 @@ public class SearchIf {
 		}
 		return new String(sb);
 	}
+	
+	/**
+	 * 追加が一匹の時の検索条件を取得
+	 * @param add_poke
+	 * @return
+	 */
+	public static String getAddIf(BasicData add_poke){
+		return SearchTypes.ADD.toString()+":"+add_poke;
+	}
+	/**
+	 * 追加が複数の時の検索条件を取得
+	 * @param add_pokes
+	 * @return
+	 */
+	public static String getAddIf(BasicData[] add_pokes){
+		StringBuilder sb=new StringBuilder();
+		sb.append(SearchTypes.ADD.toString());
+		sb.append(":");
+		for(int i=0,n=add_pokes.length;i<n;i++){
+			sb.append(add_pokes[i].getName());
+			if(i<n-1){
+				sb.append("/");
+			}
+		}
+		return new String(sb);
+	}
+	
 	/**
 	 * スピナーのみの検索ダイアログのビルダーを取得
 	 * @param context

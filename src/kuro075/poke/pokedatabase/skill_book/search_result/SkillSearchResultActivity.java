@@ -70,8 +70,8 @@ public class SkillSearchResultActivity extends SearchResultActivity{
 	public static void startThisActivityWithDefaultSearch(Context context,SkillSearchableInformations info,String _case){
 		Utility.log(TAG, "startThisActivityWithDefaultSearch");
 		String[] ifs=new String[1];
-		//ifs[0]=info.getDefaultSearchIf(_case);
-		//startThisActivity(context,info.getDefaultTitle(_case),ifs);
+		ifs[0]=info.getDefaultSearchIf(_case);
+		startThisActivity(context,info.getDefaultTitle(_case),ifs);
 	}
 	/**
 	 * このアクティビティーをstartさせる
@@ -95,7 +95,7 @@ public class SkillSearchResultActivity extends SearchResultActivity{
 
 	@Override
 	protected BasicData[] getAllDatas() {
-		return SkillDataManager.INSTANCE.getAllSkillData();
+		return SkillDataManager.INSTANCE.getAllData();
 	}
 	@Override
 	protected Comparator getComparatorByViewableInformation(int index) {
@@ -138,14 +138,12 @@ public class SkillSearchResultActivity extends SearchResultActivity{
 	@Override
 	protected void openSearchDialog(int index, Context context,
 			SearchTypes search_type, SearchIfListener listener) {
-		// TODO Auto-generated method stub
-		super.openSearchDialog(index, context, search_type, listener);
+		SkillSearchableInformations.values()[index].openDialog(context, search_type, listener);
 	}
 
 	@Override
 	protected BasicData[] search(BasicData[] data_array, String search_if) {
-		// TODO Auto-generated method stub
-		return super.search(data_array, search_if);
+		return SkillSearchableInformations.searchBySearchIf((SkillData[])data_array, search_if);
 	}
 
 }

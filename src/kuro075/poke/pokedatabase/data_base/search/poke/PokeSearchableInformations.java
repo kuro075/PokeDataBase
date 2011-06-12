@@ -17,6 +17,7 @@ import kuro075.poke.pokedatabase.data_base.item.ItemDataManager;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.EggGroups;
+import kuro075.poke.pokedatabase.data_base.search.PokeSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -788,7 +789,7 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 					}
 					break;
 				case ADD:
-					searched_array=si.search(PokeDataManager.INSTANCE.getAllPokeData(),tmp[0], tmp[1]);
+					searched_array=si.search(PokeDataManager.INSTANCE.getAllData(),tmp[0], tmp[1]);
 					searched_set.addAll(Arrays.asList(poke_array));
 					searched_set.addAll(Arrays.asList(searched_array));
 					break;
@@ -844,32 +845,6 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 	public static PokeSearchableInformations fromString(String name){
 		return stringToEnum.get(name);
 	}
-	/**
-	 * 追加が一匹の時の検索条件を取得
-	 * @param add_poke
-	 * @return
-	 */
-	public static String getAddIf(PokeData add_poke){
-		return SearchTypes.ADD.toString()+":"+add_poke;
-	}
-	/**
-	 * 追加が複数の時の検索条件を取得
-	 * @param add_pokes
-	 * @return
-	 */
-	public static String getAddIf(PokeData[] add_pokes){
-		StringBuilder sb=new StringBuilder();
-		sb.append(SearchTypes.ADD.toString());
-		sb.append(":");
-		for(int i=0,n=add_pokes.length;i<n;i++){
-			sb.append(add_pokes[i].getName());
-			if(i<n-1){
-				sb.append("/");
-			}
-		}
-		return new String(sb);
-	}
-	
 
 	
 	/**
