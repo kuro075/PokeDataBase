@@ -35,9 +35,6 @@ import android.widget.TextView;
 
 public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 	NAME("名前"){
-		private final String HIRA="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉゃゅょっ-";
-		private final String KATA="アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォャュョッーｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｧｨｩｪｫｬｭｮｯ";
-		
 		@Override
 		public String getDefaultSearchIf(String head) {
 			StringBuilder sb=new StringBuilder();
@@ -50,33 +47,7 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 		public String getDefaultTitle(String head) {
 			return head+NameSearchOptions.START;
 		}
-		/**
-		 * 平仮名を含む文字列を全てカタカナの文字列に変換して返す
-		 * 平仮名、カタカナ以外を含む場合は空の文字列("")を返す
-		 * @param text
-		 * @return
-		 */
-		public String changeHiraToKata(String text){
-			StringBuilder sb=new StringBuilder();
-			for(int i=0,n=text.length();i<n;i++){
-				char c=text.charAt(i);
-				//カタカナの場合
-				if(KATA.indexOf(c)>=0){
-					sb.append(c);
-					continue;
-				}
-				
-				int index=HIRA.indexOf(c);
-				//平仮名の場合
-				if(index>=0){
-					sb.append(KATA.charAt(index));
-					continue;
-				}
-				//それ以外
-				return "";
-			}
-			return new String(sb);
-		}
+
 		@Override
 		public void openDialog(final Context context, final SearchTypes search_type,
 				final SearchIfListener listener) {
@@ -99,7 +70,7 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 			builder.setPositiveButton("検索",new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					String text=changeHiraToKata(edit.getText().toString());
+					String text=Utility.changeHiraToKata(edit.getText().toString());
 					if(text.equals("")){
 						Utility.popToast(context, "無効な文字列です");
 						listener.receiveSearchIf(null);
@@ -171,7 +142,7 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 				for(int i=0;i<length;i++){
 					sb.append(free_word.charAt(i));
 				}
-				String text=this.changeHiraToKata(new String(sb));
+				String text=Utility.changeHiraToKata(new String(sb));
 				sb=new StringBuilder();
 				sb.append(text);
 				sb.append(" ");

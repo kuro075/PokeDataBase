@@ -9,11 +9,10 @@ import java.util.Set;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
+import kuro075.poke.pokedatabase.data_base.skill.SkillData;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.SkillSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.poke.NameSearchOptions;
-import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
-import kuro075.poke.pokedatabase.data_base.skill.SkillData;
 import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
@@ -33,35 +32,96 @@ import android.widget.TextView;
  */
 public enum SkillSearchableInformations implements SkillSearchIfCategory{
 	NAME("名前") {
-		private final String HIRA="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉゃゅょっ-";
-		private final String KATA="アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォャュョッーｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｧｨｩｪｫｬｭｮｯ";
-		
-		/**
-		 * 平仮名を含む文字列を全てカタカナの文字列に変換して返す
-		 * 平仮名、カタカナ以外を含む場合は空の文字列("")を返す
-		 * @param text
-		 * @return
-		 */
-		public String changeHiraToKata(String text){
+		@Override
+		public String getDefaultSearchIf(String head) {
 			StringBuilder sb=new StringBuilder();
-			for(int i=0,n=text.length();i<n;i++){
-				char c=text.charAt(i);
-				//カタカナの場合
-				if(KATA.indexOf(c)>=0){
-					sb.append(c);
-					continue;
+			sb.append(head);
+			sb.append(" ");
+			sb.append(NameSearchOptions.START.toString());
+			return SearchIf.createSearchIf(NAME,new String(sb) , SearchTypes.FILTER);
+		}
+		@Override
+		public String getDefaultTitle(String head) {
+			return head+NameSearchOptions.START;
+		}
+		@Override
+		public void openDialog(final Context context, final SearchTypes search_type,
+				final SearchIfListener listener) {
+			Utility.log(toString(),"openDialog");
+			AlertDialog.Builder builder;
+			LayoutInflater factory=LayoutInflater.from(context);
+			
+			final View layout = factory.inflate(R.layout.string_input_dialog,null);
+			builder = new AlertDialog.Builder(context);
+			builder.setTitle(SearchIf.createDialogTitle(this, search_type));
+			builder.setView(layout);
+			
+			
+			final EditText edit=(EditText)layout.findViewById(R.id.edit);
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,Utility.changeToStringArray(NameSearchOptions.values()));
+			final Spinner spinner = (Spinner) layout.findViewById(R.id.spinner);
+			spinner.setAdapter(adapter);
+			((TextView)layout.findViewById(R.id.text)).setText("※ひらがな、カタカナのみ有効(ひらがなは、カタカナに自動変換されます)");
+
+			builder.setPositiveButton("検索",new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					String text=Utility.changeHiraToKata(edit.getText().toString());
+					if(text.equals("")){
+						Utility.popToast(context, "無効な文字列です");
+						listener.receiveSearchIf(null);
+					}else{
+						StringBuilder sb=new StringBuilder();
+						sb.append(edit.getText().toString());
+						sb.append(" ");
+						sb.append(NameSearchOptions.values()[spinner.getSelectedItemPosition()]);
+						listener.receiveSearchIf(SearchIf.createSearchIf(NAME,new String(sb),search_type));
+					}
 				}
-				
-				int index=HIRA.indexOf(c);
-				//平仮名の場合
-				if(index>=0){
-					sb.append(KATA.charAt(index));
-					continue;
+			});
+			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					listener.receiveSearchIf(null);
 				}
-				//それ以外
-				return "";
+			});
+			
+			builder.create().show();
+		}
+
+		/**
+		 * @param skill_array
+		 * @param category
+		 * @param _case : "ひらがな・カタカナの文字列 NameSearchOption"
+		 * 
+		 */
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String _case) {
+			if(toString().equals(category)){
+				String[] text_option=_case.split(" ");
+				NameSearchOptions option=NameSearchOptions.fromString(text_option[1]);
+				List<SkillData> skill_list=new ArrayList<SkillData>();
+				for(SkillData chara:skill_array){
+					//そのまま
+					if(option.compareOf(chara, text_option[0])){
+						skill_list.add(chara);
+						continue;
+					}
+					//すべてひらがな
+					if(option.compareOf(chara, Utility.changeKataToHira(text_option[0]))){
+						skill_list.add(chara);
+						continue;
+					}
+					//すべてカタカナ
+					if(option.compareOf(chara, Utility.changeHiraToKata(text_option[0]))){
+						skill_list.add(chara);
+						continue;
+					}
+				}
+				return skill_list.toArray(new SkillData[0]);
 			}
-			return new String(sb);
+			return new SkillData[0];
 		}
 		/**
 		 * フリーワードから検索条件を取得
@@ -90,7 +150,7 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 				for(int i=0;i<length;i++){
 					sb.append(free_word.charAt(i));
 				}
-				String text=this.changeHiraToKata(new String(sb));
+				String text=Utility.changeHiraToKata(new String(sb));
 				sb=new StringBuilder();
 				sb.append(text);
 				sb.append(" ");
@@ -100,86 +160,6 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 			}
 			return "";
 		}
-		@Override
-		public String getDefaultSearchIf(String head) {
-			StringBuilder sb=new StringBuilder();
-			sb.append(head);
-			sb.append(" ");
-			sb.append(NameSearchOptions.START.toString());
-			return SearchIf.createSearchIf(NAME,new String(sb) , SearchTypes.FILTER);
-		}
-		@Override
-		public String getDefaultTitle(String head) {
-			return head+NameSearchOptions.START;
-		}
-
-		@Override
-		public void openDialog(final Context context, final SearchTypes search_type,
-				final SearchIfListener listener) {
-			Utility.log(toString(),"openDialog");
-			AlertDialog.Builder builder;
-			LayoutInflater factory=LayoutInflater.from(context);
-			
-			final View layout = factory.inflate(R.layout.string_input_dialog,null);
-			builder = new AlertDialog.Builder(context);
-			builder.setTitle(SearchIf.createDialogTitle(this, search_type));
-			builder.setView(layout);
-			
-			
-			final EditText edit=(EditText)layout.findViewById(R.id.edit);
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,Utility.changeToStringArray(NameSearchOptions.values()));
-			final Spinner spinner = (Spinner) layout.findViewById(R.id.spinner);
-			spinner.setAdapter(adapter);
-			((TextView)layout.findViewById(R.id.text)).setText("※ひらがな、カタカナのみ有効(ひらがなは、カタカナに自動変換されます)");
-
-			builder.setPositiveButton("検索",new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					String text=changeHiraToKata(edit.getText().toString());
-					if(text.equals("")){
-						Utility.popToast(context, "無効な文字列です");
-						listener.receiveSearchIf(null);
-					}else{
-						StringBuilder sb=new StringBuilder();
-						sb.append(text);
-						sb.append(" ");
-						sb.append(NameSearchOptions.values()[spinner.getSelectedItemPosition()]);
-						listener.receiveSearchIf(SearchIf.createSearchIf(NAME,new String(sb),search_type));
-					}
-				}
-			});
-			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					listener.receiveSearchIf(null);
-				}
-			});
-			
-			builder.create().show();
-		}
-		/**
-		 * @param skill_array
-		 * @param category
-		 * @param _case : "カタカナの文字列 NameSearchOption"
-		 * 
-		 */
-		@Override
-		public SkillData[] search(SkillData[] skill_array, String category,
-				String _case) {
-			if(toString().equals(category)){
-				String[] text_option=_case.split(" ");
-				NameSearchOptions option=NameSearchOptions.fromString(text_option[1]);
-				List<SkillData> skill_list=new ArrayList<SkillData>();
-				for(SkillData poke:skill_array){
-					if(option.compareOf(poke, text_option[0])){
-						skill_list.add(poke);
-					}
-				}
-				return skill_list.toArray(new SkillData[0]);
-			}
-			return new SkillData[0];
-		}
-	
 	};
 	
 	public static SkillSearchableInformations fromCategory(String category){

@@ -4,7 +4,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import kuro075.poke.pokedatabase.character_book.CharacterBookActivity;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
+import kuro075.poke.pokedatabase.item_book.ItemBookActivity;
 import kuro075.poke.pokedatabase.menu.DefaultMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeBookActivity;
 import kuro075.poke.pokedatabase.skill_book.SkillBookActivity;
@@ -46,14 +48,12 @@ public class PokeDataBaseActivity extends DefaultMenuActivity {
 		},CHARACTER("とくせい図鑑") {
 			@Override
 			public void startActivity(Context context) {
-				// TODO Auto-generated method stub
-				
+				CharacterBookActivity.startThisActivity(context);
 			}
 		},ITEM("アイテム図鑑") {
 			@Override
 			public void startActivity(Context context) {
-				// TODO Auto-generated method stub
-				
+				ItemBookActivity.startThisActivity(context);
 			}
 		},TYPE("タイプ図鑑") {
 			@Override
@@ -116,7 +116,7 @@ public class PokeDataBaseActivity extends DefaultMenuActivity {
     	edit.putInt(KEY_VERSION, version);
     	edit.commit();
        	for(FileNames fn : FileNames.values()){
-       		if(//Utility.DEBUG || 	//デバッグ用 trueで必ずファイル更新
+       		if(Utility.DEBUG || 	//デバッグ用 trueで必ずファイル更新
        		   !new_version ||	//最新バージョンかどうか
         	   !PokeDataBaseActivity.this.getFileStreamPath(fn.toString()).exists())//ファイルが存在するか
         	{
@@ -127,7 +127,7 @@ public class PokeDataBaseActivity extends DefaultMenuActivity {
 	    	    }
 	       	}
         }
-       	Utility.log(TAG,"Num:"+PokeDataManager.INSTANCE.getNum());
+       	Utility.log(TAG,"Num of Poke:"+PokeDataManager.INSTANCE.getNum());
        	
        	final OnClickListener listener=new MyClickListener(this);
        	LinearLayout linear=(LinearLayout)findViewById(R.id.linear_layout);
@@ -138,14 +138,6 @@ public class PokeDataBaseActivity extends DefaultMenuActivity {
        		button[i].setOnClickListener(listener);
        		linear.addView(button[i]);
        	}
-       	
-        //if(Utility.DEBUG) ((TextView)findViewById(R.id.hello)).setText(new kuro075.poke.pokedatabase.data_base.poke.Test().getTestString());
-        		//new kuro075.poke.pokedatabase.data_base.item.Test().getTestString());
-        		//new kuro075.poke.pokedatabase.data_base.character.Test().getTestString());
-        		//new kuro075.poke.pokedatabase.data_base.skill.Test().getTestString());
-        /*PokeBookActivity.startThisActivity(this);
-        DetailSearchActivity.startThisActivity(this);
-        SearchResultActivity.startThisActivity(this);*/
     }
     
     private void copy2Apk(InputStream input,String file) throws IOException{

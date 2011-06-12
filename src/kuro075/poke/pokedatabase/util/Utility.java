@@ -25,7 +25,65 @@ public class Utility {
 	//パッケージの名前
 	public static final String PACKAGENAME="kuro075.poke.pokedatabase";
 	public static final String DATAPATH="/data/data/"+PACKAGENAME+"/files/";
-	
+
+	/* 文字列操作 */
+	private static final String HIRA="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉゃゅょっ-1234567890";
+	private static final String KATA="アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォャュョッー1234567890ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｧｨｩｪｫｬｭｮｯ";
+
+	/**
+	 * 平仮名を含む文字列を全てカタカナの文字列に変換して返す
+	 * 平仮名、カタカナ以外を含む場合は空の文字列("")を返す
+	 * @param text
+	 * @return
+	 */
+	public static String changeHiraToKata(String text){
+		StringBuilder sb=new StringBuilder();
+		for(int i=0,n=text.length();i<n;i++){
+			char c=text.charAt(i);
+			//カタカナの場合
+			if(KATA.indexOf(c)>=0){
+				sb.append(c);
+				continue;
+			}
+			
+			int index=HIRA.indexOf(c);
+			//平仮名の場合
+			if(index>=0){
+				sb.append(KATA.charAt(index));
+				continue;
+			}
+			//それ以外
+			return "";
+		}
+		return new String(sb);
+	}
+	/**
+	 * カタカナを含む文字列を全てひらがなの文字列に変換して返す
+	 * 平仮名、カタカナ以外を含む場合は空の文字列("")を返す
+	 * @param text
+	 * @return
+	 */
+	public static String changeKataToHira(String text){
+		StringBuilder sb=new StringBuilder();
+		for(int i=0,n=text.length();i<n;i++){
+			char c=text.charAt(i);
+			//カタカナの場合
+			if(HIRA.indexOf(c)>=0){
+				sb.append(c);
+				continue;
+			}
+			
+			int index=KATA.indexOf(c);
+			//平仮名の場合
+			if(index>=0){
+				sb.append(HIRA.charAt(index));
+				continue;
+			}
+			//それ以外
+			return "";
+		}
+		return new String(sb);
+	}
 	/**
 	 * データファイル名
 	 * @author sanogenma

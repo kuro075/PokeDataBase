@@ -1,20 +1,20 @@
-package kuro075.poke.pokedatabase.skill_book;
+package kuro075.poke.pokedatabase.character_book;
 
-import kuro075.poke.pokedatabase.BookActivity;
-import kuro075.poke.pokedatabase.R;
-import kuro075.poke.pokedatabase.data_base.search.skill.SkillSearchableInformations;
-import kuro075.poke.pokedatabase.data_base.skill.SkillData;
-import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
-import kuro075.poke.pokedatabase.data_base.store.DataStore;
-import kuro075.poke.pokedatabase.data_base.store.DataStore.DataTypes;
-import kuro075.poke.pokedatabase.skill_book.search_result.SkillSearchResultActivity;
-import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import kuro075.poke.pokedatabase.BookActivity;
+import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.character_book.search_result.CharacterSearchResultActivity;
+import kuro075.poke.pokedatabase.data_base.search.character.CharacterSearchableInformations;
+import kuro075.poke.pokedatabase.data_base.character.CharacterData;
+import kuro075.poke.pokedatabase.data_base.character.CharacterDataManager;
+import kuro075.poke.pokedatabase.data_base.store.DataStore;
+import kuro075.poke.pokedatabase.data_base.store.DataStore.DataTypes;
+import kuro075.poke.pokedatabase.util.Utility;
 
-public class SkillBookActivity extends BookActivity{
-	private static final String TAG="SkillBookActivity";
+public class CharacterBookActivity extends BookActivity{
+	private static final String TAG="CharacterBookActivity";
 	
 	/**
 	 * このアクティビティーをstartさせる
@@ -22,7 +22,7 @@ public class SkillBookActivity extends BookActivity{
 	 */
 	public static void startThisActivity(Context context){
 		Utility.log(TAG, "startThisActivity");
-		Intent intent = new Intent(context,SkillBookActivity.class);
+		Intent intent = new Intent(context,CharacterBookActivity.class);
 		context.startActivity(intent);
 	}
 	
@@ -33,23 +33,23 @@ public class SkillBookActivity extends BookActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setButtonAllText(getString(R.string.all_skills));
+		setButtonAllText(getString(R.string.all_characters));
 		
 	}
 
 	@Override
 	protected void clickButtonAll() {
-		SkillSearchResultActivity.startThisActivity(this);
+		CharacterSearchResultActivity.startThisActivity(this);
 	}
 
 	@Override
 	protected void clickButtonAiueo() {
-		SkillAiueoSearchActivity.startThisActivity(this);
+		CharacterAiueoSearchActivity.startThisActivity(this);
 	}
 
 	@Override
 	protected void clickButtonDetailSearch() {
-		SkillDetailSearchActivity.startThisActivity(this);
+		CharacterDetailSearchActivity.startThisActivity(this);
 	}
 
 	@Override
@@ -58,23 +58,23 @@ public class SkillBookActivity extends BookActivity{
 		//フリーワードを取得
 		String free_word=getFreeWord();
 		//フリーワードから検索条件を取得
-		String[] search_ifs=SkillSearchableInformations.getSearchIfByFreeWord(free_word);
+		String[] search_ifs=CharacterSearchableInformations.getSearchIfByFreeWord(free_word);
 		//検索条件がある場合
 		if(search_ifs.length>0){	
 			//検索条件が一つのとき
 			if(search_ifs.length==1){
 				//わざの名前のみの場合、そのポケモンのページを開く
-				SkillData skill=SkillDataManager.INSTANCE.getSkillData(free_word);
-				if(skill!=SkillDataManager.NullData){
-					//TODO SkillPageActivity.start
+				CharacterData character=CharacterDataManager.INSTANCE.getCharacterData(free_word);
+				if(character!=CharacterDataManager.NullData){
+					//TODO CharacterPageActivity.start
 				}
 				//ポケモンの名前でないなら検索結果アクティビティーを開始
 				else{
-					SkillSearchResultActivity.startThisActivity(this, getString(R.string.free_word_search), search_ifs);
+					CharacterSearchResultActivity.startThisActivity(this, getString(R.string.free_word_search), search_ifs);
 				}
 			}
 			//検索条件が複数なら　検索条件確認画面を表示
-			else SkillCheckFreeWordActivity.startThisActivity(this, search_ifs);
+			else CharacterCheckFreeWordActivity.startThisActivity(this, search_ifs);
 		}
 		else{
 			Utility.popToast(this, "検索できません");
@@ -84,6 +84,7 @@ public class SkillBookActivity extends BookActivity{
 	@Override
 	protected DataTypes getDataType() {
 		// TODO Auto-generated method stub
-		return DataStore.DataTypes.SKILL;
+		return DataStore.DataTypes.CHARACTER;
 	}
+
 }

@@ -27,9 +27,6 @@ import android.widget.TextView;
 
 public enum CharacterSearchableInformations implements CharacterSearchIfCategory{
 	NAME("名前") {
-		private final String HIRA="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉゃゅょっ-";
-		private final String KATA="アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォャュョッーｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｧｨｩｪｫｬｭｮｯ";
-		
 		@Override
 		public String getDefaultSearchIf(String head) {
 			StringBuilder sb=new StringBuilder();
@@ -41,33 +38,6 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 		@Override
 		public String getDefaultTitle(String head) {
 			return head+NameSearchOptions.START;
-		}
-		/**
-		 * 平仮名を含む文字列を全てカタカナの文字列に変換して返す
-		 * 平仮名、カタカナ以外を含む場合は空の文字列("")を返す
-		 * @param text
-		 * @return
-		 */
-		public String changeHiraToKata(String text){
-			StringBuilder sb=new StringBuilder();
-			for(int i=0,n=text.length();i<n;i++){
-				char c=text.charAt(i);
-				//カタカナの場合
-				if(KATA.indexOf(c)>=0){
-					sb.append(c);
-					continue;
-				}
-				
-				int index=HIRA.indexOf(c);
-				//平仮名の場合
-				if(index>=0){
-					sb.append(KATA.charAt(index));
-					continue;
-				}
-				//それ以外
-				return "";
-			}
-			return new String(sb);
 		}
 		@Override
 		public void openDialog(final Context context, final SearchTypes search_type,
@@ -91,13 +61,13 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 			builder.setPositiveButton("検索",new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					String text=changeHiraToKata(edit.getText().toString());
+					String text=Utility.changeHiraToKata(edit.getText().toString());
 					if(text.equals("")){
 						Utility.popToast(context, "無効な文字列です");
 						listener.receiveSearchIf(null);
 					}else{
 						StringBuilder sb=new StringBuilder();
-						sb.append(text);
+						sb.append(edit.getText().toString());
 						sb.append(" ");
 						sb.append(NameSearchOptions.values()[spinner.getSelectedItemPosition()]);
 						listener.receiveSearchIf(SearchIf.createSearchIf(NAME,new String(sb),search_type));
@@ -117,7 +87,7 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 		/**
 		 * @param character_array
 		 * @param category
-		 * @param _case : "カタカナの文字列 NameSearchOption"
+		 * @param _case : "ひらがな・カタカナの文字列 NameSearchOption"
 		 * 
 		 */
 		@Override
@@ -127,9 +97,21 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 				String[] text_option=_case.split(" ");
 				NameSearchOptions option=NameSearchOptions.fromString(text_option[1]);
 				List<CharacterData> character_list=new ArrayList<CharacterData>();
-				for(CharacterData poke:character_array){
-					if(option.compareOf(poke, text_option[0])){
-						character_list.add(poke);
+				for(CharacterData chara:character_array){
+					//そのまま
+					if(option.compareOf(chara, text_option[0])){
+						character_list.add(chara);
+						continue;
+					}
+					//すべてひらがな
+					if(option.compareOf(chara, Utility.changeKataToHira(text_option[0]))){
+						character_list.add(chara);
+						continue;
+					}
+					//すべてカタカナ
+					if(option.compareOf(chara, Utility.changeHiraToKata(text_option[0]))){
+						character_list.add(chara);
+						continue;
 					}
 				}
 				return character_list.toArray(new CharacterData[0]);
@@ -163,7 +145,7 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 				for(int i=0;i<length;i++){
 					sb.append(free_word.charAt(i));
 				}
-				String text=this.changeHiraToKata(new String(sb));
+				String text=Utility.changeHiraToKata(new String(sb));
 				sb=new StringBuilder();
 				sb.append(text);
 				sb.append(" ");
@@ -190,7 +172,22 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 	 * @return
 	 */
 	public static String[] getSearchIfByFreeWord(String free_word){
-		return null;
+		List<String> search_ifs=new ArrayList<String>();
+		
+		final String PERTITION="[,¥(¥)¥/ ]";
+		//free_wordをパーティションで配列に分割
+		String[] words=free_word.split(PERTITION);
+		for(String word:words){
+			//TODO 語尾の"のわざ","なわざ","技"を取り除く
+			for(CharacterSearchableInformations si:values()){
+				String _case=si.getCaseByFreeWord(word);
+				if(!_case.equals("")){
+					search_ifs.add(SearchIf.createSearchIf(si, _case, SearchTypes.FILTER));
+				}
+			}
+		}
+		
+		return search_ifs.toArray(new String[0]);
 	}
 	public static CharacterData[] searchBySearchIf(CharacterData[] chara_array,String search_if){
 		Utility.log(TAG, "searchBySearchIf");

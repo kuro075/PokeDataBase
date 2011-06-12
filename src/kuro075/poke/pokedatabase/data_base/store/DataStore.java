@@ -58,7 +58,40 @@ public class DataStore {
 				// TODO Auto-generated method stub
 				
 			}
+		},
+		CHARACTER("character"){
+
+			@Override
+			void startSearchResultActivity(Context context, String title,
+					String[] search_ifs) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			void startPageActivity(Context context, String name) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		},
+		ITEM("item"){
+
+			@Override
+			void startSearchResultActivity(Context context, String title,
+					String[] search_ifs) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			void startPageActivity(Context context, String name) {
+				// TODO Auto-generated method stub
+				
+			}
+			
 		};
+		
 		private final String name;
 		private final DataStore history_store,star_store;
 		DataTypes(String name){
