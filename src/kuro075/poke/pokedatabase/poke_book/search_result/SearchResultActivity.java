@@ -627,7 +627,7 @@ public class SearchResultActivity extends PokeBookMenuActivity{
 			}
 		});
 		//リスト
-		list_view_poke=(ListView)findViewById(R.id.list_view_poke);
+		list_view_poke=(ListView)findViewById(R.id.list_view);
 		/*======================/
 		/  インスタンス変数初期設定  /
 		/======================*/

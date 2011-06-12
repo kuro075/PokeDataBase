@@ -164,7 +164,7 @@ public class BookActivity extends BookMenuActivity{
 		}
 		
 		/**
-		 * 全○○の○○を登録
+		 * 全○○の○○を登録(全ポケ、全わざ、全とくせい、)
 		 * @param name
 		 */
 		protected void setButtonAllText(String name){

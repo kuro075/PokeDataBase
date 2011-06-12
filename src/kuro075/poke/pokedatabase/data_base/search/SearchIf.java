@@ -18,7 +18,6 @@ import kuro075.poke.pokedatabase.util.Utility;
 public class SearchIf {
 	private static final String TAG="SearchIf";
 	
-	
 	private SearchIf(){}
 	/**
 	 * 検索条件を作成

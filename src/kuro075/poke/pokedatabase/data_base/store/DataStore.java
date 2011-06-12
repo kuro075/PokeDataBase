@@ -25,13 +25,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import kuro075.poke.pokedatabase.R;
-import kuro075.poke.pokedatabase.data_base.history.PageHistoryData;
-import kuro075.poke.pokedatabase.data_base.history.SearchHistoryData;
+import kuro075.poke.pokedatabase.data_base.store.history.PageHistoryData;
+import kuro075.poke.pokedatabase.data_base.store.history.SearchHistoryData;
 import kuro075.poke.pokedatabase.util.Utility;
 
 public class DataStore {
 	public enum DataTypes{
-		POKEMON("ポケモン") {
+		POKEMON("poke") {
 			@Override
 			void startSearchResultActivity(Context context, String title,
 					String[] search_ifs) {
@@ -45,7 +45,7 @@ public class DataStore {
 				kuro075.poke.pokedatabase.poke_book.poke_page.PokePageActivity.startThisActivity(context, name);
 			}
 		},
-		SKILL("わざ"){
+		SKILL("skill"){
 			@Override
 			void startSearchResultActivity(Context context, String title,
 					String[] search_ifs) {
