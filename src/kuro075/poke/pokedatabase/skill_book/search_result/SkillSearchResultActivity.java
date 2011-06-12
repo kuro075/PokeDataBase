@@ -88,9 +88,9 @@ public class SkillSearchResultActivity extends SearchResultActivity{
 		context.startActivity(intent);
 	}
 	@Override
-	protected void clickListItem(int position) {
+	protected void clickListItem(BasicData data) {
 		// TODO Auto-generated method stub
-		super.clickListItem(position);
+		super.clickListItem(data);
 	}
 
 	@Override

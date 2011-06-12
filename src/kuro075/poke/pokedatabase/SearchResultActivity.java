@@ -401,7 +401,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	/**
 	 * リストをクリックした時の動作
 	 */
-	protected void clickListItem(int position){
+	protected void clickListItem(BasicData data){
 		Utility.log(TAG, "clickListItem");
 	}
 	/**
@@ -789,7 +789,7 @@ public class SearchResultActivity extends BookMenuActivity{
 					public void onItemClick(AdapterView<?> parent, View view, int position,
 							long id) {
 						if(choice_mode==ListChoiceModes.SINGLE){
-							clickListItem(position);
+							clickListItem(datas[position]);
 						}
 					}
 				});
