@@ -12,6 +12,7 @@ import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.SkillSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.poke.NameSearchOptions;
+import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData;
 import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -35,18 +36,6 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 		private final String HIRA="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉゃゅょっ-";
 		private final String KATA="アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォャュョッーｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｧｨｩｪｫｬｭｮｯ";
 		
-		@Override
-		public String getDefaultSearchIf(String head) {
-			StringBuilder sb=new StringBuilder();
-			sb.append(head);
-			sb.append(" ");
-			sb.append(NameSearchOptions.START.toString());
-			return SearchIf.createSearchIf(NAME,new String(sb) , SearchTypes.FILTER);
-		}
-		@Override
-		public String getDefaultTitle(String head) {
-			return head+NameSearchOptions.START;
-		}
 		/**
 		 * 平仮名を含む文字列を全てカタカナの文字列に変換して返す
 		 * 平仮名、カタカナ以外を含む場合は空の文字列("")を返す
@@ -74,6 +63,56 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 			}
 			return new String(sb);
 		}
+		/**
+		 * フリーワードから検索条件を取得
+		 * 該当文字列)五文字以下の平仮名・カタカナの文字列、またはその文字列と「から始まる」「からはじまる」「を含む」「をふくむ」「で終わる」「でおわる」のいずれかが続く文字列
+		 * @param free_word
+		 * @return _case or ""
+		 */
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			int length=free_word.length();
+			//free_wordが「から始まる」「からはじまる」「を含む」「をふくむ」「で終わる」「でおわる」を含むかどうかチェック(NameSearchOptionsの各項目のtoString(),getHiraganaName()と一致するか)
+			NameSearchOptions option=NameSearchOptions.fromString(free_word);
+			//含まない場合はデフォルトとして「を含む」とする
+			if(option==null){
+				option=NameSearchOptions.INVOLVE;
+			}else{
+				length=free_word.indexOf(option.toString());
+				if(length<=0){
+					length=free_word.indexOf(option.getHiraganaName());
+				}
+			}
+			//検索ワードが５文字以下か、平仮名・カタカナのみかをチェック　該当しない場合""を返す
+			if(0<length && length<=5){
+				StringBuilder sb=new StringBuilder();
+				for(int i=0;i<length;i++){
+					sb.append(free_word.charAt(i));
+				}
+				String text=this.changeHiraToKata(new String(sb));
+				sb=new StringBuilder();
+				sb.append(text);
+				sb.append(" ");
+				sb.append(option);
+				//_caseを返す
+				return new String(sb);
+			}
+			return "";
+		}
+		@Override
+		public String getDefaultSearchIf(String head) {
+			StringBuilder sb=new StringBuilder();
+			sb.append(head);
+			sb.append(" ");
+			sb.append(NameSearchOptions.START.toString());
+			return SearchIf.createSearchIf(NAME,new String(sb) , SearchTypes.FILTER);
+		}
+		@Override
+		public String getDefaultTitle(String head) {
+			return head+NameSearchOptions.START;
+		}
+
 		@Override
 		public void openDialog(final Context context, final SearchTypes search_type,
 				final SearchIfListener listener) {
@@ -118,7 +157,6 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 			
 			builder.create().show();
 		}
-
 		/**
 		 * @param skill_array
 		 * @param category
@@ -141,43 +179,6 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 			}
 			return new SkillData[0];
 		}
-		/**
-		 * フリーワードから検索条件を取得
-		 * 該当文字列)五文字以下の平仮名・カタカナの文字列、またはその文字列と「から始まる」「からはじまる」「を含む」「をふくむ」「で終わる」「でおわる」のいずれかが続く文字列
-		 * @param free_word
-		 * @return _case or ""
-		 */
-		@Override
-		public String getCaseByFreeWord(String free_word) {
-			// TODO Auto-generated method stub
-			int length=free_word.length();
-			//free_wordが「から始まる」「からはじまる」「を含む」「をふくむ」「で終わる」「でおわる」を含むかどうかチェック(NameSearchOptionsの各項目のtoString(),getHiraganaName()と一致するか)
-			NameSearchOptions option=NameSearchOptions.fromString(free_word);
-			//含まない場合はデフォルトとして「を含む」とする
-			if(option==null){
-				option=NameSearchOptions.INVOLVE;
-			}else{
-				length=free_word.indexOf(option.toString());
-				if(length<=0){
-					length=free_word.indexOf(option.getHiraganaName());
-				}
-			}
-			//検索ワードが５文字以下か、平仮名・カタカナのみかをチェック　該当しない場合""を返す
-			if(0<length && length<=5){
-				StringBuilder sb=new StringBuilder();
-				for(int i=0;i<length;i++){
-					sb.append(free_word.charAt(i));
-				}
-				String text=this.changeHiraToKata(new String(sb));
-				sb=new StringBuilder();
-				sb.append(text);
-				sb.append(" ");
-				sb.append(option);
-				//_caseを返す
-				return new String(sb);
-			}
-			return "";
-		}
 	
 	};
 	
@@ -196,7 +197,22 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 	 * @return
 	 */
 	public static String[] getSearchIfByFreeWord(String free_word){
-		return null;
+		List<String> search_ifs=new ArrayList<String>();
+		
+		final String PERTITION="[,¥(¥)¥/ ]";
+		//free_wordをパーティションで配列に分割
+		String[] words=free_word.split(PERTITION);
+		for(String word:words){
+			//TODO 語尾の"のわざ","なわざ","技"を取り除く
+			for(SkillSearchableInformations si:values()){
+				String _case=si.getCaseByFreeWord(word);
+				if(!_case.equals("")){
+					search_ifs.add(SearchIf.createSearchIf(si, _case, SearchTypes.FILTER));
+				}
+			}
+		}
+		
+		return search_ifs.toArray(new String[0]);
 	}
 	public static SkillData[] searchBySearchIf(SkillData[] skill_array,String search_if){
 		Utility.log(TAG, "searchBySearchIf");

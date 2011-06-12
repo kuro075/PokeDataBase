@@ -1,22 +1,13 @@
 package kuro075.poke.pokedatabase.poke_book;
 
 import kuro075.poke.pokedatabase.BookActivity;
-import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
-import kuro075.poke.pokedatabase.data_base.store.DataStore;
-import kuro075.poke.pokedatabase.menu.book.PokeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.poke_page.PokePageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 
 /**
  * ポケモン図鑑トップページアクティビティー
@@ -97,7 +88,7 @@ public class PokeBookActivity extends BookActivity{
 					}
 				}
 				//検索条件が複数なら　検索条件確認画面を表示
-				else CheckFreeWordSearchIfActivity.startThisActivity(this, search_ifs);
+				else PokeCheckFreeWordActivity.startThisActivity(this, search_ifs);
 			}
 			else{
 				Utility.popToast(this, "検索できません");
