@@ -28,7 +28,7 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 	/**
 	 * このアクティビティーをstartさせる
 	 * @param context
-	 * @param name
+	 * @param skill_name
 	 */
 	public static void startThisActivity(Context context,String skill_name){
 		Utility.log(TAG, "startThisActivity");
