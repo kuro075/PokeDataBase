@@ -14,6 +14,7 @@ import kuro075.poke.pokedatabase.data_base.character.CharacterDataManager;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.data_base.store.DataStore.DataTypes;
 import kuro075.poke.pokedatabase.data_base.viewable_informations.CharacterViewableInformations;
+import kuro075.poke.pokedatabase.character_book.character_page.CharacterPageActivity;
 import kuro075.poke.pokedatabase.character_book.search_result.CharacterSearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 
@@ -89,8 +90,7 @@ public class CharacterSearchResultActivity extends SearchResultActivity{
 	}
 	@Override
 	protected void clickListItem(BasicData data) {
-		// TODO Auto-generated method stub
-		super.clickListItem(data);
+		CharacterPageActivity.startThisActivity(this, (CharacterData)data);
 	}
 
 	@Override
