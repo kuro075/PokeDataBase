@@ -179,11 +179,29 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 	private void initExpectedPower(){
 		//命中込
 		((TextView)findViewById(R.id.skill_expected_pow_hit)).setText(SkillViewableInformations.EXPECTED_POWER_HIT.getInformation(skill));
+		(findViewById(R.id.text_skill_expected_pow_hit)).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				//TODO ヘルプを表示（威力期待値　命中込みとは何か）
+			}
+		});
 		//命中・急所込
 		((TextView)findViewById(R.id.skill_expected_pow_hit_critical)).setText(SkillViewableInformations.EXPECTED_POWER_HIT_CRITICAL.getInformation(skill));
+		(findViewById(R.id.text_skill_expected_pow_hit_critical)).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				//TODO ヘルプを表示（威力期待値　命,急所込みとは何か）
+			}
+		});
+		
 		//命中・急所・効果込
 		((TextView)findViewById(R.id.skill_expected_pow_hit_critical_effect)).setText(SkillViewableInformations.EXPECTED_POWER_HIT_CRITICAL_EFFECT.getInformation(skill));
-		
+		(findViewById(R.id.text_skill_expected_pow_hit_critical_effect)).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				//TODO ヘルプを表示（威力期待値　命,急,効果込み(2回平均)とは何か）
+			}
+		});
 	}
 	
 	
@@ -214,8 +232,6 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 		
 		//効果
 		((TextView)findViewById(R.id.text_effect)).setText(SkillViewableInformations.EFFECT.getInformation(skill));
-		
-		
 	}
 	
 	
