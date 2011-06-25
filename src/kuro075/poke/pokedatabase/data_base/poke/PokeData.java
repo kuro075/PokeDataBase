@@ -280,7 +280,6 @@ public class PokeData extends BasicData implements Serializable{
 					   Integer[] evolutions,String[] condition_evolutions) 
 	{
 		super(name,no);
-		// TODO Auto-generated constructor stub
 		this.types=types;
 		this.characters=characters;
 		this.specs=specs;
@@ -1089,11 +1088,11 @@ public class PokeData extends BasicData implements Serializable{
 		if(hasSkillByEggSkill(skill)) return true;
 		//教え技(Pt,HS,BW) 
 		if(hasSkillByTeachSkill(skill))return true;
-		
+		/*
 		int position=getPositionOfEvolution();
 		if(position>0){
 			return PokeDataManager.INSTANCE.getPokeData(evolutions[position-1]).hasSkill(skill);
-		}
+		}*/
 		return false;
 	}
 	
@@ -1105,6 +1104,10 @@ public class PokeData extends BasicData implements Serializable{
 	public boolean hasSkillByLvSkill(SkillData skill){
 		for(SkillData lv_skill:lv_skills){
 			if(lv_skill.equals(skill)) return true;
+		}
+		int position=getPositionOfEvolution();
+		if(position>0){
+			return PokeDataManager.INSTANCE.getPokeData(evolutions[position-1]).hasSkillByLvSkill(skill);
 		}
 		return false;
 	}
@@ -1120,6 +1123,10 @@ public class PokeData extends BasicData implements Serializable{
 		if(hasSkillByHidenMachine(HidenMachines.fromString(skill.toString()))) return true;
 		//旧わざマシン
 		if(hasSkillByOldSkillMachine(OldSkillMachines.fromString(skill.toString()))) return true;
+		int position=getPositionOfEvolution();
+		if(position>0){
+			return PokeDataManager.INSTANCE.getPokeData(evolutions[position-1]).hasSkillByMachine(skill);
+		}
 		return false;
 	}
 	/**
@@ -1173,6 +1180,10 @@ public class PokeData extends BasicData implements Serializable{
 		for(SkillData egg:egg_skills){
 			if(egg.equals(skill)) return true;
 		}
+		int position=getPositionOfEvolution();
+		if(position>0){
+			return PokeDataManager.INSTANCE.getPokeData(evolutions[position-1]).hasSkillByEggSkill(skill);
+		}
 		return false;
 	}
 	/**
@@ -1187,6 +1198,10 @@ public class PokeData extends BasicData implements Serializable{
 		if(hasSkillByTeachSkillHS(skill)) return true;
 		//BWで覚えるかどうかをチェックしtrueならreturn
 		if(hasSkillByTeachSkillBW(skill)) return true;
+		int position=getPositionOfEvolution();
+		if(position>0){
+			return PokeDataManager.INSTANCE.getPokeData(evolutions[position-1]).hasSkillByTeachSkill(skill);
+		}
 		//どれでも覚えないならfalseを返す;
 		return false;
 	}

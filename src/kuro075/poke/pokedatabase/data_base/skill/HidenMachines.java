@@ -94,11 +94,24 @@ public enum HidenMachines {
 	
 	private final String name;
 	private final int no;
-	HidenMachines(String name,int no){this.name=name;this.no=no;}
+	private final String text_no;
+	HidenMachines(String name,int no){
+		this.name=name;
+		this.no=no;
+		StringBuilder sb=new StringBuilder();
+		sb.append("No.");
+		if(no<10)
+			sb.append(0);
+		sb.append(no);
+		text_no=new String(sb);
+	}
 	
 	@Override
 	public String toString(){return name;}
 	public int getNo(){return no;}
+	public String toNo(){
+		return text_no;
+	}
 	
 	public SkillData getSkillData(){
 		return SkillDataManager.INSTANCE.getSkillData(name);
@@ -121,8 +134,8 @@ public enum HidenMachines {
 	 * @param step
 	 * @return
 	 */
-	public static HidenMachines fromString(String step){
-		return stringToEnum.get(step);
+	public static HidenMachines fromString(String name){
+		return stringToEnum.get(name);
 	}
 	/**
 	 * 数値（インデックス）からHidenMachinesを取得

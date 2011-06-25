@@ -15,6 +15,7 @@ import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.data_base.store.DataStore.DataTypes;
 import kuro075.poke.pokedatabase.data_base.viewable_informations.SkillViewableInformations;
+import kuro075.poke.pokedatabase.skill_book.skill_page.SkillPageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 
 public class SkillSearchResultActivity extends SearchResultActivity{
@@ -87,10 +88,13 @@ public class SkillSearchResultActivity extends SearchResultActivity{
 		intent.putExtra(KEY_SEARCH_IF, search_ifs);
 		context.startActivity(intent);
 	}
+	
+	/**
+	 * リストの項目をクリックした時の動作
+	 */
 	@Override
 	protected void clickListItem(BasicData data) {
-		// TODO Auto-generated method stub
-		super.clickListItem(data);
+		SkillPageActivity.startThisActivity(this, data.toString());
 	}
 
 	@Override
