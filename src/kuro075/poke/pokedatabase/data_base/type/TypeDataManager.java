@@ -22,16 +22,19 @@ public class TypeDataManager{
 	 *
 	 */
 	public enum TypeRelations implements Serializable{
-		_0("こうかが ないようだ",0,0),_25("こうかは いまひとつの ようだ",25,1),_50("こうかは いまひとつの ようだ",50,2),
-		_100("",100,3),_200("こうかは ばつぐんだ",200,4),_400("こうかは ばつぐんだ",400,5);
+		_0("こうかが ないようだ",0,0,"×"),_25("こうかは いまひとつの ようだ",25,1,"▲"),_50("こうかは いまひとつの ようだ",50,2,"△"),
+		_100("",100,3,""),_200("こうかは ばつぐんだ",200,4,"○"),_400("こうかは ばつぐんだ",400,5,"◎");
 		private final String text;
 		private final int relation;//相性
 		private final int index;//インデックス
-		TypeRelations(String text,int relation,int index){this.text=text;this.relation=relation;this.index=index;}
+		private final String figure;//図形 
+		TypeRelations(String text,int relation,int index,String figure){this.text=text;this.relation=relation;this.index=index;this.figure=figure;}
 		@Override
 		public String toString(){return text;}
 		public int getRelation(){return relation;}
 		public int getIndex(){return index;}
+		
+		public String getFigure(){return figure;}
 		/**
 		 * 相性同士のかけ算
 		 * @param type_relations

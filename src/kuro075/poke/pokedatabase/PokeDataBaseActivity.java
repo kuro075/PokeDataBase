@@ -10,6 +10,7 @@ import kuro075.poke.pokedatabase.item_book.ItemBookActivity;
 import kuro075.poke.pokedatabase.menu.DefaultMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeBookActivity;
 import kuro075.poke.pokedatabase.skill_book.SkillBookActivity;
+import kuro075.poke.pokedatabase.type_book.TypeBookActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import kuro075.poke.pokedatabase.util.Utility.FileNames;
 
@@ -58,8 +59,7 @@ public class PokeDataBaseActivity extends DefaultMenuActivity {
 		},TYPE("タイプ図鑑") {
 			@Override
 			public void startActivity(Context context) {
-				// TODO Auto-generated method stub
-				
+				TypeBookActivity.startThisActivity(context);
 			}
 		},SIMULATOR("シミュレーター") {
 			@Override
