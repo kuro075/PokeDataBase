@@ -201,7 +201,7 @@ public enum SpecCategories implements PokeSearchIfCategory{
 				String _case) {
 			// 
 			if(toString().equals(category)){
-				return searchWithOneSpec(poke_array,_case,-1);
+				return searchWithOneSpec(poke_array,_case,Statuses.TOTAL.getIndex());
 			}
 			return new PokeData[0];
 		}
@@ -465,10 +465,25 @@ public enum SpecCategories implements PokeSearchIfCategory{
 	}
 	
 	/**
+	 * デフォルトSearchIfを生成
+	 * @param spec
+	 * @param option
+	 * @return
+	 */
+	public String createDefaultSearchIf(int spec,OneCompareOptions option,SearchTypes search_type){
+		StringBuilder sb=new StringBuilder();
+		sb.append(spec);
+		sb.append(" ");
+		sb.append(option.toString());
+		return SearchIf.createSearchIf(this, new String(sb), search_type);
+	}
+	
+	/**
 	 * 文字列からSpecCategoriesを取得
 	 * @param name
 	 * @return
 	 */
+
 	public static SpecCategories fromString(String name){
 		for(SpecCategories spec:values()){
 			if(spec.toString().equals(name)) return spec;

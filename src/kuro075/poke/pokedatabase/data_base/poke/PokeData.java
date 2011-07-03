@@ -1370,4 +1370,11 @@ public class PokeData extends BasicData implements Serializable{
 		return false;
 	}
 	
+	/**
+	 * 単タイプであるかどうかを返す
+	 * @return
+	 */
+	public boolean isSingleType(){
+		return types[1]==null;
+	}
 }

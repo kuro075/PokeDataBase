@@ -200,6 +200,33 @@ public class SearchIf {
 		return builder;
 	}
 
+	/**
+	 * search_ifから_caseを抜き出して取得
+	 * @param search_if
+	 * @return
+	 */
+	public static String getCase(String search_if){
+		String[] tmp=search_if.split("[:¥(¥)/]");//category , _case, search_type に分けられる
+		return tmp[1];
+	}
 	
-	
+	/**
+	 * search_ifからcategoryを抜き出して取得
+	 * @param search_if
+	 * @return
+	 */
+	public static String getCategory(String search_if){
+		String[] tmp=search_if.split("[:¥(¥)/]");//category , _case, search_type に分けられる
+		return tmp[0];
+	}
+
+	/**
+	 * search_ifからsearch_typeを抜き出して取得
+	 * @param search_if
+	 * @return
+	 */
+	public static SearchTypes getSearchType(String search_if){
+		String[] tmp=search_if.split("[:¥(¥)/]");//category , _case, search_type に分けられる
+		return SearchTypes.fromString(tmp[1]);
+	}
 }

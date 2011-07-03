@@ -14,6 +14,7 @@ import kuro075.poke.pokedatabase.poke_book.poke_page.egg_skill.EggSkillInformati
 import kuro075.poke.pokedatabase.poke_book.poke_page.lv_skill.LvSkillInformationLayout;
 import kuro075.poke.pokedatabase.poke_book.poke_page.machine.MachineInformationLayout;
 import kuro075.poke.pokedatabase.poke_book.poke_page.other.OtherInformationLayout;
+import kuro075.poke.pokedatabase.type_book.type_page.TypePageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
 import android.content.Intent;
@@ -182,7 +183,9 @@ public class PokePageActivity extends PokeBookMenuActivity{
 	private void clickTextType(TypeData type){
 		Utility.log(TAG,"clickTextType");
 		//検索結果アクティビティーを起動
-		PokeSearchResultActivity.startThisActivityWithDefaultSearch(this, PokeSearchableInformations.TYPE, type.toString());
+		//PokeSearchResultActivity.startThisActivityWithDefaultSearch(this, PokeSearchableInformations.TYPE, type.toString());
+		//タイプのページを開く
+		TypePageActivity.startThisActivity(this, type);
 	}
     /**
 	 * 一番上のNo.名前　タイプ　のところをセット

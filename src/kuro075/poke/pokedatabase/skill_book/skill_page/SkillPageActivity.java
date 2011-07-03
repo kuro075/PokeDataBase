@@ -18,6 +18,7 @@ import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.data_base.viewable_informations.SkillViewableInformations;
 import kuro075.poke.pokedatabase.menu.book.SkillBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
+import kuro075.poke.pokedatabase.type_book.type_page.TypePageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 
 public class SkillPageActivity extends SkillBookMenuActivity{
@@ -301,5 +302,6 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 	 */
 	private void clickType(){
 		// TODO TypePageを開く
+		TypePageActivity.startThisActivity(this, skill.getType());
 	}
 }

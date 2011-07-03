@@ -71,10 +71,182 @@ public class TypeDataManager{
 	 * タイプデータ
 	 */
 	public enum TypeData implements Serializable{
-		N("ノーマル","N",0),炎("ほのお","炎",1),水("みず","水",2),電("でんき","電",3),草("くさ","草",4),
-		氷("こおり","氷",5),闘("かくとう","闘",6),毒("どく","毒",7),地("じめん","地",8),飛("ひこう","飛",9),
-		超("エスパー","超",10),虫("むし","虫",11),岩("いわ","岩",12),霊("ゴースト","霊",13),竜("ドラゴン","竜",14),
-		悪("あく","悪",15),鋼("はがね","鋼",16);
+		N("ノーマル","N",0) {
+			@Override
+			public String getPokeFeature() {
+				return "特になし。";
+			}
+			
+			@Override
+			public String getSkillFeature() {
+				return "数が最も多い。";
+			}
+		},
+		炎("ほのお","炎",1){
+			@Override
+			public String getPokeFeature(){
+				return "「やけど」状態にならない。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "天気が「ひざしがつよい」のとき、威力が1.5倍。天気が「あめ」のとき、威力が0.5倍。とくせい「かんそうはだ」には威力が1.25倍。とくせい「あついしぼう」で半減。とくせい「もらいび」で無効化。";
+			}
+		},
+		水("みず","水",2) {
+			@Override
+			public String getPokeFeature() {
+				return "数が最も多い。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "天気が「あめ」のとき、威力が1.5倍。天気が「ひざしがつよい」のとき、威力が0.5倍。とくせい「かんそうはだ・よびみず・ちょすい」で無効化。";
+			}
+		},電("でんき","電",3) {
+			@Override
+			public String getPokeFeature() {
+				return "特になし。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "とくせい「ちくでん・ひらいしん・でんきエンジン」で無効化。";
+			}
+		},草("くさ","草",4) {
+			@Override
+			public String getPokeFeature() {
+				return "わざ「やどりぎのタネ」を受けない。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "とくせい「そうしょく」で無効化。";
+			}
+		},
+		氷("こおり","氷",5) {
+			@Override
+			public String getPokeFeature() {
+				return "「こおり」状態にならない。天気「あられ」のダメージを受けない。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "とくせい「あついしぼう」で半減。";
+			}
+		},闘("かくとう","闘",6) {
+			@Override
+			public String getPokeFeature() {
+				return "特になし。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "特になし。";
+			}
+		},毒("どく","毒",7) {
+			@Override
+			public String getPokeFeature() {
+				return "「どく・もうどく」状態にならない。わざ「どくびし」を消滅させる。持ち物「くろいヘドロ」で毎ターン最大HPの1/16回復";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "特になし。";
+			}
+		},地("じめん","地",8) {
+			@Override
+			public String getPokeFeature() {
+				return "天気「すなあらし」のダメージを受けない。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "とくせい「ふゆう」で無効化。わざ「でんじふゆう」で無効化。";
+			}
+		},飛("ひこう","飛",9) {
+			@Override
+			public String getPokeFeature() {
+				return "わざ「まきびし・どくびし」、とくせい「ありじごく」の影響を受けない。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "特になし。";
+			}
+		},
+		超("エスパー","超",10) {
+			@Override
+			public String getPokeFeature() {
+				return "特になし。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "特になし。";
+			}
+		},虫("むし","虫",11) {
+			@Override
+			public String getPokeFeature() {
+				return "特になし。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "特になし。";
+			}
+		},岩("いわ","岩",12) {
+			@Override
+			public String getPokeFeature() {
+				return "天気「すなあらし」のダメージを受けない。天気が「すなあらし」のとき、「とくぼう」が1.5倍になる";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "特になし。";
+			}
+		},霊("ゴースト","霊",13) {
+			@Override
+			public String getPokeFeature() {
+				return "わざ「かぎわける・みやぶる」を受けると「ノーマル・かくとう」タイプの「わざ」が当たるようになる。とくせい「きもったま」の「ノーマル・かくとう」タイプの「わざ」が当たる";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "特になし。";
+			}
+		},竜("ドラゴン","竜",14) {
+			@Override
+			public String getPokeFeature() {
+				return "特になし。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "特になし。";
+			}
+		},
+		悪("あく","悪",15) {
+			@Override
+			public String getPokeFeature() {
+				return "わざ「ミラクルアイ」を受けると、「エスパー」タイプの「わざ」が当たるようになる。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "特になし。";
+			}
+		},鋼("はがね","鋼",16) {
+			@Override
+			public String getPokeFeature() {
+				return "「どく・もうどく」状態にならない。天気「すなあらし」のダメージを受けない。とくせい「じりょく」で逃げられない。";
+			}
+
+			@Override
+			public String getSkillFeature() {
+				return "特になし。";
+			}
+		};
 		/**
 		 * タイプ相性
 		 * [タイプ１][タイプ２]でタイプ１→タイプ２の相性倍率
@@ -129,6 +301,8 @@ public class TypeDataManager{
 			return TypeColor[index];
 		}
 		
+		public abstract String getSkillFeature();
+		public abstract String getPokeFeature();
 		
 		/**
 		 * 相性を取得
@@ -258,7 +432,7 @@ public class TypeDataManager{
 	/**
 	 * 複合タイプに攻撃したときの相性がvalueのタイプを全て取得
 	 * @param defense_type1
-	 * @param defense_type2
+	 * @param defense_type2 単タイプのとき、null
 	 * @param value
 	 * @return
 	 */

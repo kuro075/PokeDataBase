@@ -3,6 +3,7 @@ package kuro075.poke.pokedatabase.type_book;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeRelations;
+import kuro075.poke.pokedatabase.type_book.type_page.TypePageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
 import android.content.Intent;
@@ -52,7 +53,8 @@ public class TypeRelationTableActivity extends TypeBookActivity{
 	 */
 	private void initAttackType(){
 		TableLayout layout=(TableLayout)findViewById(R.id.layout_attack_type);
-		for(TypeData type:TypeData.values()){
+		final Context context=this;
+		for(final TypeData type:TypeData.values()){
 			TableRow tr=new TableRow(layout.getContext());
 			tr.setPadding(0,0,0,1);
 			TextView tv=new TextView(tr.getContext());
@@ -65,8 +67,7 @@ public class TypeRelationTableActivity extends TypeBookActivity{
 			tv.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-					// TODO TypePageを開く
-					
+					TypePageActivity.startThisActivity(context, type);
 				}
 			});
 			tr.addView(tv);
@@ -82,7 +83,8 @@ public class TypeRelationTableActivity extends TypeBookActivity{
 		TableLayout layout=(TableLayout)findViewById(R.id.layout_defense_type);
 		layout.setStretchAllColumns(true);
 		TableRow tr=new TableRow(layout.getContext());
-		for(TypeData type:TypeData.values()){
+		final Context context=this;
+		for(final TypeData type:TypeData.values()){
 			LinearLayout ll=new LinearLayout(tr.getContext());
 			ll.setOrientation(LinearLayout.VERTICAL);
 			ll.setBackgroundColor(Color.WHITE);
@@ -99,8 +101,7 @@ public class TypeRelationTableActivity extends TypeBookActivity{
 			tv.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-					// TODO TypePageを開く
-					
+					TypePageActivity.startThisActivity(context, type);
 				}
 			});
 			ll.addView(tv);
@@ -127,6 +128,7 @@ public class TypeRelationTableActivity extends TypeBookActivity{
 				tv.setMinimumWidth(cell_width);
 				tv.setBackgroundColor(Color.BLACK);
 				tv.setGravity(Gravity.CENTER);
+				
 				ll.addView(tv);
 				tr.addView(ll);
 			}
