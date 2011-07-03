@@ -115,11 +115,10 @@ public class EggSkillInformationLayout extends FrameLayout{
 	 * タマゴ技をクリックした時の動作
 	 * @param index
 	 */
-	private void clickEggSkillName(int index){
+	private void clickEggSkillName(SkillData skill){
 		Utility.log(TAG, "clickEggSkillName");
 		if(isShown()){
-			//わざ図鑑を開く（タマゴグループを送る？）
-			
+			skill.openEggDialog(getContext(), poke.getEggGroup(0), poke.getEggGroup(1));
 		}
 	}
 	
@@ -161,9 +160,11 @@ public class EggSkillInformationLayout extends FrameLayout{
 	 * 教え技をクリックした時の動作
 	 * @param index
 	 */
-	private void clickTeachSkillName(int index){
+	private void clickTeachSkillName(SkillData skill){
 		Utility.log(TAG, "clickTeachSkillName");
-		//わざ図鑑に遷移
+		if(isShown()){
+			skill.openDialog(getContext());
+		}
 	}
 
 	/**
@@ -312,7 +313,7 @@ public class EggSkillInformationLayout extends FrameLayout{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 				// TODO Auto-generated method stub
-				clickEggSkillName(position);
+				clickEggSkillName(egg_skill_list.get(position));
 			}
 		});
 	}
@@ -334,7 +335,7 @@ public class EggSkillInformationLayout extends FrameLayout{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 				// TODO Auto-generated method stub
-				clickTeachSkillName(position);
+				clickTeachSkillName(teach_skill_list.get(position));
 			}
 		});
 	}

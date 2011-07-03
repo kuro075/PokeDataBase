@@ -225,6 +225,22 @@ public class TypePageActivity extends TypeBookMenuActivity{
 			sb.append(poke_list.size());
 			sb.append("匹");
 			((TextView)findViewById(R.id.text_num_poke)).setText(new String(sb));
+			((TextView)findViewById(R.id.text_num_poke)).setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					StringBuilder sb=new StringBuilder();
+					sb.append("「");
+					sb.append(type1.toString());
+					sb.append("・");
+					sb.append(type2.toString());
+					sb.append("」");
+					sb.append("のポケモン");
+					List<String> search_ifs=new ArrayList<String>();
+					search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type1.toString()));
+					search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type2.toString()));
+					PokeSearchResultActivity.startThisActivity(context, new String(sb), search_ifs.toArray(new String[0]));
+				}
+			});
 		}else{//単タイプのとき
 			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
 				if(poke.hasType(type1)){
@@ -235,7 +251,13 @@ public class TypePageActivity extends TypeBookMenuActivity{
 			sb.append(poke_list.size());
 			sb.append("匹");
 			((TextView)findViewById(R.id.text_num_poke)).setText(new String(sb));
-			
+			((TextView)findViewById(R.id.text_num_poke)).setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.TYPE, type1.toString());
+				}
+			});
 			//内訳
 			TableLayout tl=(TableLayout)findViewById(R.id.table_num_poke);
 			//単タイプ
@@ -305,9 +327,11 @@ public class TypePageActivity extends TypeBookMenuActivity{
 						@Override
 						public void onClick(View v) {
 							StringBuilder sb=new StringBuilder();
+							sb.append("「");
 							sb.append(type1.toString());
 							sb.append("・");
 							sb.append(type.toString());
+							sb.append("」");
 							sb.append("のポケモン");
 							List<String> search_ifs=new ArrayList<String>();
 							search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type1.toString()));
@@ -323,13 +347,7 @@ public class TypePageActivity extends TypeBookMenuActivity{
 				}
 			}
 		}
-		((TextView)findViewById(R.id.text_num_poke)).setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.TYPE, type1.toString());
-			}
-		});
+
 		
 		
 		//このタイプのわざ

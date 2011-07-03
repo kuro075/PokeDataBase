@@ -228,11 +228,11 @@ public class LvSkillInformationLayout extends FrameLayout{
 	 * 技をクリックした時の動作
 	 * @param position
 	 */
-    private void clickSkillName(int position){
+    private void clickSkillName(SkillData skill){
     	Utility.log(TAG, "clickLvSkill");
     	if(isShown()){
-        	//わざ図鑑を呼び出す
-    		
+        	//わざダイアログ
+    		skill.openDialog(getContext());
     	}
     }
     /**
@@ -290,7 +290,7 @@ public class LvSkillInformationLayout extends FrameLayout{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 				// TODO Auto-generated method stub
-				clickSkillName(position);
+				clickSkillName(SkillList.get(position));
 			}
 		});
         StringBuilder sb=new StringBuilder();

@@ -147,7 +147,7 @@ public class TypeDataManager{
 		},毒("どく","毒",7) {
 			@Override
 			public String getPokeFeature() {
-				return "「どく・もうどく」状態にならない。わざ「どくびし」を消滅させる。持ち物「くろいヘドロ」で毎ターン最大HPの1/16回復";
+				return "「どく・もうどく」状態にならない。わざ「どくびし」を消滅させる。持ち物「くろいヘドロ」で毎ターン最大HPの1/16回復。";
 			}
 
 			@Override

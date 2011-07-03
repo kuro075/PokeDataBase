@@ -28,7 +28,7 @@ public class CharacterSearchResultActivity extends SearchResultActivity{
 	 */
 	public static void startThisActivity(Context context){
 		Utility.log(TAG, "startThisActivity with no search_if");
-		startThisActivity(context,"全わざ",new String[0]);
+		startThisActivity(context,"全とくせい",new String[0]);
 	}
 	/**
 	 * このアクティビティーをstartさせる

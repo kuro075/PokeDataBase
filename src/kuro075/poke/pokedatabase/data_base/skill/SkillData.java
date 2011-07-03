@@ -1,10 +1,30 @@
 package kuro075.poke.pokedatabase.data_base.skill;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TextView;
+
+import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.BasicData;
+import kuro075.poke.pokedatabase.data_base.SearchTypes;
+import kuro075.poke.pokedatabase.data_base.poke.PokeData.EggGroups;
+import kuro075.poke.pokedatabase.data_base.search.SearchIf;
+import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
+import kuro075.poke.pokedatabase.data_base.viewable_informations.SkillViewableInformations;
+import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
+import kuro075.poke.pokedatabase.skill_book.skill_page.SkillPageActivity;
 
 public class SkillData extends BasicData{
 
@@ -272,7 +292,6 @@ public class SkillData extends BasicData{
 	
 	@Override
 	public int compareTo(BasicData another) {
-		// TODO Auto-generated method stub
 		return getNo()-another.getNo();
 	}
 	/**
@@ -359,5 +378,169 @@ public class SkillData extends BasicData{
 
 	//=========================================================
 
-
+	/**
+	 * 技のデータを表示するダイアログを開く
+	 * @param skillname
+	 */
+	public void openDialog(final Context context){
+		AlertDialog.Builder builder;
+		AlertDialog alertDialog;
+		
+		LayoutInflater factory=LayoutInflater.from(context);
+		final View layout = factory.inflate(R.layout.dialog_skilldata,null);
+		((TableLayout)layout.findViewById(R.id.tablelayout)).setStretchAllColumns(true);
+		//一段目
+		//タイプ
+		final TextView type=(TextView)layout.findViewById(R.id.text_type);
+		type.setText(getType().toString());
+		type.setTextColor(Color.WHITE);
+		type.setBackgroundColor(getType().getColor());
+		type.setGravity(Gravity.CENTER);
+		//優先度
+		final TextView text_priority=(TextView)layout.findViewById(R.id.text_priority);
+		text_priority.setText(SkillViewableInformations.PRIORITY.getInformation(this));
+		//二段目
+		//威力
+		final TextView text_pow=(TextView)layout.findViewById(R.id.text_pow);
+		text_pow.setText(SkillViewableInformations.POWER.getInformation(this));
+		//命中率
+		final TextView text_hit=(TextView)layout.findViewById(R.id.text_hit);
+		text_hit.setText(SkillViewableInformations.HIT.getInformation(this));
+		//PP
+		final TextView text_pp=(TextView)layout.findViewById(R.id.text_pp);
+		text_pp.setText(SkillViewableInformations.PP.getInformation(this));
+		
+		//三段目
+		//分類
+		final TextView text_class=(TextView)layout.findViewById(R.id.text_class);
+		text_class.setText(SkillViewableInformations.SKILL_CLASS.getInformation(this));
+		//対象
+		final TextView text_target=(TextView)layout.findViewById(R.id.text_target);
+		text_target.setText(SkillViewableInformations.TARGET.getInformation(this));
+		//直接攻撃
+		final TextView text_direct=(TextView)layout.findViewById(R.id.text_direct);
+		text_direct.setText(SkillViewableInformations.DIRECT.getInformation(this));
+		//効果
+		final TextView effect=(TextView)layout.findViewById(R.id.text_effect);
+		effect.setText(SkillViewableInformations.EFFECT.getInformation(this));
+		
+		builder = new AlertDialog.Builder(context);
+		builder.setTitle(this.toString());
+		builder.setView(layout);
+		final SkillData skill=this;
+		builder.setPositiveButton("表示", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				SkillPageActivity.startThisActivity(context, skill);
+				dialog.dismiss();
+			}
+		});
+		builder.setNeutralButton("検索", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {				
+				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.SKILL, skill.toString());
+				dialog.dismiss();
+			}
+		});
+		builder.setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		alertDialog = builder.create();
+		alertDialog.show();
+	}
+	
+	/**
+	 * タマゴ技用　技表示ダイアログ
+	 * @param skillname
+	 * @param egggroup1
+	 * @param egggroup2
+	 */
+	public void openEggDialog(final Context context,final EggGroups group1,final EggGroups group2){
+		AlertDialog.Builder builder;
+		AlertDialog alertDialog;
+		
+		LayoutInflater factory=LayoutInflater.from(context);
+		final View layout = factory.inflate(R.layout.dialog_skilldata,null);
+		((TableLayout)layout.findViewById(R.id.tablelayout)).setStretchAllColumns(true);
+		//一段目
+		//タイプ
+		final TextView type=(TextView)layout.findViewById(R.id.text_type);
+		type.setText(getType().toString());
+		type.setTextColor(Color.WHITE);
+		type.setBackgroundColor(getType().getColor());
+		type.setGravity(Gravity.CENTER);
+		//優先度
+		final TextView text_priority=(TextView)layout.findViewById(R.id.text_priority);
+		text_priority.setText(SkillViewableInformations.PRIORITY.getInformation(this));
+		//二段目
+		//威力
+		final TextView text_pow=(TextView)layout.findViewById(R.id.text_pow);
+		text_pow.setText(SkillViewableInformations.POWER.getInformation(this));
+		//命中率
+		final TextView text_hit=(TextView)layout.findViewById(R.id.text_hit);
+		text_hit.setText(SkillViewableInformations.HIT.getInformation(this));
+		//PP
+		final TextView text_pp=(TextView)layout.findViewById(R.id.text_pp);
+		text_pp.setText(SkillViewableInformations.PP.getInformation(this));
+		
+		//三段目
+		//分類
+		final TextView text_class=(TextView)layout.findViewById(R.id.text_class);
+		text_class.setText(SkillViewableInformations.SKILL_CLASS.getInformation(this));
+		//対象
+		final TextView text_target=(TextView)layout.findViewById(R.id.text_target);
+		text_target.setText(SkillViewableInformations.TARGET.getInformation(this));
+		//直接攻撃
+		final TextView text_direct=(TextView)layout.findViewById(R.id.text_direct);
+		text_direct.setText(SkillViewableInformations.DIRECT.getInformation(this));
+		//効果
+		final TextView effect=(TextView)layout.findViewById(R.id.text_effect);
+		effect.setText(SkillViewableInformations.EFFECT.getInformation(this));
+		
+		builder = new AlertDialog.Builder(context);
+		builder.setTitle(this.toString());
+		builder.setView(layout);
+		final SkillData skill=this;
+		builder.setPositiveButton("表示", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				SkillPageActivity.startThisActivity(context, skill);
+				dialog.dismiss();
+			}
+		});
+		StringBuilder sb=new StringBuilder();
+		sb.append(group1.toString());
+		if(group2!=null){
+			sb.append("\n");
+			sb.append(group2.toString());
+		}
+		builder.setNeutralButton(new String(sb), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				List<String> search_ifs=new ArrayList<String>();
+				search_ifs.add(PokeSearchableInformations.EGG_GROUP.getDefaultSearchIf(group1.toString()));
+				if(group2!=null){
+					search_ifs.add(SearchIf.createSearchIf(PokeSearchableInformations.EGG_GROUP, group2.toString(), SearchTypes.ADD));
+				}
+				search_ifs.add(PokeSearchableInformations.SKILL.getDefaultSearchIf(skill.toString()));
+				PokeSearchResultActivity.startThisActivity(context, "タマゴわざ検索", search_ifs.toArray(new String[0]));
+				dialog.dismiss();
+			}
+		});
+		
+		builder.setNegativeButton("閉じる", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		});
+		alertDialog = builder.create();
+		alertDialog.show();
+	}
+    
+	
 }

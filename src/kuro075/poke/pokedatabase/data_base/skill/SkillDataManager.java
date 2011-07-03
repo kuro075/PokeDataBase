@@ -11,13 +11,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
+import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData.AttackTargets;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
+import kuro075.poke.pokedatabase.data_base.viewable_informations.SkillViewableInformations;
+import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
+import kuro075.poke.pokedatabase.skill_book.skill_page.SkillPageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
 /**
  * 技データ管理クラス
@@ -185,4 +197,6 @@ public class SkillDataManager {
 	public SkillData getSkillData(String name){
 		return name2skill_map.get(name);
 	}
+
+
 }

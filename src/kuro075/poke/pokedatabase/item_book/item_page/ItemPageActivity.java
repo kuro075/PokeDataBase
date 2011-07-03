@@ -114,7 +114,7 @@ public class ItemPageActivity extends ItemBookMenuActivity{
 			}
 		});
 		
-		//教え技
+		//レア
 		tv=(TextView)findViewById(R.id.text_rare_num);
 		tv.setText(ItemViewableInformations.NUM_RARE_HAVING_POKE.getInformation(item));
 		tv.setOnClickListener(new OnClickListener(){

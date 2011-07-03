@@ -9,6 +9,7 @@ import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.skill.HidenMachines;
 import kuro075.poke.pokedatabase.data_base.skill.OldSkillMachines;
+import kuro075.poke.pokedatabase.data_base.skill.SkillData;
 import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
 import kuro075.poke.pokedatabase.data_base.skill.SkillMachines;
 import kuro075.poke.pokedatabase.poke_book.poke_page.FlickListView;
@@ -82,19 +83,7 @@ public class MachineInformationLayout extends FrameLayout{
         setAllSkillMachine();//わざマシンをレイアウトに登録
         setAllOldSkillMachine();//旧わざマシンをレイアウトに登録
 	}
-	
-	/**
-	 * ひでんマシンをクリックした時の動作
-	 * @param index
-	 */
-	private void clickHidenMachine(int index){
-		Utility.log(TAG, "clickHidenSkill");
-		if(isShown()){
-			//わざ図鑑に遷移
-			
-		}
-	}
-	
+
 	/**
 	 * わざマシンの列ラベルをクリックした時の動作
 	 * @param data_type
@@ -118,13 +107,10 @@ public class MachineInformationLayout extends FrameLayout{
 	 * わざマシンをクリックした時の動作
 	 * @param index
 	 */
-	private void clickSkillMachine(int index){
+	private void clickSkillMachine(SkillData skill){
 		Utility.log(TAG, "clickSkillMachine");
-		//わざ図鑑に遷移
-		if(isShown() && skill_machines.size()>index){
-			
-		}else{
-			clickHidenMachine(index-skill_machines.size());
+		if(isShown()){
+			skill.openDialog(getContext());
 		}
 	}
 	/**
@@ -148,11 +134,10 @@ public class MachineInformationLayout extends FrameLayout{
 	 * 旧わざマシンをクリックした時の動作
 	 * @param index
 	 */
-	private void clickOldSkillMachine(int index){
+	private void clickOldSkillMachine(SkillData skill){
 		Utility.log(TAG, "clickOldSkillMachine");
 		if(isShown()){
-			//わざ図鑑に遷移
-			
+			skill.openDialog(getContext());
 		}
 	}
 	/**
@@ -234,7 +219,7 @@ public class MachineInformationLayout extends FrameLayout{
 	private void setAllSkillMachine(){
     	Utility.log(TAG,"setAllMachineSkill");
     	//わざマシン
-    	List<ListMachineItemBean> list=new ArrayList<ListMachineItemBean>();
+    	final List<ListMachineItemBean> list=new ArrayList<ListMachineItemBean>();
     	
     	for(SkillMachines machine:skill_machines){
     		ListMachineItemBean item=new ListMachineItemBean();
@@ -257,8 +242,7 @@ public class MachineInformationLayout extends FrameLayout{
         MachineListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
-				// TODO Auto-generated method stub
-				clickSkillMachine(position);
+				clickSkillMachine(SkillDataManager.INSTANCE.getSkillData(list.get(position).getSkillName()));
 			}
 		});
 	}
@@ -269,7 +253,7 @@ public class MachineInformationLayout extends FrameLayout{
 	private void setAllOldSkillMachine(){
     	Log.v(TAG,"setAllMachineSkill");
     	//わざマシン
-    	List<ListMachineItemBean> list=new ArrayList<ListMachineItemBean>();
+    	final List<ListMachineItemBean> list=new ArrayList<ListMachineItemBean>();
     	for(OldSkillMachines old_machine:old_skill_machines){
     		ListMachineItemBean item=new ListMachineItemBean();
     		//マシンNo
@@ -282,8 +266,7 @@ public class MachineInformationLayout extends FrameLayout{
         OldMachineListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
-				// TODO Auto-generated method stub
-				clickOldSkillMachine(position);
+				clickOldSkillMachine(SkillDataManager.INSTANCE.getSkillData(list.get(position).getSkillName()));
 			}
 		});
     }

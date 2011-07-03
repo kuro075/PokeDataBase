@@ -2,6 +2,7 @@ package kuro075.poke.pokedatabase.poke_book.poke_page.basic;
 
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.character.CharacterData;
+import kuro075.poke.pokedatabase.data_base.character.CharacterDataManager;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Sexes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Statuses;
@@ -9,6 +10,7 @@ import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformation
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 import kuro075.poke.pokedatabase.data_base.viewable_informations.PokeViewableInformations;
+import kuro075.poke.pokedatabase.item_book.item_page.ItemPageActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
@@ -50,7 +52,6 @@ public class BasicInformationLayout extends LinearLayout{
 	
 	public BasicInformationLayout(Context context,OnTouchListener listener,PokeData poke) {
 		super(context);
-		// TODO Auto-generated constructor stub
 		this.poke=poke;
 		initLayout(listener);
 		setAllData();
@@ -62,7 +63,9 @@ public class BasicInformationLayout extends LinearLayout{
 	 */
 	private void clickCharacter(CharacterData chara){
 		Utility.log(TAG, "clickCharacter");
-		//特性図鑑を開く
+		if(isShown()){
+			chara.openDialog(getContext());
+		}
 	}
 	
 	/**
@@ -92,8 +95,7 @@ public class BasicInformationLayout extends LinearLayout{
 	}
 	private void clickTextItem(PokeData.ItemRarities rarity){
 		Utility.log(TAG, "clickTextItem");
-		//検索結果を開く
-		PokeSearchResultActivity.startThisActivityWithDefaultSearch(getContext(), PokeSearchableInformations.ITEM, poke.getItem(rarity).toString());
+		ItemPageActivity.startThisActivity(getContext(), poke.getItem(rarity));
 	}
 	/**
 	 * layout初期化
@@ -169,7 +171,7 @@ public class BasicInformationLayout extends LinearLayout{
     	for(int i=0,n=3;i<n;i++){
     		final CharacterData character=poke.getCharacter(i);
         	Character[i].setText(character.toString());
-        	if(character.getNo()>=0){
+        	if(character.getNo()<CharacterDataManager.INSTANCE.getNum()){
 	    		Character[i].setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
