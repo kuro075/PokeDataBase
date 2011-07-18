@@ -1,5 +1,7 @@
 package kuro075.poke.pokedatabase.data_base;
 
+import kuro075.poke.pokedatabase.util.Utility;
+
 /**
  * すべてのデータクラスのスーパークラス
  * 
@@ -74,4 +76,17 @@ public class BasicData implements Comparable<BasicData>{
 	public String getNo2String(){
 		return string_no;
 	}
+
+	/**
+	 * 頭文字がheadのときtrueを返す
+	 * @param head
+	 * @return
+	 */
+	public boolean isNameHead(String head){
+		String hira_name=Utility.changeKataToHira(Name);
+		String hira_head=Utility.changeKataToHira(head);
+		if(hira_name.indexOf(hira_head)==0) return true;
+		return false;
+	}
+
 }

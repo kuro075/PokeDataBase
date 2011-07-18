@@ -37,6 +37,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 	NAME("名前"){
@@ -304,20 +305,113 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 		}
 	},
 	CHARACTER("特性"){
+		final String[] KANA={"","あ","か","さ","た","な","は","ま","や","ら","わ"};
+		final String[] JOUKEN={"通常","夢"};
 		@Override
-		public void openDialog(Context context,
-				SearchTypes search_type,SearchIfListener listener) {
-			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,CharacterDataManager.INSTANCE.getAllCharaName()).create().show();
+		public void openDialog(final Context context,
+				final SearchTypes search_type,final SearchIfListener listener) {
+			//SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,CharacterDataManager.INSTANCE.getAllCharaName()).create().show();
+			
+			LayoutInflater factory=LayoutInflater.from(context);
+			final View layout = factory.inflate(R.layout.dialog_select_character,null);
+			
+			//通常
+			final CheckBox check_normal=(CheckBox)layout.findViewById(R.id.check_normal);
+			//夢特性
+			final CheckBox check_dream=(CheckBox)layout.findViewById(R.id.check_dream);
+			
+			ArrayAdapter<String> adapter;
+			//特性頭文字スピナー設定
+			final Spinner spinner_head = (Spinner)layout.findViewById(R.id.spinner_head);
+			adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,KANA);
+			spinner_head.setAdapter(adapter);
+
+			final Spinner spinner_charaname = (Spinner)layout.findViewById(R.id.spinner_charaname);
+			
+			String[] all_chara_name=CharacterDataManager.INSTANCE.getAllCharaName();
+			//特性名スピナー設定
+			adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,all_chara_name);
+			spinner_charaname.setAdapter(adapter);
+			
+			spinner_head.setOnItemSelectedListener(new OnItemSelectedListener(){
+				@Override
+				public void onItemSelected(AdapterView<?> parent, View view, int position,long id) {
+					if(position>0){
+						List<String> chara_list=new ArrayList<String>();
+						for(CharacterData chara:CharacterDataManager.INSTANCE.getAllData()){
+							for(String head:Utility.getAiueoLine(position-1)){
+								if(chara.isNameHead(head)){
+									chara_list.add(chara.getName());
+									break;
+								}
+							}
+						}
+						spinner_charaname.setAdapter(new ArrayAdapter<String>(context,R.layout.center_spinner_item,chara_list.toArray(new String[0])));
+					}else{
+						spinner_charaname.setAdapter(new ArrayAdapter<String>(context,R.layout.center_spinner_item,CharacterDataManager.INSTANCE.getAllCharaName()));
+					}
+				}
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+				}
+			});
+			
+			AlertDialog.Builder builder=new AlertDialog.Builder(context);
+			builder.setTitle(SearchIf.createDialogTitle(this, search_type));
+			builder.setView(layout);
+			//検索
+			builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if(spinner_charaname.isEnabled() && (check_dream.isChecked() || check_normal.isChecked())){
+						// TODO 検索
+						StringBuilder sb=new StringBuilder();
+						sb.append(spinner_charaname.getSelectedItem().toString());
+						sb.append(" ");
+						if(check_normal.isChecked()){
+							sb.append(JOUKEN[0]);
+							if(check_dream.isChecked()){
+								sb.append("・");
+								sb.append(JOUKEN[1]);
+							}
+						}else
+						if(check_dream.isChecked()){
+							sb.append(JOUKEN[1]);
+						}
+						listener.receiveSearchIf(SearchIf.createSearchIf(CHARACTER,new String(sb),search_type));
+					}else{
+						Utility.popToast(context,"検索できません");
+					}
+				}
+			});
+			builder.create().show();
+		
 		}
 
 		@Override
 		public PokeData[] search(PokeData[] poke_array, String category,
-				String chara_name) {
+				String _case) {
 			if(toString().equals(category)){
-				CharacterData chara=CharacterDataManager.INSTANCE.getCharacterData(chara_name);
+				String[] chara_and_jouken=_case.split(" ");
+				CharacterData chara=CharacterDataManager.INSTANCE.getCharacterData(chara_and_jouken[0]);
+				String[] jouken=chara_and_jouken[1].split("・");
 				List<PokeData> list=new ArrayList<PokeData>();
-				for(PokeData poke:poke_array){
-					if(poke.hasCharacter(chara)) list.add(poke);
+				if(jouken.length==2){
+					for(PokeData poke:poke_array){
+						if(poke.hasCharacter(chara)) list.add(poke);
+					}
+				}else
+				if(jouken[0].equals(JOUKEN[0])){//通常
+					for(PokeData poke:poke_array){
+						if(poke.getCharacter(0).equals(chara) || poke.getCharacter(1).equals(chara))
+							list.add(poke);
+					}
+				}else
+				if(jouken[1].equals(JOUKEN[1])){//夢特性
+					for(PokeData poke:poke_array){
+						if(poke.getCharacter(2).equals(chara))
+							list.add(poke);
+					}
 				}
 				return list.toArray(new PokeData[0]);
 			}
