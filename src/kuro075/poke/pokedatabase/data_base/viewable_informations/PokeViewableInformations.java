@@ -744,13 +744,15 @@ public enum PokeViewableInformations {
 				public int compare(PokeData p1,PokeData p2){
 					final ItemData item1=p1.getItem(ItemRarities.COMMON);
 					final ItemData item2=p2.getItem(ItemRarities.COMMON);
-					return item1.compareTo(item2);
+					String name1=item1==null?"-":item1.toString(),
+						   name2=item2==null?"-":item2.toString();
+					return name1.compareTo(name2);
 				}
 			};
 		}
 	},
 	ITEM_RARE("持っている道具(レア)"){
-		@Override
+	@Override
 		public String getInformation(PokeData poke) {
 			// TODO Auto-generated method stub
 			//ItemDataManagerから道具名を取ってきて返す
@@ -767,7 +769,9 @@ public enum PokeViewableInformations {
 				public int compare(PokeData p1,PokeData p2){
 					final ItemData item1=p1.getItem(ItemRarities.RARE);
 					final ItemData item2=p2.getItem(ItemRarities.RARE);
-					return item1.compareTo(item2);
+					String name1=item1==null?"-":item1.toString(),
+						   name2=item2==null?"-":item2.toString();
+					return name1.compareTo(name2);
 				}
 			};
 		}

@@ -380,8 +380,15 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 						}
 						listener.receiveSearchIf(SearchIf.createSearchIf(CHARACTER,new String(sb),search_type));
 					}else{
-						Utility.popToast(context,"検索できません");
+						Utility.popToast(context,"条件が不正です");
 					}
+				}
+			});
+			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// 
+					listener.receiveSearchIf(null);
 				}
 			});
 			builder.create().show();
@@ -394,26 +401,33 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 			if(toString().equals(category)){
 				String[] chara_and_jouken=_case.split(" ");
 				CharacterData chara=CharacterDataManager.INSTANCE.getCharacterData(chara_and_jouken[0]);
-				String[] jouken=chara_and_jouken[1].split("・");
 				List<PokeData> list=new ArrayList<PokeData>();
-				if(jouken.length==2){
+				if(chara_and_jouken.length==1){
 					for(PokeData poke:poke_array){
 						if(poke.hasCharacter(chara)) list.add(poke);
 					}
-				}else
-				if(jouken[0].equals(JOUKEN[0])){//通常
-					for(PokeData poke:poke_array){
-						if(poke.getCharacter(0).equals(chara) || poke.getCharacter(1).equals(chara))
-							list.add(poke);
-					}
-				}else
-				if(jouken[1].equals(JOUKEN[1])){//夢特性
-					for(PokeData poke:poke_array){
-						if(poke.getCharacter(2).equals(chara))
-							list.add(poke);
+				}else{
+					String[] jouken=chara_and_jouken[1].split("・");
+					if(jouken.length==2){
+						for(PokeData poke:poke_array){
+							if(poke.hasCharacter(chara)) list.add(poke);
+						}
+					}else
+					if(jouken[0].equals(JOUKEN[0])){//通常
+						for(PokeData poke:poke_array){
+							if(poke.getCharacter(0).equals(chara) || poke.getCharacter(1).equals(chara))
+								list.add(poke);
+						}
+					}else
+					if(jouken[1].equals(JOUKEN[1])){//夢特性
+						for(PokeData poke:poke_array){
+							if(poke.getCharacter(2).equals(chara))
+								list.add(poke);
+						}
 					}
 				}
 				return list.toArray(new PokeData[0]);
+				
 			}
 			return new PokeData[0];
 		}
@@ -666,10 +680,19 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 						if(flag){
 							//TODO 検索
 							listener.receiveSearchIf(getSearchIf(SkillDataManager.INSTANCE.getSkillData(skill_list.get(spinner_name.getSelectedItemPosition())),check_array,search_type));
+						}else{
+							Utility.popToast(context,"条件が不正です");
 						}
 					}else{
-						Utility.popToast(context,"検索できません");
+						Utility.popToast(context,"条件が不正です");
 					}
+				}
+			});
+			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// 
+					listener.receiveSearchIf(null);
 				}
 			});
 			((TableLayout)layout.findViewById(R.id.table_check)).setStretchAllColumns(true);
@@ -702,9 +725,7 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 		
 		@Override
 		public String getDefaultSearchIf(String skill_name){
-			boolean[] flag=new boolean[4];
-			Arrays.fill(flag,true);
-			return getSearchIf(SkillDataManager.INSTANCE.getSkillData(skill_name),flag,SearchTypes.FILTER);
+			return SearchIf.createSearchIf(this,skill_name,SearchTypes.FILTER);
 		}
 		@Override
 		public String getDefaultTitle(String _case){
@@ -714,9 +735,7 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 			StringBuilder sb = new StringBuilder();
 			sb.append("「");
 			sb.append(skill_name_and_learning_type[0]);
-			sb.append("」を");
-			sb.append(skill_name_and_learning_type[1]);
-			sb.append("で覚えるポケモン");
+			sb.append("」を覚えるポケモン");
 			return new String(sb);
 		}
 		
@@ -728,48 +747,56 @@ public enum PokeSearchableInformations  implements PokeSearchIfCategory{
 				//skill_name lv マシン　タマゴ　教え　に分ける
 				String[] skill_name_and_learning_type=_case.split(" ");
 				SkillData skill=SkillDataManager.INSTANCE.getSkillData(skill_name_and_learning_type[0]);
-				String[] learning_types=skill_name_and_learning_type[1].split("・");
-				//lv マシン タマゴ 教えの全ての場合
-				if(learning_types.length==4){
+				if(skill_name_and_learning_type.length==1){
 					for(PokeData poke:poke_array){
 						if(poke.hasSkill(skill)){
 							list.add(poke);
 						}
 					}
 				}else{
-					boolean[] flag=new boolean[4];
-					Arrays.fill(flag,false);
-					for(int i=0,n=learning_types.length;i<n;i++){
-						for(int j=0,m=LEARNING_TYPE.length;j<m;j++){
-							if(LEARNING_TYPE[j].equals(learning_types[i])){
-								flag[j]=true;
-								break;
+					String[] learning_types=skill_name_and_learning_type[1].split("・");
+					//lv マシン タマゴ 教えの全ての場合
+					if(learning_types.length==4){
+						for(PokeData poke:poke_array){
+							if(poke.hasSkill(skill)){
+								list.add(poke);
 							}
 						}
-					}
-					for(PokeData poke:poke_array){
-						if(flag[0]){//レベル技
-							if(poke.hasSkillByLvSkill(skill)){
-								list.add(poke);
-								continue;
+					}else{
+						boolean[] flag=new boolean[4];
+						Arrays.fill(flag,false);
+						for(int i=0,n=learning_types.length;i<n;i++){
+							for(int j=0,m=LEARNING_TYPE.length;j<m;j++){
+								if(LEARNING_TYPE[j].equals(learning_types[i])){
+									flag[j]=true;
+									break;
+								}
 							}
 						}
-						if(flag[1]){//マシン技
-							if(poke.hasSkillByMachine(skill)){
-								list.add(poke);
-								continue;
+						for(PokeData poke:poke_array){
+							if(flag[0]){//レベル技
+								if(poke.hasSkillByLvSkill(skill)){
+									list.add(poke);
+									continue;
+								}
 							}
-						}
-						if(flag[2]){//タマゴ技
-							if(poke.hasSkillByEggSkill(skill)){
-								list.add(poke);
-								continue;
+							if(flag[1]){//マシン技
+								if(poke.hasSkillByMachine(skill)){
+									list.add(poke);
+									continue;
+								}
 							}
-						}
-						if(flag[3]){//教え技
-							if(poke.hasSkillByTeachSkill(skill)){
-								list.add(poke);
-								continue;
+							if(flag[2]){//タマゴ技
+								if(poke.hasSkillByEggSkill(skill)){
+									list.add(poke);
+									continue;
+								}
+							}
+							if(flag[3]){//教え技
+								if(poke.hasSkillByTeachSkill(skill)){
+									list.add(poke);
+									continue;
+								}
 							}
 						}
 					}
