@@ -9,42 +9,6 @@ import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData;
 
 public enum ItemViewableInformations {
-	CLASS("分類") {
-		@Override
-		public String getInformation(ItemData item) {
-			// TODO Auto-generated method stub
-			return item.getItemClass().toString();
-		}
-		@Override
-		public Comparator<ItemData> getComparator() {
-			// TODO Auto-generated method stub
-			return new Comparator<ItemData>(){
-				@Override
-				public int compare(ItemData item1, ItemData item2) {
-					// TODO Auto-generated method stub
-					return item1.getItemClass().toString().compareTo(item2.getItemClass().toString());
-				}
-			};
-		}
-	},
-	SUB_CLASS("サブ分類"){
-		@Override
-		public String getInformation(ItemData item) {
-			// TODO Auto-generated method stub
-			return item.getItemSubClass().toString();
-		}
-		@Override
-		public Comparator<ItemData> getComparator() {
-			// TODO Auto-generated method stub
-			return new Comparator<ItemData>(){
-				@Override
-				public int compare(ItemData item1, ItemData item2) {
-					// TODO Auto-generated method stub
-					return item1.getItemSubClass().toString().compareTo(item2.getItemSubClass().toString());
-				}
-			};
-		}
-	},
 	BUY_VALUE("買値"){
 		@Override
 		public String getInformation(ItemData item) {
@@ -85,6 +49,42 @@ public enum ItemViewableInformations {
 				public int compare(ItemData item1, ItemData item2) {
 					// TODO Auto-generated method stub
 					return item1.getSellValue()-item2.getSellValue();
+				}
+			};
+		}
+	},
+	CLASS("分類") {
+		@Override
+		public String getInformation(ItemData item) {
+			// TODO Auto-generated method stub
+			return item.getItemClass().toString();
+		}
+		@Override
+		public Comparator<ItemData> getComparator() {
+			// TODO Auto-generated method stub
+			return new Comparator<ItemData>(){
+				@Override
+				public int compare(ItemData item1, ItemData item2) {
+					// TODO Auto-generated method stub
+					return item1.getItemClass().toString().compareTo(item2.getItemClass().toString());
+				}
+			};
+		}
+	},
+	SUB_CLASS("サブ分類"){
+		@Override
+		public String getInformation(ItemData item) {
+			// TODO Auto-generated method stub
+			return item.getItemSubClass().toString();
+		}
+		@Override
+		public Comparator<ItemData> getComparator() {
+			// TODO Auto-generated method stub
+			return new Comparator<ItemData>(){
+				@Override
+				public int compare(ItemData item1, ItemData item2) {
+					// TODO Auto-generated method stub
+					return item1.getItemSubClass().toString().compareTo(item2.getItemSubClass().toString());
 				}
 			};
 		}

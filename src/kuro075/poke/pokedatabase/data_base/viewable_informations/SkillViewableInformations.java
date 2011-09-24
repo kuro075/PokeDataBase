@@ -31,30 +31,6 @@ public enum SkillViewableInformations {
 			};
 		}
 	},
-	SKILL_CLASS("分類"){
-		@Override
-		public String getInformation(SkillData skill) {
-			// TODO Auto-generated method stub
-			return skill.getSkillClass().toString();
-		}
-
-		@Override
-		public Comparator<SkillData> getComparator() {
-			// TODO Auto-generated method stub
-			return new Comparator<SkillData>(){
-				@Override
-				public int compare(SkillData s1, SkillData s2) {
-					// TODO Auto-generated method stub
-					final int d=s1.getSkillClass().getIndex()-s2.getSkillClass().getIndex();
-					if(d==0){
-						return s1.getNo()-s2.getNo();
-					}
-					return d;
-				}
-			};
-		}
-		
-	},
 	POWER("威力"){
 		@Override
 		public String getInformation(SkillData skill) {
@@ -106,7 +82,7 @@ public enum SkillViewableInformations {
 			};
 		}
 	},
-	EXPECTED_POWER_HIT_CRITICAL("威力期待値(命中・急所込"){
+/*	EXPECTED_POWER_HIT_CRITICAL("威力期待値(命中・急所込"){
 		private int calc(int pow,int hit,int critical){
 			return (pow*hit*(16-critical)+pow*hit*critical*2)/16/100;
 		}
@@ -161,7 +137,7 @@ public enum SkillViewableInformations {
 				}
 			};
 		}
-	},
+	},*/
 	HIT("命中率") {
 		@Override
 		public String getInformation(SkillData skill) {
@@ -212,71 +188,6 @@ public enum SkillViewableInformations {
 			};
 		}
 	},
-	DIRECT("直接攻撃") {
-		@Override
-		public String getInformation(SkillData skill) {
-			// TODO Auto-generated method stub
-			return skill.getDirect().isDirect()?"○":"×";
-		}
-
-		@Override
-		public Comparator<SkillData> getComparator() {
-			// TODO Auto-generated method stub
-			return new Comparator<SkillData>(){
-				@Override
-				public int compare(SkillData s1, SkillData s2) {
-					// TODO Auto-generated method stub
-					final int d=s1.getDirect().getIndex()-s2.getDirect().getIndex();
-					if(d==0){
-						return s1.getNo()-s2.getNo();
-					}
-					return d;
-				}
-			};
-		}
-	},
-	TARGET("攻撃対象") {
-		@Override
-		public String getInformation(SkillData skill) {
-			// TODO Auto-generated method stub
-			return skill.getTarget().toString();
-		}
-
-		@Override
-		public Comparator<SkillData> getComparator() {
-			// TODO Auto-generated method stub
-			return new Comparator<SkillData>(){
-				@Override
-				public int compare(SkillData s1, SkillData s2) {
-					// TODO Auto-generated method stub
-					final int d=s1.getTarget().getIndex()-s2.getTarget().getIndex();
-					if(d==0){
-						return s1.getNo()-s2.getNo();
-					}
-					return d;
-				}
-			};
-		}
-	},
-	EFFECT("効果") {
-		@Override
-		public String getInformation(SkillData skill) {
-			// TODO Auto-generated method stub
-			return skill.getOutlineEffect();
-		}
-
-		@Override
-		public Comparator<SkillData> getComparator() {
-			// TODO Auto-generated method stub
-			return new Comparator<SkillData>(){
-				@Override
-				public int compare(SkillData s1, SkillData s2) {
-					// TODO Auto-generated method stub
-					return s1.getNo()-s2.getNo();
-				}
-			};
-		}
-	},
 	PRIORITY("優先度") {
 		@Override
 		public String getInformation(SkillData skill) {
@@ -302,6 +213,95 @@ public enum SkillViewableInformations {
 						return s1.getNo()-s2.getNo();
 					}
 					return d;
+				}
+			};
+		}
+	},
+	SKILL_CLASS("分類"){
+		@Override
+		public String getInformation(SkillData skill) {
+			// TODO Auto-generated method stub
+			return skill.getSkillClass().toString();
+		}
+
+		@Override
+		public Comparator<SkillData> getComparator() {
+			// TODO Auto-generated method stub
+			return new Comparator<SkillData>(){
+				@Override
+				public int compare(SkillData s1, SkillData s2) {
+					// TODO Auto-generated method stub
+					final int d=s1.getSkillClass().getIndex()-s2.getSkillClass().getIndex();
+					if(d==0){
+						return s1.getNo()-s2.getNo();
+					}
+					return d;
+				}
+			};
+		}
+		
+	},
+	TARGET("攻撃対象") {
+		@Override
+		public String getInformation(SkillData skill) {
+			// TODO Auto-generated method stub
+			return skill.getTarget().toString();
+		}
+
+		@Override
+		public Comparator<SkillData> getComparator() {
+			// TODO Auto-generated method stub
+			return new Comparator<SkillData>(){
+				@Override
+				public int compare(SkillData s1, SkillData s2) {
+					// TODO Auto-generated method stub
+					final int d=s1.getTarget().getIndex()-s2.getTarget().getIndex();
+					if(d==0){
+						return s1.getNo()-s2.getNo();
+					}
+					return d;
+				}
+			};
+		}
+	},
+	DIRECT("直接攻撃") {
+		@Override
+		public String getInformation(SkillData skill) {
+			// TODO Auto-generated method stub
+			return skill.getDirect().isDirect()?"○":"×";
+		}
+
+		@Override
+		public Comparator<SkillData> getComparator() {
+			// TODO Auto-generated method stub
+			return new Comparator<SkillData>(){
+				@Override
+				public int compare(SkillData s1, SkillData s2) {
+					// TODO Auto-generated method stub
+					final int d=s1.getDirect().getIndex()-s2.getDirect().getIndex();
+					if(d==0){
+						return s1.getNo()-s2.getNo();
+					}
+					return d;
+				}
+			};
+		}
+	},
+	EFFECT("効果") {
+		@Override
+		public String getInformation(SkillData skill) {
+			// TODO Auto-generated method stub
+			return skill.getOutlineEffect();
+		}
+
+		@Override
+		public Comparator<SkillData> getComparator() {
+			// TODO Auto-generated method stub
+			return new Comparator<SkillData>(){
+				@Override
+				public int compare(SkillData s1, SkillData s2) {
+					// TODO Auto-generated method stub
+					return s1.getNo()-s2.getNo();
 				}
 			};
 		}

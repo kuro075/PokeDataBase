@@ -11,9 +11,12 @@ import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
+import kuro075.poke.pokedatabase.data_base.search.SearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.SkillSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.poke.NameSearchOptions;
+import kuro075.poke.pokedatabase.data_base.search.poke.OneCompareOptions;
 import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
+import kuro075.poke.pokedatabase.data_base.skill.SkillData.SkillClasses;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -27,6 +30,8 @@ import android.widget.TextView;
 
 /**
  * SkillDataの検索可能情報
+ * 名前(完了)、タイプ(完了)、威力(未完)、命中(未完？)、PP(完了)、優先度(完了)、分類(完了)、種類、対象(完了)、直接攻撃(完了?)
+ *
  * @author sanogenma
  *
  */
@@ -160,7 +165,264 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 			}
 			return "";
 		}
+	},
+	TYPE("タイプ"){
+		/*=======================/
+		 * タイプで検索
+		 * ・MYSELF(タイプ) default
+		 * ・RELATION(タイプ相性)
+		/=======================*/
+		@Override
+		public String getDefaultSearchIf(String type) {
+			return SearchIf.createSearchIf(TypeCategories.MYSELF,type,SearchTypes.FILTER);
+		}
+		
+		@Override
+		public boolean isCategory(String category) {
+			for(TypeCategories type:TypeCategories.values()){
+				if(type.toString().equals(category)){
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String type) {
+			return TypeCategories.fromString(category).search(skill_array, category, type);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			TypeCategories.MYSELF.openDialog(context, search_type, listener);
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	},
+	POW("威力"){
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String _case) {
+			String[] pow_option=_case.split(" ");
+			int pow=Integer.valueOf(pow_option[0]);
+			OneCompareOptions option=OneCompareOptions.fromString(pow_option[1]);
+			
+			List<SkillData> list=new ArrayList<SkillData>();
+			for(SkillData skill:skill_array){
+				if(skill.getPower()>0){
+					if(option.compareOf(skill.getPower(),pow)){
+						list.add(skill);
+					}
+				}
+			}
+			return list.toArray(new SkillData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			// TODO 威力変動するわざの考慮
+			SearchIf.createIntInputDialogBuilder(context,search_type,listener,this,10,250).create().show();
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	},
+	HIT("命中率"){
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String _case) {
+			String[] hit_option=_case.split(" ");
+			int hit=Integer.valueOf(hit_option[0]);
+			OneCompareOptions option=OneCompareOptions.fromString(hit_option[1]);
+			
+			List<SkillData> list=new ArrayList<SkillData>();
+			for(SkillData skill:skill_array){
+				int target_hit=skill.getHit();
+				if(target_hit<=0){
+					target_hit=100;
+				}
+				if(option.compareOf(target_hit,hit)){
+					list.add(skill);
+				}
+			}
+			return list.toArray(new SkillData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.createIntInputDialogBuilder(context,search_type,listener,this,30,100).create().show();
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	},
+	PP("PP"){
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String _case) {
+			String[] pp_option=_case.split(" ");
+			int pp=Integer.valueOf(pp_option[0]);
+			OneCompareOptions option=OneCompareOptions.fromString(pp_option[1]);
+			
+			List<SkillData> list=new ArrayList<SkillData>();
+			for(SkillData skill:skill_array){
+				if(option.compareOf(skill.getPp(),pp)){
+					list.add(skill);
+				}
+			}
+			return list.toArray(new SkillData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.createIntInputDialogBuilder(context,search_type,listener,this,1,40).create().show();
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	},
+	PRIORITY("優先度"){
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String _case) {
+			// TODO Auto-generated method stub
+			String[] priority_option=_case.split(" ");
+			int priority=Integer.valueOf(priority_option[0]);
+			OneCompareOptions option=OneCompareOptions.fromString(priority_option[1]);
+			
+			List<SkillData> list=new ArrayList<SkillData>();
+			for(SkillData skill:skill_array){
+				if(option.compareOf(skill.getPriority(),priority)){
+					list.add(skill);
+				}
+			}
+			return list.toArray(new SkillData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			// TODO Auto-generated method stub
+			SearchIf.createIntInputDialogBuilder(context,search_type,listener,this,-7,5).create().show();
+		
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	},
+	SKILL_CLASS("分類"){
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String _case) {
+			SkillClasses skill_class=SkillClasses.fromString(_case);
+			List<SkillData> list=new ArrayList<SkillData>();
+			for(SkillData skill:skill_array){
+				if(skill.getSkillClass().equals(skill_class)){
+					list.add(skill);
+				}
+			}
+			
+			return list.toArray(new SkillData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			// TODO Auto-generated method stub
+			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(SkillClasses.values())).create().show();
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	},
+	TARGET("攻撃対象"){
+
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String _case) {
+			SkillData.AttackTargets target=SkillData.AttackTargets.fromString(_case);
+			List<SkillData> list=new ArrayList<SkillData>();
+			for(SkillData skill:skill_array){
+				if(skill.getTarget().equals(target)){
+					list.add(skill);
+				}
+			}
+			
+			return list.toArray(new SkillData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(SkillData.AttackTargets.values())).create().show();
+			
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	},
+	DIRECT("直接攻撃"){
+
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String _case) {
+			SkillData.WhetherDirect direct=SkillData.WhetherDirect.fromString(_case);
+			List<SkillData> list=new ArrayList<SkillData>();
+			for(SkillData skill:skill_array){
+				if(skill.getDirect().equals(direct)){
+					list.add(skill);
+				}
+			}
+			
+			return list.toArray(new SkillData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(SkillData.WhetherDirect.values())).create().show();
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	};
+	
+	
+	
+	
 	
 	public static SkillSearchableInformations fromCategory(String category){
 		for(SkillSearchableInformations info:values()){

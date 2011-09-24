@@ -186,6 +186,7 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 				//TODO ヘルプを表示（威力期待値　命中込みとは何か）
 			}
 		});
+		/*
 		//命中・急所込
 		((TextView)findViewById(R.id.skill_expected_pow_hit_critical)).setText(SkillViewableInformations.EXPECTED_POWER_HIT_CRITICAL.getInformation(skill));
 		(findViewById(R.id.text_skill_expected_pow_hit_critical)).setOnClickListener(new OnClickListener(){
@@ -203,6 +204,7 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 				//TODO ヘルプを表示（威力期待値　命,急,効果込み(2回平均)とは何か）
 			}
 		});
+		*/
 	}
 	
 	

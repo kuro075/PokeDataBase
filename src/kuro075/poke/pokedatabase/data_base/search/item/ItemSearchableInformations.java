@@ -10,10 +10,13 @@ import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.item.ItemData;
+import kuro075.poke.pokedatabase.data_base.item.ItemData.ItemClasses;
+import kuro075.poke.pokedatabase.data_base.item.ItemData.ItemSubClasses;
 import kuro075.poke.pokedatabase.data_base.item.ItemDataManager;
 import kuro075.poke.pokedatabase.data_base.search.ItemSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.poke.NameSearchOptions;
+import kuro075.poke.pokedatabase.data_base.search.poke.OneCompareOptions;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,6 +28,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+/**
+ * 名前、買値、売値、分類、サブ分類
+ * @author sanogenma
+ *
+ */
 public enum ItemSearchableInformations implements ItemSearchIfCategory{
 	NAME("名前") {
 		@Override
@@ -155,7 +163,123 @@ public enum ItemSearchableInformations implements ItemSearchIfCategory{
 			}
 			return "";
 		}
+	},
+	BUY_VALUE("買値"){
+		@Override
+		public ItemData[] search(ItemData[] item_array, String category,
+				String _case) {
+			String[] buy_option=_case.split(" ");
+			int buy=Integer.valueOf(buy_option[0]);
+			OneCompareOptions option=OneCompareOptions.fromString(buy_option[1]);
+			
+			List<ItemData> list=new ArrayList<ItemData>();
+			for(ItemData item:item_array){
+				if(option.compareOf(item.getBuyValue(), buy)){
+					list.add(item);
+				}
+			}
+			return list.toArray(new ItemData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.createIntInputDialogBuilder(context,search_type,listener,this,0,90000).create().show();
+				
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	},
+	SELL_VALUE("売値"){
+		@Override
+		public ItemData[] search(ItemData[] item_array, String category,
+				String _case) {
+			String[] sell_option=_case.split(" ");
+			int sell=Integer.valueOf(sell_option[0]);
+			OneCompareOptions option=OneCompareOptions.fromString(sell_option[1]);
+			
+			List<ItemData> list=new ArrayList<ItemData>();
+			for(ItemData item:item_array){
+				if(option.compareOf(item.getSellValue(), sell)){
+					list.add(item);
+				}
+			}
+			return list.toArray(new ItemData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.createIntInputDialogBuilder(context,search_type,listener,this,0,5000).create().show();
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	},
+	ITEM_CLASS("分類"){
+
+		@Override
+		public ItemData[] search(ItemData[] item_array, String category,
+				String _case) {
+			ItemClasses item_class=ItemClasses.fromString(_case);
+			List<ItemData> list=new ArrayList<ItemData>();
+			for(ItemData item:item_array){
+				if(item.getItemClass().equals(item_class)){
+					list.add(item);
+				}
+			}
+			return list.toArray(new ItemData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(ItemClasses.values())).create().show();
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	},
+	SUB_CLASS("サブ分類"){
+		@Override
+		public ItemData[] search(ItemData[] item_array, String category,
+				String _case) {
+			ItemSubClasses item_class=ItemSubClasses.fromString(_case);
+			List<ItemData> list=new ArrayList<ItemData>();
+			for(ItemData item:item_array){
+				if(item.getItemSubClass().equals(item_class)){
+					list.add(item);
+				}
+			}
+			return list.toArray(new ItemData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(ItemSubClasses.values())).create().show();
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	};
+	
+	
 	public static ItemSearchableInformations fromCategory(String category){
 		for(ItemSearchableInformations info:values()){
 			if(info.isCategory(category)) return info;

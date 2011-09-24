@@ -229,4 +229,6 @@ public class SearchIf {
 		String[] tmp=search_if.split("[:¥(¥)/]");//category , _case, search_type に分けられる
 		return SearchTypes.fromString(tmp[1]);
 	}
+	
+	
 }
