@@ -50,13 +50,13 @@ public class DataStore {
 			void startSearchResultActivity(Context context, String title,
 					String[] search_ifs) {
 				// TODO Auto-generated method stub
-				
+				kuro075.poke.pokedatabase.skill_book.search_result.SkillSearchResultActivity.startThisActivity(context,title,search_ifs);
 			}
 
 			@Override
 			void startPageActivity(Context context, String name) {
 				// TODO Auto-generated method stub
-				
+				kuro075.poke.pokedatabase.skill_book.skill_page.SkillPageActivity.startThisActivity(context, name);
 			}
 		},
 		CHARACTER("character"){
@@ -65,12 +65,14 @@ public class DataStore {
 			void startSearchResultActivity(Context context, String title,
 					String[] search_ifs) {
 				// TODO Auto-generated method stub
+				kuro075.poke.pokedatabase.character_book.search_result.CharacterSearchResultActivity.startThisActivity(context,title,search_ifs);
 				
 			}
 
 			@Override
 			void startPageActivity(Context context, String name) {
 				// TODO Auto-generated method stub
+				kuro075.poke.pokedatabase.character_book.character_page.CharacterPageActivity.startThisActivity(context, name);
 				
 			}
 			
@@ -81,12 +83,32 @@ public class DataStore {
 			void startSearchResultActivity(Context context, String title,
 					String[] search_ifs) {
 				// TODO Auto-generated method stub
+				kuro075.poke.pokedatabase.item_book.search_result.ItemSearchResultActivity.startThisActivity(context,title,search_ifs);
 				
 			}
 
 			@Override
 			void startPageActivity(Context context, String name) {
 				// TODO Auto-generated method stub
+				kuro075.poke.pokedatabase.item_book.item_page.ItemPageActivity.startThisActivity(context, name);
+				
+			}
+			
+		},
+		TYPE("type"){
+
+			@Override
+			void startSearchResultActivity(Context context, String title,
+					String[] search_ifs) {
+				// TODO Auto-generated method stub
+				kuro075.poke.pokedatabase.type_book.search_result.TypeSearchResultActivity.startThisActivity(context,title,search_ifs);
+				
+			}
+
+			@Override
+			void startPageActivity(Context context, String name) {
+				// TODO Auto-generated method stub
+				kuro075.poke.pokedatabase.type_book.type_page.TypePageActivity.startThisActivity(context, name);
 				
 			}
 			

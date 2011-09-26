@@ -16,6 +16,9 @@ import android.graphics.Color;
  *
  */
 public class TypeDataManager{
+	private static final String TAG="TypeDataManager";
+	public static final TypeDataManager INSTANCE = new Builder().build();
+
 	/**
 	 * タイプ相性倍率
 	 * @author sanogenma
@@ -457,5 +460,84 @@ public class TypeDataManager{
 		if(type1!=null) num+=type1.getIndex()*TypeData.values().length;
 		if(type2!=null) num+=type2.getIndex();
 		return num;
+	}
+	
+
+	//================================================================================
+	/*==========/
+	/  Builder  / 
+	/==========*/
+	private static class Builder{
+		List<TypeDataForSearch> type_list=new ArrayList<TypeDataForSearch>();
+		
+		private Builder(){
+			int index=0;
+			for(TypeData type:TypeData.values()){
+				type_list.add(new TypeDataForSearch(type.toString(),index,type,null));
+				index++;
+			}
+			for(int i=0,n=TypeData.values().length;i<n;i++){
+				TypeData type1=TypeData.values()[i];
+				for(int j=i+1;j<n;j++){
+					TypeData type2=TypeData.values()[j];
+					StringBuilder sb=new StringBuilder();
+					sb.append(type1.toString());
+					sb.append("・");
+					sb.append(type2.toString());
+					type_list.add(new TypeDataForSearch(new String(sb),index,type1,type2));
+					index++;
+				}
+			}
+		}
+		
+		private TypeDataManager build(){
+			return new TypeDataManager(type_list.toArray(new TypeDataForSearch[0]));
+		}
+	}
+	//================================================================================
+	
+	//================================================================================
+	/*========/
+	/  データ  / 
+	/========*/
+	private final TypeDataForSearch[] type_data_for_search;
+	
+	private TypeDataManager(TypeDataForSearch[] type){
+		type_data_for_search=type;
+	}
+	
+	/**
+	 * 全てのタイプデータを取得
+	 * @return
+	 */
+	public TypeDataForSearch[] getAllData(){
+		return type_data_for_search;
+	}
+	
+	/**
+	 * すべての単タイプを取得
+	 * @return
+	 */
+	public TypeDataForSearch[] getAllSingleTypeData(){
+		List<TypeDataForSearch> single_type_list=new ArrayList<TypeDataForSearch>();
+		for(TypeDataForSearch type:type_data_for_search){
+			if(type.isSingleType()){
+				single_type_list.add(type);
+			}
+		}
+		return single_type_list.toArray(new TypeDataForSearch[0]);
+	}
+	/**
+	 * すべての複合タイプを取得
+	 * @return
+	 */
+	public TypeDataForSearch[] getAllMultipleTypeData(){
+		List<TypeDataForSearch> multiple_type_list=new ArrayList<TypeDataForSearch>();
+		for(TypeDataForSearch type:type_data_for_search){
+			if(type.isMultipleType()){
+				multiple_type_list.add(type);
+			}
+		}
+		return multiple_type_list.toArray(new TypeDataForSearch[0]);
 	}
 }

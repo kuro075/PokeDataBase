@@ -107,7 +107,7 @@ public class ItemSearchResultActivity extends SearchResultActivity{
 	}
 	@Override
 	protected int getMaxLengthOfName() {
-		return 7;
+		return 8;
 	}
 
 	@Override
