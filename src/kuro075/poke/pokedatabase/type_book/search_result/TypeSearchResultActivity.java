@@ -1,15 +1,23 @@
 package kuro075.poke.pokedatabase.type_book.search_result;
 
+import java.util.Comparator;
+
 import android.content.Context;
 import android.content.Intent;
 import kuro075.poke.pokedatabase.SearchResultActivity;
-import kuro075.poke.pokedatabase.data_base.search.skill.SkillSearchableInformations;
+import kuro075.poke.pokedatabase.data_base.BasicData;
+import kuro075.poke.pokedatabase.data_base.SearchIfListener;
+import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.search.type.TypeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
-import kuro075.poke.pokedatabase.skill_book.search_result.SkillSearchResultActivity;
+import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
+import kuro075.poke.pokedatabase.type_book.type_page.TypePageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
+import kuro075.poke.pokedatabase.data_base.type.TypeDataForSearch;
+import kuro075.poke.pokedatabase.data_base.viewable_informations.TypeViewableInformations;
 
 public class TypeSearchResultActivity extends SearchResultActivity{
+
 	private static final String TAG="TypeSearchResultActivity";
 	
 	/**
@@ -43,7 +51,7 @@ public class TypeSearchResultActivity extends SearchResultActivity{
 	 */
 	public static void startThisActivity(Context context,String title,String[] search_ifs){
 		Utility.log(TAG, "startThisActivity with search_ifs");
-		Intent intent = new Intent(context,SkillSearchResultActivity.class);
+		Intent intent = new Intent(context,TypeSearchResultActivity.class);
 		intent.putExtra(KEY_TITLE, title);
 		intent.putExtra(KEY_SEARCH_IF, search_ifs);
 		context.startActivity(intent);
@@ -74,9 +82,66 @@ public class TypeSearchResultActivity extends SearchResultActivity{
 	 */
 	public static void startThisActivityWithoutHistory(Context context,String title,String[] search_ifs){
 		Utility.log(TAG, "startThisActivityWithoutHistory");
-		Intent intent = new Intent(context,SkillSearchResultActivity.class);
+		Intent intent = new Intent(context,TypeSearchResultActivity.class);
 		intent.putExtra(KEY_TITLE, title);
 		intent.putExtra(KEY_SEARCH_IF, search_ifs);
 		context.startActivity(intent);
+	}
+	
+	@Override
+	protected void clickListItem(BasicData data) {
+		// TODO Auto-generated method stub
+		TypePageActivity.startThisActivity(this, data.toString());
+	}
+	@Override
+	protected BasicData[] getAllDatas() {
+		// TODO Auto-generated method stub
+		return TypeDataManager.INSTANCE.getAllData();
+	}
+	@Override
+	protected Comparator getComparatorByViewableInformation(int index) {
+		// TODO Auto-generated method stub
+		return TypeViewableInformations.values()[index].getComparator();
+	}
+	@Override
+	protected int getMaxLengthOfName() {
+		// TODO Auto-generated method stub
+		return 8;
+	}
+	@Override
+	protected boolean getNoVisible() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	protected String[] getSearchableInformationTitles() {
+		// TODO Auto-generated method stub
+		return Utility.changeToStringArray(TypeSearchableInformations.values());
+	}
+	@Override
+	protected String getViewableInformation(int index, BasicData data) {
+		// TODO Auto-generated method stub
+		return TypeViewableInformations.values()[index].getInformation((TypeDataForSearch)data);
+	}
+	@Override
+	protected String getViewableInformationTitle(int index) {
+		// TODO Auto-generated method stub
+		return TypeViewableInformations.values()[index].toString();
+	}
+	@Override
+	protected String[] getViewableInformationTitles() {
+		// TODO Auto-generated method stub
+		return Utility.changeToStringArray(TypeViewableInformations.values());
+	}
+	@Override
+	protected void openSearchDialog(int index, Context context,
+			SearchTypes search_type, SearchIfListener listener) {
+		// TODO Auto-generated method stub
+		TypeSearchableInformations.values()[index].openDialog(context, search_type, listener);
+	}
+	@Override
+	protected BasicData[] search(BasicData[] data_array, String search_if) {
+		// TODO Auto-generated method stub
+		return TypeSearchableInformations.searchBySearchIf((TypeDataForSearch[])data_array,search_if);
 	}
 }

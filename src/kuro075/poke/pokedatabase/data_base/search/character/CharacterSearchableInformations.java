@@ -56,7 +56,7 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,Utility.changeToStringArray(NameSearchOptions.values()));
 			final Spinner spinner = (Spinner) layout.findViewById(R.id.spinner);
 			spinner.setAdapter(adapter);
-			((TextView)layout.findViewById(R.id.text)).setText("※ひらがな、カタカナのみ有効(ひらがなは、カタカナに自動変換されます)");
+			((TextView)layout.findViewById(R.id.text)).setText("※ひらがな、カタカナのみ有効");
 
 			builder.setPositiveButton("検索",new DialogInterface.OnClickListener() {
 				@Override

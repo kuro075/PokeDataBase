@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
+import kuro075.poke.pokedatabase.util.Utility;
 
 import android.graphics.Color;
 
@@ -501,9 +502,18 @@ public class TypeDataManager{
 	/  データ  / 
 	/========*/
 	private final TypeDataForSearch[] type_data_for_search;
+	private final String[] type_name;
+	private final Map<String,TypeDataForSearch> name2type_map=new HashMap<String,TypeDataForSearch>();
+	private final int num;
+	public static final TypeDataForSearch NullData=new TypeDataForSearch("",-1,TypeData.N,null);
 	
 	private TypeDataManager(TypeDataForSearch[] type){
 		type_data_for_search=type;
+		num=type.length;
+		for(TypeDataForSearch type_data:type){
+			name2type_map.put(type_data.toString(), type_data);
+		}
+		type_name=Utility.changeToStringArray(type);
 	}
 	
 	/**
@@ -539,5 +549,29 @@ public class TypeDataManager{
 			}
 		}
 		return multiple_type_list.toArray(new TypeDataForSearch[0]);
+	}
+	
+	public TypeDataForSearch getTypeData(int index){
+		if(index<0 || num<=index) return NullData;
+		return type_data_for_search[index];
+	}
+	
+	public TypeDataForSearch getTypeData(String name){
+		return name2type_map.get(name);
+	}
+	
+	/**
+	 * TypeDataForSearchを取得
+	 * @param type1
+	 * @param type2
+	 * @return
+	 */
+	public TypeDataForSearch getTypeData(TypeData type1,TypeData type2){
+		for(TypeDataForSearch type:this.type_data_for_search){
+			if(type.isType(type1,type2)){
+				return type;
+			}
+		}
+		return null;
 	}
 }

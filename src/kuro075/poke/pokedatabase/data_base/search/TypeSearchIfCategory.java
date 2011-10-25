@@ -1,6 +1,7 @@
 package kuro075.poke.pokedatabase.data_base.search;
 
-import kuro075.poke.pokedatabase.data_base.character.CharacterData;
+import kuro075.poke.pokedatabase.data_base.type.TypeDataForSearch;
+
 
 public interface TypeSearchIfCategory extends SearchIfCategory{
 	/**
@@ -10,7 +11,7 @@ public interface TypeSearchIfCategory extends SearchIfCategory{
 	 * @param _case 検索条件
 	 * @return 検索後のポケモンリスト
 	 */
-	public CharacterData[] search(CharacterData[] chara_array,String category,String _case);
+	public TypeDataForSearch[] search(TypeDataForSearch[] chara_array,String category,String _case);
 
 	
 }

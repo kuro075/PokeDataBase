@@ -1,6 +1,7 @@
 package kuro075.poke.pokedatabase.type_book.type_page;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
@@ -22,15 +23,19 @@ import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.poke.OneCompareOptions;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.search.poke.SpecCategories;
+import kuro075.poke.pokedatabase.data_base.search.skill.SkillSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData;
 import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData.SkillClasses;
+import kuro075.poke.pokedatabase.data_base.type.TypeDataForSearch;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeRelations;
+import kuro075.poke.pokedatabase.data_base.viewable_informations.TypeViewableInformations;
 import kuro075.poke.pokedatabase.menu.book.TypeBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
 import kuro075.poke.pokedatabase.poke_book.poke_page.PokePageActivity;
+import kuro075.poke.pokedatabase.skill_book.search_result.SkillSearchResultActivity;
 import kuro075.poke.pokedatabase.type_book.type_page.TypePageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 
@@ -59,7 +64,12 @@ public class TypePageActivity extends TypeBookMenuActivity{
 	 * @param type_name
 	 */
 	public static void startThisActivity(Context context,String type_name){
-		startThisActivity(context,type_name,NONE);
+		String[] types=type_name.split("・");
+		if(types.length==1){
+			startThisActivity(context,type_name,NONE);
+		}else{
+			startThisActivity(context,types[0],types[1]);
+		}
 	}
 	/**
 	 * このアクティビティーをstartさせる(複合タイプ)
@@ -90,6 +100,7 @@ public class TypePageActivity extends TypeBookMenuActivity{
 	/  インスタンス変数  /
 	/================*/
 	private TypeData type1=TypeData.N,type2=null;
+	private TypeDataForSearch type;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +112,7 @@ public class TypePageActivity extends TypeBookMenuActivity{
 		if(extras != null){
 			type1=TypeData.fromString(extras.getString(KEY_TYPE1_NAME));
 			type2=TypeData.fromString(extras.getString(KEY_TYPE2_NAME));
+			type=TypeDataManager.INSTANCE.getTypeData(type1, type2);
 		}
 
 		/* レイアウト初期化 */
@@ -133,6 +145,7 @@ public class TypePageActivity extends TypeBookMenuActivity{
 	 * タイプ相性
 	 */
 	private void initTypeRelation(){
+		//表示するタイプの数
 		final int MAX=13;//TODO 設定で変更できるように
 		//攻撃時
 		//タイプ相性
@@ -215,12 +228,13 @@ public class TypePageActivity extends TypeBookMenuActivity{
 		
 		//このタイプのポケモン
 		List<PokeData> poke_list=new ArrayList<PokeData>();
+		poke_list=Arrays.asList(type.getPokeArray());
 		if(type2!=null){//複合タイプのとき
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
+			/*for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
 				if(poke.hasType(type1) && poke.hasType(type2)){
 					poke_list.add(poke);
 				}
-			}
+			}*/
 			StringBuilder sb=new StringBuilder();
 			sb.append(poke_list.size());
 			sb.append("匹");
@@ -242,11 +256,11 @@ public class TypePageActivity extends TypeBookMenuActivity{
 				}
 			});
 		}else{//単タイプのとき
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
+			/*for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
 				if(poke.hasType(type1)){
 					poke_list.add(poke);
 				}
-			}
+			}*/
 			StringBuilder sb=new StringBuilder();
 			sb.append(poke_list.size());
 			sb.append("匹");
@@ -254,7 +268,6 @@ public class TypePageActivity extends TypeBookMenuActivity{
 			((TextView)findViewById(R.id.text_num_poke)).setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.TYPE, type1.toString());
 				}
 			});
@@ -285,7 +298,6 @@ public class TypePageActivity extends TypeBookMenuActivity{
 			text_num.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.TYPE, type1.toString());
 				}
 			});
@@ -351,16 +363,27 @@ public class TypePageActivity extends TypeBookMenuActivity{
 		
 		
 		//このタイプのわざ
-		List<SkillData> skill_list=new ArrayList<SkillData>();
-		for(SkillData skill:SkillDataManager.INSTANCE.getAllData()){
-			if(skill.getType().equals(type1)){
-				skill_list.add(skill);
-			}else
-			if(type2!=null && skill.getType().equals(type2)){
-				skill_list.add(skill);
+		List<SkillData> skill_list=Arrays.asList(type.getSkillArray());
+		TextView text=((TextView)findViewById(R.id.text_num_skill));
+		text.setText(TypeViewableInformations.NUM_SKILL.getInformation(type));//getTextNum(skill_list.size()));
+		text.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// このタイプのわざの個数を押したときの動作
+				StringBuilder sb=new StringBuilder();
+				sb.append(type.getType1().toString());
+				List<String> search_ifs=new ArrayList<String>();
+				search_ifs.add(SkillSearchableInformations.TYPE.getDefaultSearchIf(type.getType1().toString()));
+				if(type.getType2()!=null){
+					sb.append(" と ");
+					sb.append(type.getType2().toString());
+					search_ifs.add(SearchIf.createSearchIf(SkillSearchableInformations.TYPE, type.getType2().toString(), SearchTypes.ADD));
+				}
+				sb.append(" のわざ");
+				SkillSearchResultActivity.startThisActivity(context, new String(sb), search_ifs.toArray(new String[0]));
 			}
-		}
-		((TextView)findViewById(R.id.text_num_skill)).setText(getTextNum(skill_list.size()));
+		});
+		
 		
 		int num=0;
 		//物理
@@ -369,7 +392,26 @@ public class TypePageActivity extends TypeBookMenuActivity{
 				num++;
 			}
 		}
-		((TextView)findViewById(R.id.text_num_physical_skill)).setText(getTextNum(num));
+		text=((TextView)findViewById(R.id.text_num_physical_skill));
+		text.setText(num+"個");
+		text.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// このタイプのわざの個数を押したときの動作
+				StringBuilder sb=new StringBuilder();
+				sb.append(type.getType1().toString());
+				List<String> search_ifs=new ArrayList<String>();
+				search_ifs.add(SkillSearchableInformations.TYPE.getDefaultSearchIf(type.getType1().toString()));
+				if(type.getType2()!=null){
+					sb.append(" と ");
+					sb.append(type.getType2().toString());
+					search_ifs.add(SearchIf.createSearchIf(SkillSearchableInformations.TYPE, type.getType2().toString(), SearchTypes.ADD));
+				}
+				sb.append(" の物理わざ");
+				search_ifs.add(SkillSearchableInformations.SKILL_CLASS.getDefaultSearchIf(SkillClasses.PHYSICAL.toString()));
+				SkillSearchResultActivity.startThisActivity(context, new String(sb), search_ifs.toArray(new String[0]));
+			}
+		});
 		
 		//特殊
 		num=0;
@@ -378,8 +420,27 @@ public class TypePageActivity extends TypeBookMenuActivity{
 				num++;
 			}
 		}
-		((TextView)findViewById(R.id.text_num_special_skill)).setText(getTextNum(num));
-	
+		text=((TextView)findViewById(R.id.text_num_special_skill));
+		text.setText(num+"個");
+		text.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// このタイプのわざの個数を押したときの動作
+				StringBuilder sb=new StringBuilder();
+				sb.append(type.getType1().toString());
+				List<String> search_ifs=new ArrayList<String>();
+				search_ifs.add(SkillSearchableInformations.TYPE.getDefaultSearchIf(type.getType1().toString()));
+				if(type.getType2()!=null){
+					sb.append(" と ");
+					sb.append(type.getType2().toString());
+					search_ifs.add(SearchIf.createSearchIf(SkillSearchableInformations.TYPE, type.getType2().toString(), SearchTypes.ADD));
+				}
+				sb.append(" の特殊わざ");
+				search_ifs.add(SkillSearchableInformations.SKILL_CLASS.getDefaultSearchIf(SkillClasses.SPECIAL.toString()));
+				SkillSearchResultActivity.startThisActivity(context, new String(sb), search_ifs.toArray(new String[0]));
+			}
+		});
+		
 		//変化
 		num=0;
 		for(SkillData skill:skill_list){
@@ -387,8 +448,26 @@ public class TypePageActivity extends TypeBookMenuActivity{
 				num++;
 			}
 		}
-		((TextView)findViewById(R.id.text_num_change_skill)).setText(getTextNum(num));
-	
+		text=((TextView)findViewById(R.id.text_num_change_skill));
+		text.setText(num+"個");
+		text.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// このタイプのわざの個数を押したときの動作
+				StringBuilder sb=new StringBuilder();
+				sb.append(type.getType1().toString());
+				List<String> search_ifs=new ArrayList<String>();
+				search_ifs.add(SkillSearchableInformations.TYPE.getDefaultSearchIf(type.getType1().toString()));
+				if(type.getType2()!=null){
+					sb.append(" と ");
+					sb.append(type.getType2().toString());
+					search_ifs.add(SearchIf.createSearchIf(SkillSearchableInformations.TYPE, type.getType2().toString(), SearchTypes.ADD));
+				}
+				sb.append(" の変化わざ");
+				search_ifs.add(SkillSearchableInformations.SKILL_CLASS.getDefaultSearchIf(SkillClasses.CHANGE.toString()));
+				SkillSearchResultActivity.startThisActivity(context, new String(sb), search_ifs.toArray(new String[0]));
+			}
+		});
 		
 	}
 
@@ -499,7 +578,11 @@ public class TypePageActivity extends TypeBookMenuActivity{
 				sum+=poke.getSpec(Statuses.values()[i]);
 			}
 			TextView tv=(TextView)findViewById(AVE_SPEC_ID[i]);
-			sum/=poke_list.size();
+			if(poke_list.size()>0){
+				sum/=poke_list.size();
+			}else{
+				sum=0;
+			}
 			tv.setText(String.valueOf(sum));
 		}
 	}
