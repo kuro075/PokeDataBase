@@ -18,7 +18,8 @@ public class TypeDataForSearch extends BasicData{
 	//このタイプのわざリスト
 	private final List<SkillData> skill_list=new ArrayList<SkillData>();
 	private boolean flag_skill_list=false;
-	
+	//このタイプの弱点・抵抗の数
+	private final int num_weak_type,num_resist_type;
 	
 	private static final int NUM_SPEC=7;//種族値の種類の数
 	//最高・最低・平均種族値とそのポケモンとその数と更新フラグ
@@ -33,6 +34,11 @@ public class TypeDataForSearch extends BasicData{
 		type_data1=type;
 		type_data2=null;
 		initFlag();
+		num_weak_type=TypeDataManager.getWeakTypes(type_data1, type_data2, TypeDataManager.TypeRelations._400).length
+		             +TypeDataManager.getWeakTypes(type_data1, type_data2, TypeDataManager.TypeRelations._200).length;
+		num_resist_type=TypeDataManager.getWeakTypes(type_data1, type_data2, TypeDataManager.TypeRelations._50).length
+					   +TypeDataManager.getWeakTypes(type_data1, type_data2, TypeDataManager.TypeRelations._25).length
+					   +TypeDataManager.getWeakTypes(type_data1, type_data2, TypeDataManager.TypeRelations._0).length;
 	}
 	
 	protected TypeDataForSearch(String name, int no,TypeDataManager.TypeData type1,TypeDataManager.TypeData type2) {
@@ -40,6 +46,11 @@ public class TypeDataForSearch extends BasicData{
 		type_data1=type1;
 		type_data2=type2;
 		initFlag();
+		num_weak_type=TypeDataManager.getWeakTypes(type_data1, type_data2, TypeDataManager.TypeRelations._400).length
+			         +TypeDataManager.getWeakTypes(type_data1, type_data2, TypeDataManager.TypeRelations._200).length;
+		num_resist_type=TypeDataManager.getWeakTypes(type_data1, type_data2, TypeDataManager.TypeRelations._50).length
+		   			   +TypeDataManager.getWeakTypes(type_data1, type_data2, TypeDataManager.TypeRelations._25).length
+		   			   +TypeDataManager.getWeakTypes(type_data1, type_data2, TypeDataManager.TypeRelations._0).length;
 	}
 	
 	/**
@@ -82,6 +93,7 @@ public class TypeDataForSearch extends BasicData{
 			flag_skill_list=true;
 		}
 	}
+	
 	
 	/**
 	 * このタイプでの最大種族値を取得
@@ -181,6 +193,7 @@ public class TypeDataForSearch extends BasicData{
 	 * @return
 	 */
 	public PokeData[] getPokeArray(){
+		initPokeList();
 		return poke_list.toArray(new PokeData[0]);
 	}
 	/**
@@ -244,5 +257,21 @@ public class TypeDataForSearch extends BasicData{
 			return type_data1.equals(type1) && type2==null;
 		}
 		return type_data1.equals(type1) && type_data2.equals(type2);
+	}
+	
+	/**
+	 * 弱点の数を取得
+	 * @return
+	 */
+	public int getNumWeakType(){
+		return num_weak_type;
+	}
+	
+	/**
+	 * 抵抗の数を取得
+	 * @return
+	 */
+	public int getNumResistType(){
+		return num_resist_type;
 	}
 }

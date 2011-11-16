@@ -110,7 +110,7 @@ public class ItemPageActivity extends ItemBookMenuActivity{
 		tv.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				// TODO 通常持っているポケモンのみを検索
+				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.ITEM, item.toString()+" 通常");
 			}
 		});
 		
@@ -120,7 +120,7 @@ public class ItemPageActivity extends ItemBookMenuActivity{
 		tv.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				// TODO レアで持っているポケモンのみを検索
+				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.ITEM, item.toString()+" レア");
 			}
 		});
 	}

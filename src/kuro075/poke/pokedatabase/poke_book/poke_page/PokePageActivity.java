@@ -4,6 +4,7 @@ import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
+import kuro075.poke.pokedatabase.data_base.search.skill.SkillSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 import kuro075.poke.pokedatabase.menu.MenuItems;
@@ -14,6 +15,7 @@ import kuro075.poke.pokedatabase.poke_book.poke_page.egg_skill.EggSkillInformati
 import kuro075.poke.pokedatabase.poke_book.poke_page.lv_skill.LvSkillInformationLayout;
 import kuro075.poke.pokedatabase.poke_book.poke_page.machine.MachineInformationLayout;
 import kuro075.poke.pokedatabase.poke_book.poke_page.other.OtherInformationLayout;
+import kuro075.poke.pokedatabase.skill_book.search_result.SkillSearchResultActivity;
 import kuro075.poke.pokedatabase.type_book.type_page.TypePageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.content.Context;
@@ -335,16 +337,20 @@ public class PokePageActivity extends PokeBookMenuActivity{
 	}  
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
+		// TODO メニュー項目の追加
+		MenuItems.VIEW_ALL_SKILL.addMenuItem(menu);
 		MenuItems.PAGE_SAVE.addMenuItem(menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
+		// TODO メニューをクリックした時の動作
 		switch(MenuItems.fromId(item.getItemId())){
 			case PAGE_SAVE:
 				DataStore.DataTypes.POKEMON.openSaveStarDialog(this, poke.getName());
+				break;
+			case VIEW_ALL_SKILL:
+				SkillSearchResultActivity.startThisActivityWithDefaultSearch(this, SkillSearchableInformations.POKEMON, this.poke.getName());
 				break;
 		}
 		return super.onOptionsItemSelected(item);

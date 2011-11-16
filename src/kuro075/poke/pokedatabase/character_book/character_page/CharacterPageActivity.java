@@ -108,8 +108,7 @@ public class CharacterPageActivity extends CharacterBookMenuActivity{
 		tv.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				// TODO 夢特性のみに変更
-				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.CHARACTER, character.toString());
+				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.CHARACTER, character.toString()+" 夢");
 			}
 		});
 	}

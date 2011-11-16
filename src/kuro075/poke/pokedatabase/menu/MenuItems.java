@@ -7,7 +7,7 @@ public enum MenuItems {
 	/*======================/
 	 * DefaultMenuActivity  
 	/======================*/
-	MODE("モード選択",android.R.drawable.ic_menu_view),
+	MODE("図鑑選択",android.R.drawable.ic_menu_view),
 	PREFERENCE("設定",android.R.drawable.ic_menu_preferences),
 	/*=======================/
 	 * BookMenuActivity
@@ -29,6 +29,10 @@ public enum MenuItems {
  	/  PageActivity  /
 	/===============*/
 	PAGE_SAVE("お気に入りに登録",android.R.drawable.ic_menu_save),
+	/*===============/
+ 	/  PokePageActivity  /
+	/===============*/
+	VIEW_ALL_SKILL("覚えるわざ",android.R.drawable.ic_menu_compass),
 	/*
 	 * 汎用
 	 */

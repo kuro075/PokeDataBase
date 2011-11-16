@@ -9,6 +9,7 @@ import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Statuses;
+import kuro075.poke.pokedatabase.data_base.search.OneCompareOptions;
 import kuro075.poke.pokedatabase.data_base.search.PokeSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.SearchIfCategory;

@@ -5,15 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.BasicData;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
-import kuro075.poke.pokedatabase.data_base.search.poke.OneCompareOptions;
 import kuro075.poke.pokedatabase.util.Utility;
 
 public class SearchIf {
@@ -115,7 +116,7 @@ public class SearchIf {
 	 * @param datas
 	 * @return
 	 */
-	public static AlertDialog.Builder createSimpleSpinnerDialogBuilder(Context context,final SearchTypes search_type,final SearchIfListener listener,final SearchIfCategory category,final String[] datas){
+/*	public static AlertDialog.Builder createSimpleSpinnerDialogBuilder(Context context,final SearchTypes search_type,final SearchIfListener listener,final SearchIfCategory category,final String[] datas){
 		Utility.log(TAG, "createSimpleSpinnerDialogBuilder");
 		AlertDialog.Builder builder;
 		LayoutInflater factory=LayoutInflater.from(context);
@@ -143,6 +144,75 @@ public class SearchIf {
 			}
 		});
 		return builder;
+	}*/
+	public static void openSimpleSpinnerDialog(Context context,final SearchTypes search_type,final SearchIfListener listener,final SearchIfCategory category,final String[] datas){
+		Utility.log(TAG, "createSimpleSpinnerDialogBuilder");
+		AlertDialog.Builder builder;
+		LayoutInflater factory=LayoutInflater.from(context);
+		
+		final View layout = factory.inflate(R.layout.simple_spinner_dialog, null);
+		builder = new AlertDialog.Builder(context);
+		builder.setTitle(SearchIf.createDialogTitle(category,search_type));
+		builder.setView(layout);
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,datas);
+		final Spinner spinner = (Spinner)layout.findViewById(R.id.spinner);
+		spinner.setAdapter(adapter);
+		builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Utility.log(toString(), "onClickSearchButton");
+				listener.receiveSearchIf(SearchIf.createSearchIf(category,spinner.getSelectedItem().toString(),search_type));
+				dialog.dismiss();
+			}
+		});
+		builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				listener.receiveSearchIf(null);
+			}
+		});
+		builder.create().show();
+	}
+	
+	/**
+	 * リスト選択ダイアログを開く
+	 * @param context
+	 * @param search_type
+	 * @param listener
+	 * @param category
+	 * @param datas
+	 */
+	public static void openSimpleListDialog(Context context, final SearchTypes search_type,final SearchIfListener listener, final SearchIfCategory category,final String[] datas){
+		Utility.log(TAG,"createSimpleListDialogBuilder");
+		AlertDialog.Builder builder;
+		LayoutInflater factory=LayoutInflater.from(context);
+		
+		final View layout = factory.inflate(R.layout.simple_list_dialog,null);
+		builder = new AlertDialog.Builder(context);
+		builder.setTitle(SearchIf.createDialogTitle(category, search_type));
+		builder.setView(layout);
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_list_item,datas);
+		final ListView listView = (ListView) layout.findViewById(R.id.list_view);
+		listView.setAdapter(adapter);
+
+		builder.setPositiveButton("戻る",new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				listener.receiveSearchIf(null);
+			}
+		});
+		
+		final AlertDialog dialog=builder.create();
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+				listener.receiveSearchIf(SearchIf.createSearchIf(category,datas[position],search_type));
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
 	}
 	
 	/**

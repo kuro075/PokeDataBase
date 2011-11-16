@@ -141,19 +141,10 @@ public enum ItemViewableInformations {
 		}
 	},
 	NUM_HAVING_POKE("所持ポケモン"){
-		private int getNumHavingPoke(ItemData item){
-			int num=0;
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
-				if(poke.hasItem(item)){
-					num++;
-				}
-			}
-			return num;
-		}
 		@Override
 		public String getInformation(ItemData item) {
 			StringBuilder sb=new StringBuilder();
-			sb.append(getNumHavingPoke(item));
+			sb.append(item.getNumPoke());
 			sb.append("匹");
 			return new String(sb);
 		}
@@ -163,7 +154,7 @@ public enum ItemViewableInformations {
 			return new Comparator<ItemData>(){
 				@Override
 				public int compare(ItemData s1, ItemData s2) {
-					int d=getNumHavingPoke(s1)-getNumHavingPoke(s2);
+					int d=s1.getNumPoke()-s2.getNumPoke();
 					if(d==0){
 						return s1.getNo()-s2.getNo();
 					}
@@ -173,20 +164,10 @@ public enum ItemViewableInformations {
 		}
 	},
 	NUM_NORMAL_HAVING_POKE("所持ポケモン(通常)"){
-		private int getNumHavingPoke(ItemData item){
-			int num=0;
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
-				ItemData common=poke.getItem(ItemRarities.COMMON);
-				if(common!=null && common.equals(item)){
-					num++;
-				}
-			}
-			return num;
-		}
 		@Override
 		public String getInformation(ItemData item) {
 			StringBuilder sb=new StringBuilder();
-			sb.append(getNumHavingPoke(item));
+			sb.append(item.getNumPokeCommon());
 			sb.append("匹");
 			return new String(sb);
 		}
@@ -196,7 +177,7 @@ public enum ItemViewableInformations {
 			return new Comparator<ItemData>(){
 				@Override
 				public int compare(ItemData s1, ItemData s2) {
-					int d=getNumHavingPoke(s1)-getNumHavingPoke(s2);
+					int d=s1.getNumPokeCommon()-s2.getNumPokeCommon();
 					if(d==0){
 						return s1.getNo()-s2.getNo();
 					}
@@ -206,20 +187,10 @@ public enum ItemViewableInformations {
 		}
 	},
 	NUM_RARE_HAVING_POKE("所持ポケモン(レア)"){
-		private int getNumHavingPoke(ItemData item){
-			int num=0;
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
-				ItemData rare=poke.getItem(ItemRarities.RARE);
-				if(rare!=null && rare.equals(item)){
-					num++;
-				}
-			}
-			return num;
-		}
 		@Override
 		public String getInformation(ItemData item) {
 			StringBuilder sb=new StringBuilder();
-			sb.append(getNumHavingPoke(item));
+			sb.append(item.getNumPokeRare());
 			sb.append("匹");
 			return new String(sb);
 		}
@@ -229,7 +200,7 @@ public enum ItemViewableInformations {
 			return new Comparator<ItemData>(){
 				@Override
 				public int compare(ItemData s1, ItemData s2) {
-					int d=getNumHavingPoke(s1)-getNumHavingPoke(s2);
+					int d=s1.getNumPokeRare()-s2.getNumPokeRare();
 					if(d==0){
 						return s1.getNo()-s2.getNo();
 					}

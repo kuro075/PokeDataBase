@@ -83,7 +83,6 @@ public class PokeDataBaseActivity extends DefaultMenuActivity {
 		}
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
 			for(int i=0,n=button.length;i<n;i++){
 				if(button[i]==v){
 					Modes.values()[i].startActivity(context);
@@ -107,7 +106,6 @@ public class PokeDataBaseActivity extends DefaultMenuActivity {
     		PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
     		version=packageInfo.versionCode;
     	}catch(NameNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
     	SharedPreferences preference=this.getPreferences(MODE_PRIVATE);

@@ -41,19 +41,10 @@ public enum CharacterViewableInformations {
 		}
 	},
 	NUM_POKE("ポケモンの数"){
-		private int getNumPoke(CharacterData chara){
-			int num=0;
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
-				if(poke.hasCharacter(chara)){
-					num++;
-				}
-			}
-			return num;
-		}
 		@Override
 		public String getInformation(CharacterData chara) {
 			StringBuilder sb=new StringBuilder();
-			sb.append(getNumPoke(chara));
+			sb.append(chara.getNumPoke());
 			sb.append("匹");
 			return new String(sb);
 		}
@@ -63,7 +54,7 @@ public enum CharacterViewableInformations {
 			return new Comparator<CharacterData>(){
 				@Override
 				public int compare(CharacterData c1, CharacterData c2) {
-					int d=getNumPoke(c1)-getNumPoke(c2);
+					int d=c1.getNumPoke()-c2.getNumPoke();
 					if(d==0){
 						return c1.getNo()-c2.getNo();
 					}
@@ -73,19 +64,10 @@ public enum CharacterViewableInformations {
 		}
 	},
 	NUM_DREAM_POKE("ポケモンの数(夢特性)"){
-		private int getNumPoke(CharacterData chara){
-			int num=0;
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
-				if(poke.getCharacter(CharacterTypes.DREAM)==chara){
-					num++;
-				}
-			}
-			return num;
-		}
 		@Override
 		public String getInformation(CharacterData chara) {
 			StringBuilder sb=new StringBuilder();
-			sb.append(getNumPoke(chara));
+			sb.append(chara.getNumDreamPoke());
 			sb.append("匹");
 			return new String(sb);
 		}
@@ -95,7 +77,7 @@ public enum CharacterViewableInformations {
 			return new Comparator<CharacterData>(){
 				@Override
 				public int compare(CharacterData c1, CharacterData c2) {
-					int d=getNumPoke(c1)-getNumPoke(c2);
+					int d=c1.getNumDreamPoke()-c2.getNumDreamPoke();
 					if(d==0){
 						return c1.getNo()-c2.getNo();
 					}

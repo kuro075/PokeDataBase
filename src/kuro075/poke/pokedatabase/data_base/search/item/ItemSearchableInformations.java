@@ -14,9 +14,9 @@ import kuro075.poke.pokedatabase.data_base.item.ItemData.ItemClasses;
 import kuro075.poke.pokedatabase.data_base.item.ItemData.ItemSubClasses;
 import kuro075.poke.pokedatabase.data_base.item.ItemDataManager;
 import kuro075.poke.pokedatabase.data_base.search.ItemSearchIfCategory;
+import kuro075.poke.pokedatabase.data_base.search.OneCompareOptions;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.poke.NameSearchOptions;
-import kuro075.poke.pokedatabase.data_base.search.poke.OneCompareOptions;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -242,7 +242,7 @@ public enum ItemSearchableInformations implements ItemSearchIfCategory{
 		@Override
 		public void openDialog(Context context, SearchTypes search_type,
 				SearchIfListener listener) {
-			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(ItemClasses.values())).create().show();
+			SearchIf.openSimpleListDialog(context,search_type,listener,this,Utility.changeToStringArray(ItemClasses.values()));
 		}
 
 		@Override
@@ -269,7 +269,7 @@ public enum ItemSearchableInformations implements ItemSearchIfCategory{
 		@Override
 		public void openDialog(Context context, SearchTypes search_type,
 				SearchIfListener listener) {
-			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(ItemSubClasses.values())).create().show();
+			SearchIf.openSimpleListDialog(context,search_type,listener,this,Utility.changeToStringArray(ItemSubClasses.values()));
 		}
 
 		@Override

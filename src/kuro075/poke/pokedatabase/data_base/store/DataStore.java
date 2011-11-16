@@ -96,7 +96,6 @@ public class DataStore {
 			
 		},
 		TYPE("type"){
-
 			@Override
 			void startSearchResultActivity(Context context, String title,
 					String[] search_ifs) {
@@ -111,7 +110,6 @@ public class DataStore {
 				kuro075.poke.pokedatabase.type_book.type_page.TypePageActivity.startThisActivity(context, name);
 				
 			}
-			
 		};
 		
 		private final String name;

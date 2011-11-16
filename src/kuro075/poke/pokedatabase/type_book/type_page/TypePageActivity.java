@@ -19,14 +19,15 @@ import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.Statuses;
 import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
+import kuro075.poke.pokedatabase.data_base.search.OneCompareOptions;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
-import kuro075.poke.pokedatabase.data_base.search.poke.OneCompareOptions;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.search.poke.SpecCategories;
 import kuro075.poke.pokedatabase.data_base.search.skill.SkillSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData;
 import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData.SkillClasses;
+import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataForSearch;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
@@ -82,6 +83,12 @@ public class TypePageActivity extends TypeBookMenuActivity{
 		Intent intent = new Intent(context,TypePageActivity.class);
 		intent.putExtra(KEY_TYPE1_NAME, type1);
 		intent.putExtra(KEY_TYPE2_NAME, type2);
+		//履歴に登録
+		if(type2.equals(NONE)){
+			DataStore.DataTypes.TYPE.getHistoryStore().addPageData(type1);
+		}else{
+			DataStore.DataTypes.TYPE.getHistoryStore().addPageData(type1+"・"+type2);
+		}
 		context.startActivity(intent);
 	}
 	/**
@@ -96,6 +103,24 @@ public class TypePageActivity extends TypeBookMenuActivity{
 		startThisActivity(context,type1.toString(),type2.toString());
 	}
 
+	/**
+	 * このアクティビティーを履歴に保存せずにstartさせる
+	 * @param context
+	 * @param type_name
+	 */
+	public static void startThisActivityWithoutHistory(Context context,String type_name){
+		Utility.log(TAG, "startThisActivity without history");
+		Intent intent = new Intent(context,TypePageActivity.class);
+		String[] types=type_name.split("・");
+		if(types.length==1){
+			intent.putExtra(KEY_TYPE1_NAME,type_name);
+		}else{
+			intent.putExtra(KEY_TYPE1_NAME,types[0]);
+			intent.putExtra(KEY_TYPE2_NAME,types[1]);
+		}
+		context.startActivity(intent);
+	}
+	
 	/*================/
 	/  インスタンス変数  /
 	/================*/
@@ -239,22 +264,24 @@ public class TypePageActivity extends TypeBookMenuActivity{
 			sb.append(poke_list.size());
 			sb.append("匹");
 			((TextView)findViewById(R.id.text_num_poke)).setText(new String(sb));
-			((TextView)findViewById(R.id.text_num_poke)).setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					StringBuilder sb=new StringBuilder();
-					sb.append("「");
-					sb.append(type1.toString());
-					sb.append("・");
-					sb.append(type2.toString());
-					sb.append("」");
-					sb.append("のポケモン");
-					List<String> search_ifs=new ArrayList<String>();
-					search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type1.toString()));
-					search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type2.toString()));
-					PokeSearchResultActivity.startThisActivity(context, new String(sb), search_ifs.toArray(new String[0]));
-				}
-			});
+			if(poke_list.size()>0){
+				((TextView)findViewById(R.id.text_num_poke)).setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						StringBuilder sb=new StringBuilder();
+						sb.append("「");
+						sb.append(type1.toString());
+						sb.append("・");
+						sb.append(type2.toString());
+						sb.append("」");
+						sb.append("のポケモン");
+						List<String> search_ifs=new ArrayList<String>();
+						search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type1.toString()));
+						search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type2.toString()));
+						PokeSearchResultActivity.startThisActivity(context, new String(sb), search_ifs.toArray(new String[0]));
+					}
+				});
+			}
 		}else{//単タイプのとき
 			/*for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
 				if(poke.hasType(type1)){
@@ -470,18 +497,6 @@ public class TypePageActivity extends TypeBookMenuActivity{
 		});
 		
 	}
-
-	/**
-	 * ○匹　を取得
-	 * @param num
-	 * @return
-	 */
-	private String getTextNum(int num){
-		StringBuilder sb=new StringBuilder();
-		sb.append(num);
-		sb.append("匹");
-		return new String(sb);
-	}
 	
 	/**
 	 * 種族値表を初期化
@@ -500,76 +515,86 @@ public class TypePageActivity extends TypeBookMenuActivity{
 		
 		//最高種族値
 		for(int i=0;i<MAX_SPEC_ID.length;i++){
-			int max=0;
-			int num=0;
-			PokeData max_poke=PokeDataManager.NullData;
-			for(PokeData poke:poke_list){
-				int spec=poke.getSpec(Statuses.values()[i]);
-				if(spec>max){
-					max=spec;
-					max_poke=poke;
-					num=0;
-				}else if(spec==max){
-					num++;
+			if(poke_list.size()>0){//このタイプのポケモンが存在するとき
+				int max=0;
+				int num=0;
+				PokeData max_poke=PokeDataManager.NullData;
+				for(PokeData poke:poke_list){
+					int spec=poke.getSpec(Statuses.values()[i]);
+					if(spec>max){
+						max=spec;
+						max_poke=poke;
+						num=0;
+					}else if(spec==max){
+						num++;
+					}
 				}
+				TextView tv=(TextView)findViewById(MAX_SPEC_ID[i]);
+				tv.setText(getTextSpec(max_poke.getName(),max));
+				final int no=max_poke.getNo();
+				final int num_max_poke=num;
+				final int index=i;
+				final int max_spec=max;
+				tv.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						if(num_max_poke>0){
+							List<String> search_ifs=new ArrayList<String>();
+							search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type1.toString()));
+							if(type2!=null) search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type2.toString()));
+							search_ifs.add(SpecCategories.values()[index].createDefaultSearchIf(max_spec, OneCompareOptions.EQUAL, SearchTypes.FILTER));
+							String search_if=search_ifs.get(search_ifs.size()-1);
+							PokeSearchResultActivity.startThisActivity(context, SearchIf.getCategory(search_if)+":"+SearchIf.getCase(search_if), search_ifs.toArray(new String[0]));
+						}else
+							PokePageActivity.startThisActivity(context, no);
+					}
+				});
+			}else{//このタイプのポケモンが存在しないとき
+				TextView tv=(TextView)findViewById(MAX_SPEC_ID[i]);
+				tv.setText(getTextSpec("-",0));
 			}
-			TextView tv=(TextView)findViewById(MAX_SPEC_ID[i]);
-			tv.setText(getTextSpec(max_poke.getName(),max));
-			final int no=max_poke.getNo();
-			final int num_max_poke=num;
-			final int index=i;
-			final int max_spec=max;
-			tv.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					if(num_max_poke>0){
-						List<String> search_ifs=new ArrayList<String>();
-						search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type1.toString()));
-						if(type2!=null) search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type2.toString()));
-						search_ifs.add(SpecCategories.values()[index].createDefaultSearchIf(max_spec, OneCompareOptions.EQUAL, SearchTypes.FILTER));
-						String search_if=search_ifs.get(search_ifs.size()-1);
-						PokeSearchResultActivity.startThisActivity(context, SearchIf.getCategory(search_if)+":"+SearchIf.getCase(search_if), search_ifs.toArray(new String[0]));
-					}else
-						PokePageActivity.startThisActivity(context, no);
-				}
-			});
 		}
 		//最低種族値
 		for(int i=0;i<MIN_SPEC_ID.length;i++){
-			int min=720;
-			int num=0;
-			PokeData min_poke=PokeDataManager.NullData;
-			for(PokeData poke:poke_list){
-				int spec=poke.getSpec(Statuses.values()[i]);
-				if(spec<min){
-					min=spec;
-					min_poke=poke;
-					num=0;
-				}else
-				if(spec==min){
-					num++;
-				}
-			}
-			TextView tv=(TextView)findViewById(MIN_SPEC_ID[i]);
-			tv.setText(getTextSpec(min_poke.getName(),min));
-			final int no=min_poke.getNo();
-			final int num_min_poke=num;
-			final int index=i;
-			final int min_spec=min;
-			tv.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					if(num_min_poke>0){
-						List<String> search_ifs=new ArrayList<String>();
-						search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type1.toString()));
-						if(type2!=null) search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type2.toString()));
-						search_ifs.add(SpecCategories.values()[index].createDefaultSearchIf(min_spec, OneCompareOptions.EQUAL, SearchTypes.FILTER));
-						String search_if=search_ifs.get(search_ifs.size()-1);
-						PokeSearchResultActivity.startThisActivity(context, SearchIf.getCategory(search_if)+":"+SearchIf.getCase(search_if), search_ifs.toArray(new String[0]));
+			if(poke_list.size()>0){//このタイプのポケモンが存在するとき
+				int min=720;
+				int num=0;
+				PokeData min_poke=PokeDataManager.NullData;
+				for(PokeData poke:poke_list){
+					int spec=poke.getSpec(Statuses.values()[i]);
+					if(spec<min){
+						min=spec;
+						min_poke=poke;
+						num=0;
 					}else
-						PokePageActivity.startThisActivity(context, no);
+					if(spec==min){
+						num++;
+					}
 				}
-			});
+				TextView tv=(TextView)findViewById(MIN_SPEC_ID[i]);
+				tv.setText(getTextSpec(min_poke.getName(),min));
+				final int no=min_poke.getNo();
+				final int num_min_poke=num;
+				final int index=i;
+				final int min_spec=min;
+				tv.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						if(num_min_poke>0){
+							List<String> search_ifs=new ArrayList<String>();
+							search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type1.toString()));
+							if(type2!=null) search_ifs.add(PokeSearchableInformations.TYPE.getDefaultSearchIf(type2.toString()));
+							search_ifs.add(SpecCategories.values()[index].createDefaultSearchIf(min_spec, OneCompareOptions.EQUAL, SearchTypes.FILTER));
+							String search_if=search_ifs.get(search_ifs.size()-1);
+							PokeSearchResultActivity.startThisActivity(context, SearchIf.getCategory(search_if)+":"+SearchIf.getCase(search_if), search_ifs.toArray(new String[0]));
+						}else
+							PokePageActivity.startThisActivity(context, no);
+					}
+				});
+			}else{//このタイプのポケモンが存在しないとき
+				TextView tv=(TextView)findViewById(MIN_SPEC_ID[i]);
+				tv.setText(getTextSpec("-",0));
+			}
 		}
 		//平均値
 		for(int i=0;i<AVE_SPEC_ID.length;i++){

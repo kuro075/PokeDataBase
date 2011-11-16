@@ -15,6 +15,7 @@ import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData.AttackTargets;
+import kuro075.poke.pokedatabase.data_base.skill.SkillData.SkillKind;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.data_base.viewable_informations.SkillViewableInformations;
 import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
@@ -103,10 +104,15 @@ public class SkillDataManager {
 							skill_builder.setEffect(st.nextToken());
 							//==============================================================
 							//わざの優先度
-							if(st.hasMoreTokens()){
-								skill_builder.setPriority(Integer.parseInt(st.nextToken()));
-							}else{
-								skill_builder.setPriority(0);
+							//if(st.hasMoreTokens()){
+							skill_builder.setPriority(Integer.parseInt(st.nextToken()));
+							//}else{
+							skill_builder.setPriority(0);
+							//}
+							//==============================================================
+							//わざの種類
+							while(st.hasMoreTokens()){
+								skill_builder.addSkillKind(SkillKind.fromName(st.nextToken()));
 							}
 							//==============================================================
 							//SkillDataをビルドして登録

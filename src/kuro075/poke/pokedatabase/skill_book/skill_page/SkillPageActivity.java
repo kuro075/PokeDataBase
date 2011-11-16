@@ -113,8 +113,7 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 		tv.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				// TODO LV技のみに変更
-				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.SKILL, skill.toString());
+				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.SKILL, skill.toString()+" Lv");
 			}
 		});
 		
@@ -145,8 +144,7 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 		tv.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				// TODO わざマシンのみに変更
-				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.SKILL, skill.toString());
+				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.SKILL, skill.toString()+" マ");
 			}
 		});
 		
@@ -156,8 +154,7 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 		tv.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				// TODO タマゴ技のみに変更
-				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.SKILL, skill.toString());
+				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.SKILL, skill.toString()+" 卵");
 			}
 		});
 		
@@ -167,8 +164,7 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 		tv.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				// TODO 教え技のみに変更
-				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.SKILL, skill.toString());
+				PokeSearchResultActivity.startThisActivityWithDefaultSearch(context, PokeSearchableInformations.SKILL, skill.toString()+" 教");
 			}
 		});
 	}

@@ -18,6 +18,8 @@ import android.widget.TextView;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.BasicData;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
+import kuro075.poke.pokedatabase.data_base.poke.PokeData;
+import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.poke.PokeData.EggGroups;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
@@ -71,6 +73,12 @@ public class SkillData extends BasicData{
 		@Override
 		public String toString(){return name;}
 	}
+	
+	/**
+	 * ビルダー
+	 * @author sanogenma
+	 *
+	 */
 	protected static class Builder{
 
 		private String name="-";//名前
@@ -84,11 +92,16 @@ public class SkillData extends BasicData{
 		private AttackTargets target=null;//攻撃対象
 		private String effect="-";//効果
 		private int priority=0;//優先度
+		private List<SkillKind> kind_list=new ArrayList<SkillKind>();
 		
 		protected Builder(){}
 		
 		public SkillData build(){
-			return new SkillData(name,no,type,skill_class,power,hit,pp,direct,target,effect,priority);
+			return new SkillData(name,no,type,skill_class,power,hit,pp,direct,target,effect,priority,kind_list.toArray(new SkillKind[0]));
+		}
+		
+		public void addSkillKind(SkillKind kind){
+			kind_list.add(kind);
 		}
 		
 		public void setDirect(WhetherDirect direct) {
@@ -151,20 +164,8 @@ public class SkillData extends BasicData{
 		@Override
 		public String toString(){return name;}
 	}
-
-	//=========================================================
-	/*
-	　・タイプ：TypeData type;
-	　・分類：SkillClasses skill_class;
-	　・威力：int power;
-	　・命中率：int hit;
-	　・PP：int pp;
-	　・直接攻撃かどうか：WhetherDirect direct;
-	　・攻撃対象：AttackTargets target;
-	　・効果：String effect;
-	　・優先度：int priority;
-	*/
-
+	
+	
 	/**
 	 * 分類
 	 */
@@ -201,6 +202,43 @@ public class SkillData extends BasicData{
 		}
 		SkillClasses(String name,int index){this.name=name;this.index=index;}
 		public int getIndex(){return index;}
+		@Override
+		public String toString(){return name;}
+	}
+
+	//=========================================================
+
+	/**
+	 * わざの種類
+	 * 先制,能力ランク(急所),一撃必殺,後攻,反射,
+	 * 状態異常（メロメロ)、ひるみ,通常,反動,連続(一ターン中)、
+	 * 持続(げきりん系ころがる系),溜め,回復,必中,天候（ウェザボ、光合成系、雨乞い系、）,
+	 * 威力変動（きしかいせい系、ふんか系、すばやさ系、重さ系、なつき系）,固定ダメージ,条件下威力二倍,誓い,ダブルトリプル用,
+	 * 設置（全体の場、自分の場、相手の場）,交代(自分、相手),特性変化,タイプ変化,技禁止,
+	 * 技変化,吸収,束縛,もちもの操作,効果不定(ゆびをふる・ねこのて),その他
+	 * @author sanogenma
+	 *
+	 */
+	public enum SkillKind{
+		UNUSUAL("状態異常"),KILL("一撃必殺"),DOUBLE_POW("威力2倍"),POW_CHANGE("威力変動"),RECOVERY("回復"),
+		ABSORPTION("吸収"),CRITICAL("急所"),INDEFINITE("効果不定"),LAST("後攻"),CHANGE("交代"),
+		FIXED_DAMAGE("固定ダメージ"),KEEP("持続"),BOMB("自爆"),FIELD("設置"),FIRST("先制"),RESTRAINTS("束縛"),
+		TYPE("タイプ変化"),DOUBLES("ダブルトリプル用"),CHAGE("溜め"),VOW("誓い"),NORMAL("通常"),
+		WEATHER("天候"),CHARACTER("特性変化"),STATUS("能力値"),STATUS_RANK("能力ランク"),REFLECT("反射"),REACTION("反動"),
+		HIT("必中"),PP("PPダメージ"),SHRINK("ひるみ"),DEFENSE("防ぐ"),ITEM("もちもの操作"),CONTINUE("連続"),BAN_SKILL("わざ制限"),
+		CHANGE_SKILL("わざ変化"),OTHER("その他");
+		
+		private final String name;
+		SkillKind(String name){this.name=name;}
+		public static SkillKind fromName(String name){
+			for(SkillKind kind:values()){
+				if(kind.toString().equals(name)){
+					return kind;
+				}
+			}
+			return null;
+		}
+		
 		@Override
 		public String toString(){return name;}
 	}
@@ -254,9 +292,19 @@ public class SkillData extends BasicData{
 		@Override
 		public String toString(){return name;}
 	}
-	/**
-	 * 
-	 */
+
+	/*
+	　・タイプ：TypeData type;
+	　・分類：SkillClasses skill_class;
+	　・威力：int power;
+	　・命中率：int hit;
+	　・PP：int pp;
+	　・直接攻撃かどうか：WhetherDirect direct;
+	　・攻撃対象：AttackTargets target;
+	　・効果：String effect;
+	　・優先度：int priority;
+	　・覚えるポケモンリスト List<PokeData> poke_list,lv_poke_list,machine_poke_list,egg_poke_list,teach_poke_list
+	*/
 	private static final long serialVersionUID = 1L;
 	private final TypeData type;//タイプ
 	private final SkillClasses skill_class;//分類
@@ -264,20 +312,17 @@ public class SkillData extends BasicData{
 	private final int hit;//命中
 	private final int pp;//PP
 	private final WhetherDirect direct;//直接攻撃かどうか
-	
-	
 	private final AttackTargets target;//攻撃対象
-	
-	//=========================================================
-	//enum
-	
-
 	private final String effect;//効果
-	
 	private final int priority;//優先度
+	private final SkillKind[] skill_kind;//わざの種類
+	
+	//覚えるポケモンリスト lv,machine,egg,teach
+	private final List<PokeData> poke_list=new ArrayList<PokeData>(),lv_poke_list=new ArrayList<PokeData>(),machine_poke_list=new ArrayList<PokeData>(),egg_poke_list=new ArrayList<PokeData>(),teach_poke_list=new ArrayList<PokeData>();
+	private boolean flag_poke_list=false;
 	
 	private SkillData(String name,int no,TypeData type,SkillClasses skill_class,int power,int hit,
-					  int pp,WhetherDirect direct,AttackTargets target,String effect,int priority) {
+					  int pp,WhetherDirect direct,AttackTargets target,String effect,int priority,SkillKind[] skill_kind) {
 		super(name,no);
 		this.type=type;
 		this.skill_class=skill_class;
@@ -288,6 +333,7 @@ public class SkillData extends BasicData{
 		this.target=target;
 		this.effect=effect;
 		this.priority=priority;
+		this.skill_kind=skill_kind;
 	}
 	
 	@Override
@@ -319,13 +365,58 @@ public class SkillData extends BasicData{
 	}
 
 	/**
+	 * 覚えるポケモンの数を取得
+	 * @return
+	 */
+	public int getNumPoke(){
+		initPokeList();
+		return poke_list.size();
+	}
+
+	/**
+	 * タマゴわざで覚えるポケモンの数を取得
+	 * @return
+	 */
+	public int getNumPokeByEgg(){
+		initPokeList();
+		return egg_poke_list.size();
+	}
+
+	/**
+	 * Lvで覚えるポケモンの数を取得
+	 * @return
+	 */
+	public int getNumPokeByLv(){
+		initPokeList();
+		return lv_poke_list.size();
+	}
+
+	/**
+	 * わざマシンで覚えるポケモンの数を取得
+	 * @return
+	 */
+	public int getNumPokeByMachine(){
+		initPokeList();
+		return machine_poke_list.size();
+	}
+
+	/**
+	 * 教えわざで覚えるポケモンの数を取得
+	 * @return
+	 */
+	public int getNumPokeByTeach(){
+		initPokeList();
+		return teach_poke_list.size();
+	}
+
+	
+	/**
 	 * 効果の概要を取得（未完成）
 	 * @return
 	 */
 	public String getOutlineEffect(){
 		return getEffect();
 	}
-
 	/**
 	 * 威力を取得
 	 * @return わざの威力
@@ -341,7 +432,6 @@ public class SkillData extends BasicData{
 	public int getPp() {
 		return pp;
 	}
-
 	/**
 	 * 優先度を取得
 	 * @return　わざの優先度
@@ -349,7 +439,6 @@ public class SkillData extends BasicData{
 	public int getPriority() {
 		return priority;
 	}
-
 	/**
 	 * 分類を取得
 	 * @return　わざの分類
@@ -357,8 +446,6 @@ public class SkillData extends BasicData{
 	public SkillClasses getSkillClass() {
 		return skill_class;
 	}
-
-	
 	/**
 	 * 攻撃対象を取得
 	 * @return　わざの攻撃対象
@@ -366,8 +453,6 @@ public class SkillData extends BasicData{
 	public AttackTargets getTarget() {
 		return target;
 	}
-	//=========================================================
-	//ゲッター系
 	/**
 	 * タイプを取得
 	 * @return わざのタイプ
@@ -375,7 +460,40 @@ public class SkillData extends BasicData{
 	public TypeData getType() {
 		return type;
 	}
-
+	
+	/**
+	 * 種類を全て取得
+	 * @return
+	 */
+	public SkillKind[] getAllSkillKind(){
+		return skill_kind.clone();
+	}
+	/**
+	 * このわざを覚えるポケモンのリストを初期化
+	 */
+	public void initPokeList(){
+		if(!flag_poke_list){
+			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
+				if(poke.hasSkill(this)){
+					poke_list.add(poke);
+					if(poke.hasSkillByLvSkill(this)){
+						lv_poke_list.add(poke);
+					}
+					if(poke.hasSkillByMachine(this)){
+						machine_poke_list.add(poke);
+					}
+					if(poke.hasSkillByEggSkill(this)){
+						egg_poke_list.add(poke);
+					}
+					if(poke.hasSkillByTeachSkill(this)){
+						teach_poke_list.add(poke);
+					}
+				}
+			}
+			flag_poke_list=true;
+		}		
+	}
+	
 	//=========================================================
 
 	/**

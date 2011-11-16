@@ -52,6 +52,49 @@ public enum TypeViewableInformations {
 			};
 		}
 	},
+	NUM_WEAK_TYPE("弱点の数"){
+
+		@Override
+		public String getInformation(TypeDataForSearch type) {
+			StringBuilder sb=new StringBuilder();
+			sb.append(type.getNumWeakType());
+			sb.append("個");
+			return new String(sb);
+		}
+
+		@Override
+		public Comparator<TypeDataForSearch> getComparator() {
+			return new Comparator<TypeDataForSearch>(){
+				@Override
+				public int compare(TypeDataForSearch type1,
+						TypeDataForSearch type2) {
+					return type1.getNumWeakType()-type2.getNumWeakType();
+				}
+			};
+		}
+		
+	},
+	NUM_RESIST_TYPE("抵抗の数"){
+		@Override
+		public String getInformation(TypeDataForSearch type) {
+			StringBuilder sb=new StringBuilder();
+			sb.append(type.getNumResistType());
+			sb.append("個");
+			return new String(sb);
+		}
+
+		@Override
+		public Comparator<TypeDataForSearch> getComparator() {
+			return new Comparator<TypeDataForSearch>(){
+				@Override
+				public int compare(TypeDataForSearch type1,
+						TypeDataForSearch type2) {
+					return type1.getNumResistType()-type2.getNumResistType();
+				}
+			};
+		}
+		
+	},
 	FEATURE_POKEMON("特徴(ポケモン)"){
 		@Override
 		public String getInformation(TypeDataForSearch type) {
@@ -67,7 +110,7 @@ public enum TypeViewableInformations {
 				@Override
 				public int compare(TypeDataForSearch type1,
 						TypeDataForSearch type2) {
-					return type1.getType1().getPokeFeature().compareTo(type2.getType2().getPokeFeature());
+					return type1.getType1().getPokeFeature().compareTo(type2.getType1().getPokeFeature());
 				}
 			};
 		}
@@ -87,7 +130,7 @@ public enum TypeViewableInformations {
 				@Override
 				public int compare(TypeDataForSearch type1,
 						TypeDataForSearch type2) {
-					return type1.getType1().getSkillFeature().compareTo(type2.getType2().getSkillFeature());
+					return type1.getType1().getSkillFeature().compareTo(type2.getType1().getSkillFeature());
 				}
 			};
 		}

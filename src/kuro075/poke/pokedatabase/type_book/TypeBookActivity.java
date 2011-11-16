@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.search.type.TypeSearchableInformations;
+import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.menu.book.TypeBookMenuActivity;
 import kuro075.poke.pokedatabase.type_book.search_result.TypeSearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -65,7 +66,27 @@ public class TypeBookActivity extends TypeBookMenuActivity{
 				TypeRelationTableActivity.startThisActivity(context);
 			}
 		});
+		//お気に入り
+		((Button)findViewById(R.id.button_star)).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				getDataType().openStarDialog(context);
+			}
+		});
+		//ショートカット
+		((Button)findViewById(R.id.button_short_cut)).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				getDataType().openShortCutDialog(context);
+			}
+		});
+		//履歴
+		((Button)findViewById(R.id.button_history)).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				getDataType().openHistoryDialog(context);
+			}
+		});
 	}
-	
 	
 }

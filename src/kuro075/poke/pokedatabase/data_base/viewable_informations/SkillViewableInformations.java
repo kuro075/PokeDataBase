@@ -287,6 +287,32 @@ public enum SkillViewableInformations {
 			};
 		}
 	},
+	SKILL_KIND("種類"){
+
+		@Override
+		public String getInformation(SkillData skill) {
+			StringBuilder sb=new StringBuilder();
+			SkillData.SkillKind[] kind=skill.getAllSkillKind();
+			for(int i=0,n=kind.length;i<n;i++){
+				sb.append(kind[i]);
+				if(i!=n-1){
+					sb.append(",");
+				}
+			}
+			return new String(sb);
+		}
+
+		@Override
+		public Comparator<SkillData> getComparator() {
+			return new Comparator<SkillData>(){
+				@Override
+				public int compare(SkillData s1, SkillData s2) {
+					return s1.getAllSkillKind()[0].toString().compareTo(s2.getAllSkillKind()[0].toString());
+				}
+			};
+		}
+		
+	},
 	EFFECT("効果") {
 		@Override
 		public String getInformation(SkillData skill) {
@@ -307,19 +333,10 @@ public enum SkillViewableInformations {
 		}
 	},
 	NUM_LEARNING_POKE("覚えるポケモンの数"){
-		private int getNumLearningPoke(SkillData skill){
-			int num=0;
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
-				if(poke.hasSkill(skill)){
-					num++;
-				}
-			}
-			return num;
-		}
 		@Override
 		public String getInformation(SkillData skill) {
 			StringBuilder sb=new StringBuilder();
-			sb.append(getNumLearningPoke(skill));
+			sb.append(skill.getNumPoke());
 			sb.append("匹");
 			return new String(sb);
 		}
@@ -329,7 +346,7 @@ public enum SkillViewableInformations {
 			return new Comparator<SkillData>(){
 				@Override
 				public int compare(SkillData s1, SkillData s2) {
-					int d=getNumLearningPoke(s1)-getNumLearningPoke(s2);
+					int d=s1.getNumPoke()-s2.getNumPoke();
 					if(d==0){
 						return s1.getNo()-s2.getNo();
 					}
@@ -339,19 +356,10 @@ public enum SkillViewableInformations {
 		}
 	},
 	NUM_LV_LEARNING_POKE("覚えるポケモンの数(Lv)"){
-		private int getNumLearningPoke(SkillData skill){
-			int num=0;
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
-				if(poke.hasSkillByLvSkill(skill)){
-					num++;
-				}
-			}
-			return num;
-		}
 		@Override
 		public String getInformation(SkillData skill) {
 			StringBuilder sb=new StringBuilder();
-			sb.append(getNumLearningPoke(skill));
+			sb.append(skill.getNumPokeByLv());
 			sb.append("匹");
 			return new String(sb);
 		}
@@ -361,7 +369,7 @@ public enum SkillViewableInformations {
 			return new Comparator<SkillData>(){
 				@Override
 				public int compare(SkillData s1, SkillData s2) {
-					int d=getNumLearningPoke(s1)-getNumLearningPoke(s2);
+					int d=s1.getNumPokeByLv()-s2.getNumPokeByLv();
 					if(d==0){
 						return s1.getNo()-s2.getNo();
 					}
@@ -371,19 +379,10 @@ public enum SkillViewableInformations {
 		}
 	},
 	NUM_MACHINE_LEARNING_POKE("覚えるポケモンの数(わざマシン)"){
-		private int getNumLearningPoke(SkillData skill){
-			int num=0;
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
-				if(poke.hasSkillByMachine(skill)){
-					num++;
-				}
-			}
-			return num;
-		}
 		@Override
 		public String getInformation(SkillData skill) {
 			StringBuilder sb=new StringBuilder();
-			sb.append(getNumLearningPoke(skill));
+			sb.append(skill.getNumPokeByMachine());
 			sb.append("匹");
 			return new String(sb);
 		}
@@ -393,7 +392,7 @@ public enum SkillViewableInformations {
 			return new Comparator<SkillData>(){
 				@Override
 				public int compare(SkillData s1, SkillData s2) {
-					int d=getNumLearningPoke(s1)-getNumLearningPoke(s2);
+					int d=s1.getNumPokeByMachine()-s2.getNumPokeByMachine();
 					if(d==0){
 						return s1.getNo()-s2.getNo();
 					}
@@ -403,19 +402,10 @@ public enum SkillViewableInformations {
 		}
 	},
 	NUM_EGG_LEARNING_POKE("覚えるポケモンの数(タマゴわざ)"){
-		private int getNumLearningPoke(SkillData skill){
-			int num=0;
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
-				if(poke.hasSkillByEggSkill(skill)){
-					num++;
-				}
-			}
-			return num;
-		}
 		@Override
 		public String getInformation(SkillData skill) {
 			StringBuilder sb=new StringBuilder();
-			sb.append(getNumLearningPoke(skill));
+			sb.append(skill.getNumPokeByEgg());
 			sb.append("匹");
 			return new String(sb);
 		}
@@ -425,7 +415,7 @@ public enum SkillViewableInformations {
 			return new Comparator<SkillData>(){
 				@Override
 				public int compare(SkillData s1, SkillData s2) {
-					int d=getNumLearningPoke(s1)-getNumLearningPoke(s2);
+					int d=s1.getNumPokeByEgg()-s2.getNumPokeByEgg();
 					if(d==0){
 						return s1.getNo()-s2.getNo();
 					}
@@ -435,19 +425,10 @@ public enum SkillViewableInformations {
 		}
 	},
 	NUM_TEACH_LEARNING_POKE("覚えるポケモンの数(教え技)"){
-		private int getNumLearningPoke(SkillData skill){
-			int num=0;
-			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
-				if(poke.hasSkillByTeachSkill(skill)){
-					num++;
-				}
-			}
-			return num;
-		}
 		@Override
 		public String getInformation(SkillData skill) {
 			StringBuilder sb=new StringBuilder();
-			sb.append(getNumLearningPoke(skill));
+			sb.append(skill.getNumPokeByTeach());
 			sb.append("匹");
 			return new String(sb);
 		}
@@ -457,7 +438,7 @@ public enum SkillViewableInformations {
 			return new Comparator<SkillData>(){
 				@Override
 				public int compare(SkillData s1, SkillData s2) {
-					int d=getNumLearningPoke(s1)-getNumLearningPoke(s2);
+					int d=s1.getNumPokeByTeach()-s2.getNumPokeByTeach();
 					if(d==0){
 						return s1.getNo()-s2.getNo();
 					}

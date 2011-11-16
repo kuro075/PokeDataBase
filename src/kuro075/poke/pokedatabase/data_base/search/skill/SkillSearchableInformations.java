@@ -9,23 +9,29 @@ import java.util.Set;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
+import kuro075.poke.pokedatabase.data_base.poke.PokeData;
+import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData;
+import kuro075.poke.pokedatabase.data_base.search.OneCompareOptions;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.SearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.SkillSearchIfCategory;
 import kuro075.poke.pokedatabase.data_base.search.poke.NameSearchOptions;
-import kuro075.poke.pokedatabase.data_base.search.poke.OneCompareOptions;
 import kuro075.poke.pokedatabase.data_base.skill.SkillDataManager;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData.SkillClasses;
+import kuro075.poke.pokedatabase.data_base.type.TypeDataManager.TypeData;
 import kuro075.poke.pokedatabase.util.Utility;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 /**
@@ -352,7 +358,7 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 		public void openDialog(Context context, SearchTypes search_type,
 				SearchIfListener listener) {
 			// TODO Auto-generated method stub
-			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(SkillClasses.values())).create().show();
+			SearchIf.openSimpleListDialog(context,search_type,listener,this,Utility.changeToStringArray(SkillClasses.values()));
 		}
 
 		@Override
@@ -380,7 +386,7 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 		@Override
 		public void openDialog(Context context, SearchTypes search_type,
 				SearchIfListener listener) {
-			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(SkillData.AttackTargets.values())).create().show();
+			SearchIf.openSimpleListDialog(context,search_type,listener,this,Utility.changeToStringArray(SkillData.AttackTargets.values()));
 			
 		}
 
@@ -409,7 +415,7 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 		@Override
 		public void openDialog(Context context, SearchTypes search_type,
 				SearchIfListener listener) {
-			SearchIf.createSimpleSpinnerDialogBuilder(context,search_type,listener,this,Utility.changeToStringArray(SkillData.WhetherDirect.values())).create().show();
+			SearchIf.openSimpleListDialog(context,search_type,listener,this,Utility.changeToStringArray(SkillData.WhetherDirect.values()));
 		}
 
 		@Override
@@ -418,6 +424,235 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 			return null;
 		}
 		
+	},
+	POKEMON("ポケモン"){
+		public final String[] LEARNING_TYPE={"Lv","マ","卵","教"};
+		final String[] KANA={"","あ","か","さ","た","な","は","ま","や","ら","わ"};
+		public List<String> type_list=null;
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String _case) {
+			if(toString().equals(category)){
+				List<SkillData> list=new ArrayList<SkillData>();
+				//skill_name lv マシン　タマゴ　教え　に分ける
+				String[] poke_name_and_learning_type=_case.split(" ");
+				PokeData poke=PokeDataManager.INSTANCE.getPokeData(poke_name_and_learning_type[0]);
+				if(poke_name_and_learning_type.length==1){
+					for(SkillData skill:skill_array){
+						if(poke.hasSkill(skill)){
+							list.add(skill);
+						}
+					}
+				}else{
+					String[] learning_types=poke_name_and_learning_type[1].split("・");
+					//lv マシン タマゴ 教えの全ての場合
+					if(learning_types.length==4){
+						for(SkillData skill:skill_array){
+							if(poke.hasSkill(skill)){
+								list.add(skill);
+							}
+						}
+					}else{
+						boolean[] flag=new boolean[4];
+						Arrays.fill(flag,false);
+						for(int i=0,n=learning_types.length;i<n;i++){
+							for(int j=0,m=LEARNING_TYPE.length;j<m;j++){
+								if(LEARNING_TYPE[j].equals(learning_types[i])){
+									flag[j]=true;
+									break;
+								}
+							}
+						}
+						for(SkillData skill:skill_array){
+							if(flag[0]){//レベル技
+								if(poke.hasSkillByLvSkill(skill)){
+									list.add(skill);
+									continue;
+								}
+							}
+							if(flag[1]){//マシン技
+								if(poke.hasSkillByMachine(skill)){
+									list.add(skill);
+									continue;
+								}
+							}
+							if(flag[2]){//タマゴ技
+								if(poke.hasSkillByEggSkill(skill)){
+									list.add(skill);
+									continue;
+								}
+							}
+							if(flag[3]){//教え技
+								if(poke.hasSkillByTeachSkill(skill)){
+									list.add(skill);
+									continue;
+								}
+							}
+						}
+					}
+				}
+				return list.toArray(new SkillData[0]);
+			}
+			return new SkillData[0];
+		}
+		@Override
+		public String getDefaultTitle(String _case){
+			Utility.log(TAG, "getDefaultTitle");
+			//skill_name lv マシン　タマゴ　教え　に分ける
+			String[] skill_name_and_learning_type=_case.split(" ");
+			StringBuilder sb = new StringBuilder();
+			sb.append("「");
+			sb.append(skill_name_and_learning_type[0]);
+			sb.append("」が覚えるわざ");
+			return new String(sb);
+		}
+		/**
+		 * 技(skill),どうやって覚えるか(check),検索タイプ(search_type)
+		 * @param skill
+		 * @param check
+		 * @param search_type
+		 * @return
+		 */
+		private String getSearchIf(PokeData poke,boolean[] check,SearchTypes search_type){
+			boolean flag=false;
+			StringBuilder sb=new StringBuilder();
+			sb.append(poke);
+			sb.append(" ");
+			for(int i=0;i<4;i++){
+				if(check[i]){
+					if(flag){
+						sb.append("・");
+					}
+					sb.append(LEARNING_TYPE[i]);
+					flag=true;
+				}
+			}
+			return SearchIf.createSearchIf(this,new String(sb),search_type);
+		}
+		@Override
+		public void openDialog(final Context context, final SearchTypes search_type,
+				final SearchIfListener listener) {
+			LayoutInflater factory=LayoutInflater.from(context);
+			final View layout = factory.inflate(R.layout.dialog_skillfilter,null);
+			AlertDialog.Builder builder = new AlertDialog.Builder(context);
+			builder.setTitle(SearchIf.createDialogTitle(this, search_type));
+			builder.setView(layout);
+			
+			ArrayAdapter<String> adapter;
+			
+			//頭文字スピナーの設定
+			((TextView)layout.findViewById(R.id.text_skillclass)).setText("頭文字");
+			final Spinner spinner_head = (Spinner)layout.findViewById(R.id.spinner_skillclass);
+			adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,KANA);
+			spinner_head.setAdapter(adapter);
+
+			//タイプスピナーの設定
+			final Spinner spinner_type = (Spinner)layout.findViewById(R.id.spinner_type);
+			if(type_list==null){
+				type_list = new ArrayList<String>();
+				type_list.add("");
+				for(TypeData type:TypeData.values()){
+					type_list.add(type.toString());
+				}
+			}
+			adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,type_list);
+			spinner_type.setAdapter(adapter);
+			//ポケモンのスピナーの設定
+			((TextView)layout.findViewById(R.id.text_skill_name)).setText("ポケモン");
+			final Spinner spinner_name = (Spinner)layout.findViewById(R.id.spinner_skillname);
+			final List<String> poke_list=new ArrayList<String>();
+			poke_list.addAll(Arrays.asList(PokeDataManager.INSTANCE.getAllName()));
+			adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,poke_list);
+			spinner_name.setAdapter(adapter);
+			
+			final AdapterView.OnItemSelectedListener adapter_listener=new AdapterView.OnItemSelectedListener(){
+				@Override
+				public void onItemSelected(AdapterView<?> parent, View view, int position,long id) {
+					List<String> list=new ArrayList<String>();
+					//タイプと頭文字を考慮してポケモンリストを作成
+					TypeData type=TypeData.fromString(type_list.get(spinner_type.getSelectedItemPosition()));
+					int head_position=spinner_head.getSelectedItemPosition();
+					for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
+						if(type==null || poke.hasType(type)){//タイプが一致
+							if(head_position==0){//頭文字が選択されていないとき
+								list.add(poke.getName());
+							}else{//頭文字が選択されているとき
+								for(String head:Utility.getAiueoLine(head_position-1)){
+									if(poke.isNameHead(head)){
+										list.add(poke.getName());
+										break;
+									}
+								}
+							}
+						}
+					}
+					for(int i=0,n=poke_list.size();i<n;i++) poke_list.remove(0);
+					poke_list.addAll(list);
+					ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,R.layout.center_spinner_item,poke_list.toArray(new String[0]));
+					spinner_name.setAdapter(adapter);
+					spinner_name.setEnabled(poke_list.size()>0);
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+			};
+			
+			
+			//分類が変更された時の動作
+			spinner_head.setOnItemSelectedListener(adapter_listener);
+			//タイプが変更された時の動作
+			spinner_type.setOnItemSelectedListener(adapter_listener);
+			//各チェックボックス
+			final CheckBox[] check_box=new CheckBox[4];
+			check_box[0]=(CheckBox)layout.findViewById(R.id.check_lv);
+			check_box[1]=(CheckBox)layout.findViewById(R.id.check_machine);
+			check_box[2]=(CheckBox)layout.findViewById(R.id.check_egg);
+			check_box[3]=(CheckBox)layout.findViewById(R.id.check_teach);
+			
+			//検索
+			builder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if(spinner_name.isEnabled()){
+						boolean flag=false;
+						boolean[] check_array=new boolean[4];
+						for(int i=0;i<4;i++){
+							check_array[i]=check_box[i].isChecked();
+							flag=flag||check_array[i];
+						}
+						if(flag){
+							//TODO 検索
+							listener.receiveSearchIf(getSearchIf(PokeDataManager.INSTANCE.getPokeData(poke_list.get(spinner_name.getSelectedItemPosition())),check_array,search_type));
+						}else{
+							Utility.popToast(context,"条件が不正です");
+						}
+					}else{
+						Utility.popToast(context,"条件が不正です");
+					}
+				}
+			});
+			builder.setNegativeButton("戻る",new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// 
+					listener.receiveSearchIf(null);
+				}
+			});
+			((TableLayout)layout.findViewById(R.id.table_check)).setStretchAllColumns(true);
+			builder.create().show();
+
+			
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	
 	};
 	
 	

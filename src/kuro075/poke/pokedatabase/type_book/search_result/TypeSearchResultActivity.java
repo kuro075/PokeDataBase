@@ -10,6 +10,7 @@ import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.search.type.TypeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
+import kuro075.poke.pokedatabase.data_base.store.DataStore.DataTypes;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.type_book.type_page.TypePageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -19,7 +20,6 @@ import kuro075.poke.pokedatabase.data_base.viewable_informations.TypeViewableInf
 public class TypeSearchResultActivity extends SearchResultActivity{
 
 	private static final String TAG="TypeSearchResultActivity";
-	
 	/**
 	 * このアクティビティーをstartさせる
 	 * 検索条件なし
@@ -29,6 +29,7 @@ public class TypeSearchResultActivity extends SearchResultActivity{
 		Utility.log(TAG, "startThisActivity with no search_if");
 		startThisActivity(context,"全タイプ",new String[0]);
 	}
+	
 	/**
 	 * このアクティビティーをstartさせる
 	 * 検索条件が一つのとき
@@ -59,7 +60,6 @@ public class TypeSearchResultActivity extends SearchResultActivity{
 			DataStore.DataTypes.TYPE.getHistoryStore().addSearchDataWithoutTitle(search_ifs);
 		}
 	}
-	
 	/**
 	 * このアクティビティーをstartさせる
 	 * 検索条件がデフォルトのとき
@@ -73,6 +73,7 @@ public class TypeSearchResultActivity extends SearchResultActivity{
 		ifs[0]=info.getDefaultSearchIf(_case);
 		startThisActivity(context,info.getDefaultTitle(_case),ifs);
 	}
+	
 	/**
 	 * このアクティビティーをstartさせる
 	 * 履歴を保存しない
@@ -87,12 +88,12 @@ public class TypeSearchResultActivity extends SearchResultActivity{
 		intent.putExtra(KEY_SEARCH_IF, search_ifs);
 		context.startActivity(intent);
 	}
-	
 	@Override
 	protected void clickListItem(BasicData data) {
 		// TODO Auto-generated method stub
 		TypePageActivity.startThisActivity(this, data.toString());
 	}
+	
 	@Override
 	protected BasicData[] getAllDatas() {
 		// TODO Auto-generated method stub
@@ -102,6 +103,11 @@ public class TypeSearchResultActivity extends SearchResultActivity{
 	protected Comparator getComparatorByViewableInformation(int index) {
 		// TODO Auto-generated method stub
 		return TypeViewableInformations.values()[index].getComparator();
+	}
+	@Override
+	protected DataTypes getDataType() {
+		// TODO Auto-generated method stub
+		return DataStore.DataTypes.TYPE;
 	}
 	@Override
 	protected int getMaxLengthOfName() {

@@ -1,5 +1,8 @@
 package kuro075.poke.pokedatabase.data_base.character;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +15,8 @@ import kuro075.poke.pokedatabase.data_base.BasicData;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.viewable_informations.CharacterViewableInformations;
 import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
+import kuro075.poke.pokedatabase.data_base.poke.PokeData;
+import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 
 /**
  * 特性のデータクラス
@@ -33,20 +38,20 @@ public class CharacterData extends BasicData{
 			return new CharacterData(name,no,battle_effect,field_effect);
 		}
 
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public void setNo(int no) {
-			this.no = no;
-		}
-
 		public void setBattle_effect(String battle_effect) {
 			this.battle_effect = battle_effect;
 		}
 
 		public void setField_effect(String field_effect) {
 			this.field_effect = field_effect;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public void setNo(int no) {
+			this.no = no;
 		}
 		
 		
@@ -59,7 +64,9 @@ public class CharacterData extends BasicData{
 	
 	private final String battle_effect;//戦闘中の効果
 	private final String field_effect;//フィールド上の効果
-	
+	//持っているポケモンリスト
+	private final List<PokeData> poke_list=new ArrayList<PokeData>(),dream_poke_list=new ArrayList<PokeData>();
+	private boolean flag_poke_list=false;
 	
 	private CharacterData(String name,int no,String battle_effect,String field_effect) {
 		super(name,no);
@@ -90,6 +97,39 @@ public class CharacterData extends BasicData{
 		return field_effect;
 	}
 
+	/**
+	 * 夢特性で持っているポケモンの数を取得
+	 * @return
+	 */
+	public int getNumDreamPoke(){
+		initPokeList();
+		return dream_poke_list.size();
+	}
+	
+	/**
+	 * 持っているポケモンの数を取得
+	 * @return
+	 */
+	public int getNumPoke(){
+		initPokeList();
+		return poke_list.size();
+	}
+	
+	/**
+	 * この特性を持っているポケモンリストを初期化
+	 */
+	public void initPokeList(){
+		if(!flag_poke_list){
+			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
+				if(poke.hasCharacter(this)){
+					poke_list.add(poke);
+					CharacterData chara=poke.getCharacter(PokeData.CharacterTypes.DREAM);
+					if(chara!=null && chara.equals(this)) dream_poke_list.add(poke);
+				}
+			}
+			flag_poke_list=true;
+		}
+	}
 	/**
 	 * 特性詳細表示ダイアログを開く
 	 * @param charaname
@@ -136,5 +176,4 @@ public class CharacterData extends BasicData{
 		alertDialog = builder.create();
 		alertDialog.show();
 	}
-	
 }

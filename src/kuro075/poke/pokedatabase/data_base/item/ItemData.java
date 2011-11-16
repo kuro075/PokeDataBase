@@ -1,9 +1,13 @@
 package kuro075.poke.pokedatabase.data_base.item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import kuro075.poke.pokedatabase.data_base.BasicData;
+import kuro075.poke.pokedatabase.data_base.poke.PokeData;
+import kuro075.poke.pokedatabase.data_base.poke.PokeDataManager;
 
 /**
  * アイテムクラス
@@ -78,6 +82,9 @@ public class ItemData extends BasicData{
 	private final String using_effect;//使った時の効果
 	private final String having_effect;//持たせた時の効果
 	private final String getting_place;//入手場所
+	//持っているポケモンリスト
+	private final List<PokeData> poke_list=new ArrayList<PokeData>(),common_poke_list=new ArrayList<PokeData>(),rare_poke_list=new ArrayList<PokeData>();
+	private boolean flag_poke_list=false;
 	
 	private ItemData(String name,int no,ItemClasses item_class,ItemSubClasses item_sub_class,
 					 int buy_value,int sell_value,
@@ -189,6 +196,49 @@ public class ItemData extends BasicData{
 		return getting_place;
 	}
 
+	/**
+	 * このアイテムを持っているポケモンの数を取得
+	 * @return
+	 */
+	public int getNumPoke(){
+		initPokeList();
+		return poke_list.size();
+	}
+	/**
+	 * このアイテムを通常で持っているポケモンの数を取得
+	 * @return
+	 */
+	public int getNumPokeCommon(){
+		initPokeList();
+		return common_poke_list.size();
+	}
+	/**
+	 * このアイテムをレアで持っているポケモンの数を取得
+	 * @return
+	 */
+	public int getNumPokeRare(){
+		initPokeList();
+		return rare_poke_list.size();
+	}
+	
+	/**
+	 * このアイテムを持っているポケモンのリストを初期化
+	 */
+	public void initPokeList(){
+		if(!flag_poke_list){
+			for(PokeData poke:PokeDataManager.INSTANCE.getAllData()){
+				if(poke.hasItem(this)){
+					poke_list.add(poke);
+					ItemData item=poke.getItem(PokeData.ItemRarities.COMMON);
+					if(item!=null && item.equals(this))	common_poke_list.add(poke);
+					item=poke.getItem(PokeData.ItemRarities.RARE);
+					if(item!=null && item.equals(this)) rare_poke_list.add(poke);
+				}
+			}
+			flag_poke_list=true;
+		}
+	}
+	
 	@Override
 	public int compareTo(BasicData another) {
 		// TODO Auto-generated method stub

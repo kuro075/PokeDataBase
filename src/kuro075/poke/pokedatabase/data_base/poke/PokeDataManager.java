@@ -329,6 +329,7 @@ public class PokeDataManager implements Serializable{
 	//=========================================================================
 	//ポケモンのデータ配列
 	private final PokeData[] poke_data;
+	private final String[] poke_name;
 	private final Map<String,PokeData> name2poke_map=new HashMap<String,PokeData>();
 	private final int num;
 	public static final PokeData NullData=new PokeData.Builder().build();
@@ -339,6 +340,7 @@ public class PokeDataManager implements Serializable{
 		for(PokeData poke:poke_data){	
 			name2poke_map.put(poke.toString(), poke);
 		}
+		poke_name=Utility.changeToStringArray(poke_data);
 	}
 	//=========================================================================
 	//ゲッター
@@ -351,6 +353,9 @@ public class PokeDataManager implements Serializable{
 	
 	public PokeData[] getAllData(){
 		return poke_data.clone();
+	}
+	public String[] getAllName(){
+		return poke_name.clone();
 	}
 	/**
 	 * PokeDataを図鑑ナンバーから取得

@@ -5,9 +5,9 @@ import java.util.List;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.SearchIfListener;
 import kuro075.poke.pokedatabase.data_base.SearchTypes;
+import kuro075.poke.pokedatabase.data_base.search.OneCompareOptions;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.SearchIfCategory;
-import kuro075.poke.pokedatabase.data_base.search.poke.OneCompareOptions;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -28,7 +28,7 @@ import android.widget.Toast;
  */
 public class Utility {
 	//デバッグ用
-	public static final boolean DEBUG=true;
+	public static final boolean DEBUG=false;
 	
 	//パッケージの名前
 	public static final String PACKAGENAME="kuro075.poke.pokedatabase";

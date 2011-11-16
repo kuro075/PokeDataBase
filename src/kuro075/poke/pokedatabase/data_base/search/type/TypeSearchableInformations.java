@@ -12,6 +12,7 @@ import kuro075.poke.pokedatabase.data_base.SearchTypes;
 import kuro075.poke.pokedatabase.data_base.character.CharacterData;
 import kuro075.poke.pokedatabase.data_base.search.SearchIf;
 import kuro075.poke.pokedatabase.data_base.search.TypeSearchIfCategory;
+import kuro075.poke.pokedatabase.data_base.skill.SkillData.SkillClasses;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataForSearch;
 import kuro075.poke.pokedatabase.data_base.type.TypeDataManager;
 import kuro075.poke.pokedatabase.util.Utility;
@@ -27,8 +28,8 @@ public enum TypeSearchableInformations implements TypeSearchIfCategory{
 		@Override
 		public void openDialog(Context context, SearchTypes search_type,
 				SearchIfListener listener) {
-			// TODO 検索ダイアログを開く
-			
+			// 検索ダイアログを開く
+			SearchIf.openSimpleListDialog(context,search_type,listener,this,kinds);
 		}
 
 		@Override
