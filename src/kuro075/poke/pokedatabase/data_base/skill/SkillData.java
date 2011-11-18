@@ -220,10 +220,10 @@ public class SkillData extends BasicData{
 	 *
 	 */
 	public enum SkillKind{
-		UNUSUAL("状態異常"),KILL("一撃必殺"),DOUBLE_POW("威力2倍"),POW_CHANGE("威力変動"),RECOVERY("回復"),
+		KILL("一撃必殺"),DOUBLE_POW("威力2倍"),POW_CHANGE("威力変動"),RECOVERY("回復"),
 		ABSORPTION("吸収"),CRITICAL("急所"),INDEFINITE("効果不定"),LAST("後攻"),CHANGE("交代"),
-		FIXED_DAMAGE("固定ダメージ"),KEEP("持続"),BOMB("自爆"),FIELD("設置"),FIRST("先制"),RESTRAINTS("束縛"),
-		TYPE("タイプ変化"),DOUBLES("ダブルトリプル用"),CHAGE("溜め"),VOW("誓い"),NORMAL("通常"),
+		FIXED_DAMAGE("固定ダメージ"),KEEP("持続"),BOMB("自爆"),UNUSUAL("状態異常"),FIELD("設置"),FIRST("先制"),RESTRAINTS("束縛"),
+		TYPE("タイプ変化"),DOUBLES("ダブル用"),CHAGE("溜め"),VOW("誓い"),NORMAL("通常"),
 		WEATHER("天候"),CHARACTER("特性変化"),STATUS("能力値"),STATUS_RANK("能力ランク"),REFLECT("反射"),REACTION("反動"),
 		HIT("必中"),PP("PPダメージ"),SHRINK("ひるみ"),DEFENSE("防ぐ"),ITEM("もちもの操作"),CONTINUE("連続"),BAN_SKILL("わざ制限"),
 		CHANGE_SKILL("わざ変化"),OTHER("その他");
@@ -467,6 +467,20 @@ public class SkillData extends BasicData{
 	 */
 	public SkillKind[] getAllSkillKind(){
 		return skill_kind.clone();
+	}
+	
+	/**
+	 * わざの種類を持っているかどうか
+	 * @param kind
+	 * @return
+	 */
+	public boolean hasSkillKind(SkillKind kind){
+		for(SkillKind k:skill_kind){
+			if(k.equals(kind)){
+				return true;
+			}
+		}
+		return false;
 	}
 	/**
 	 * このわざを覚えるポケモンのリストを初期化

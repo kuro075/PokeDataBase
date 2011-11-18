@@ -65,6 +65,9 @@ public enum SkillViewableInformations {
 			if(pow<=0){
 				return "-";
 			}
+			if(hit==0 && skill.hasSkillKind(SkillData.SkillKind.HIT)){//必中技の場合
+				return String.valueOf(pow);
+			}
 			return String.valueOf(pow*hit/100);
 		}
 

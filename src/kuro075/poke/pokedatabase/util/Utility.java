@@ -28,7 +28,7 @@ import android.widget.Toast;
  */
 public class Utility {
 	//デバッグ用
-	public static final boolean DEBUG=false;
+	public static final boolean DEBUG=true;
 	
 	//パッケージの名前
 	public static final String PACKAGENAME="kuro075.poke.pokedatabase";

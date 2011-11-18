@@ -160,7 +160,7 @@ public enum PokeViewableInformations {
 			};
 		}
 	},
-	SPEC_CONTACT("種族値(特殊)"){
+	SPEC_CONTACT("種族値(特攻)"){
 		private final Statuses status=Statuses.C;
 		@Override
 		public String getInformation(PokeData poke){
@@ -404,7 +404,7 @@ public enum PokeViewableInformations {
 			};
 		}
 	},
-	EFF_CONTACT("努力値(特殊)"){
+	EFF_CONTACT("努力値(特攻)"){
 		private final Statuses status = Statuses.C;
 		@Override
 		public String getInformation(PokeData poke){

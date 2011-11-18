@@ -106,9 +106,9 @@ public class SkillDataManager {
 							//わざの優先度
 							//if(st.hasMoreTokens()){
 							skill_builder.setPriority(Integer.parseInt(st.nextToken()));
-							//}else{
-							skill_builder.setPriority(0);
-							//}
+							/*}else{
+								skill_builder.setPriority(0);
+							}*/
 							//==============================================================
 							//わざの種類
 							while(st.hasMoreTokens()){

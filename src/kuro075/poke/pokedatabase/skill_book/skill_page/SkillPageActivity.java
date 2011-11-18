@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import kuro075.poke.pokedatabase.R;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
+import kuro075.poke.pokedatabase.data_base.search.skill.SkillSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.skill.HidenMachines;
 import kuro075.poke.pokedatabase.data_base.skill.OldSkillMachines;
 import kuro075.poke.pokedatabase.data_base.skill.SkillData;
@@ -18,6 +20,7 @@ import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.data_base.viewable_informations.SkillViewableInformations;
 import kuro075.poke.pokedatabase.menu.book.SkillBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
+import kuro075.poke.pokedatabase.skill_book.search_result.SkillSearchResultActivity;
 import kuro075.poke.pokedatabase.type_book.type_page.TypePageActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 
@@ -208,24 +211,107 @@ public class SkillPageActivity extends SkillBookMenuActivity{
 	 * 威力から効果までの基本データを初期化
 	 */
 	private void initBasicInfo(){
+		final Context context=this;
+		
+		
 		((TableLayout)findViewById(R.id.tablelayout)).setStretchAllColumns(true);
 		//威力
-		((TextView)findViewById(R.id.text_pow)).setText(SkillViewableInformations.POWER.getInformation(skill));
+		TextView tv=((TextView)findViewById(R.id.text_pow));
+		tv.setText(SkillViewableInformations.POWER.getInformation(skill));
+		tv.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// 威力がクリックされた時の動作
+				SkillSearchResultActivity.startThisActivityWithDefaultSearch(context, SkillSearchableInformations.POW, String.valueOf(skill.getPower()));
+			}
+		});
 		//命中
-		((TextView)findViewById(R.id.text_hit)).setText(SkillViewableInformations.HIT.getInformation(skill));
+		tv=((TextView)findViewById(R.id.text_hit));
+		tv.setText(SkillViewableInformations.HIT.getInformation(skill));
+		tv.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// 命中率がクリックされた時の動作
+				SkillSearchResultActivity.startThisActivityWithDefaultSearch(context, SkillSearchableInformations.HIT, String.valueOf(skill.getHit()));
+			}
+		});
 		//PP
-		((TextView)findViewById(R.id.text_pp)).setText(SkillViewableInformations.PP.getInformation(skill));
+		tv=((TextView)findViewById(R.id.text_pp));
+		tv.setText(SkillViewableInformations.PP.getInformation(skill));
+		tv.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// PPがクリックされた時の動作
+				SkillSearchResultActivity.startThisActivityWithDefaultSearch(context, SkillSearchableInformations.PP, String.valueOf(skill.getPp()));
+			}
+		});
 		//優先度
-		((TextView)findViewById(R.id.text_priority)).setText(SkillViewableInformations.PRIORITY.getInformation(skill));
+		tv=((TextView)findViewById(R.id.text_priority));
+		tv.setText(SkillViewableInformations.PRIORITY.getInformation(skill));
+		tv.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// 優先度がクリックされた時の動作
+				SkillSearchResultActivity.startThisActivityWithDefaultSearch(context, SkillSearchableInformations.PRIORITY, String.valueOf(skill.getPriority()));
+			}
+		});
 		//分類
-		((TextView)findViewById(R.id.text_class)).setText(SkillViewableInformations.SKILL_CLASS.getInformation(skill));
-		//種類
-		
+		tv=((TextView)findViewById(R.id.text_class));
+		tv.setText(SkillViewableInformations.SKILL_CLASS.getInformation(skill));
+		tv.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// 分類がクリックされた時の動作
+				SkillSearchResultActivity.startThisActivityWithDefaultSearch(context, SkillSearchableInformations.SKILL_CLASS, skill.getSkillClass().toString());
+			}
+		});
 		//対象
-		((TextView)findViewById(R.id.text_target)).setText(SkillViewableInformations.TARGET.getInformation(skill));
+		tv=((TextView)findViewById(R.id.text_target));
+		tv.setText(SkillViewableInformations.TARGET.getInformation(skill));
+		tv.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// 対象がクリックされた時の動作
+				SkillSearchResultActivity.startThisActivityWithDefaultSearch(context, SkillSearchableInformations.TARGET, skill.getTarget().toString());
+			}
+		});
 		//直接攻撃
-		((TextView)findViewById(R.id.text_direct)).setText(SkillViewableInformations.DIRECT.getInformation(skill));
-
+		tv=((TextView)findViewById(R.id.text_direct));
+		tv.setText(SkillViewableInformations.DIRECT.getInformation(skill));
+		tv.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// 直接攻撃がクリックされた時の動作
+				SkillSearchResultActivity.startThisActivityWithDefaultSearch(context, SkillSearchableInformations.DIRECT, skill.getDirect().toString());
+			}
+		});
+		//種類
+		SkillData.SkillKind[] kinds=skill.getAllSkillKind();
+		LinearLayout layout=(LinearLayout)findViewById(R.id.layout_kind);
+		for(final SkillData.SkillKind kind:kinds){
+			tv=new TextView(layout.getContext());
+			tv.setText(kind.toString());
+			tv.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					// 種類がクリックされた時の動作
+					SkillSearchResultActivity.startThisActivityWithDefaultSearch(context, SkillSearchableInformations.KIND, kind.toString());
+				}
+			});
+			layout.addView(tv);
+		}
+		/*
+		StringBuilder sb=new StringBuilder();
+		SkillData.SkillKind[] kinds=skill.getAllSkillKind();
+		for(int i=0,n=kinds.length;i<n;i++){
+			sb.append(kinds[i]);
+			if(i!=n-1){
+				sb.append("\n");
+			}
+		}
+		tv=((TextView)findViewById(R.id.text_kind));
+		tv.setText(new String(sb));
+		*/
 		
 		
 		

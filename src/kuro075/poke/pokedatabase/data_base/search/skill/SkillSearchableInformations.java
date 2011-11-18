@@ -243,6 +243,21 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 			// TODO Auto-generated method stub
 			return null;
 		}
+		
+		@Override
+		public String getDefaultSearchIf(String _case){
+			return SearchIf.createSearchIf(this, _case+" "+OneCompareOptions.EQUAL, SearchTypes.FILTER);
+		}
+		
+		@Override
+		public String getDefaultTitle(String _case){
+			Utility.log(TAG, "getDefaultTitle");
+			StringBuilder sb = new StringBuilder();
+			sb.append("「威力");
+			sb.append(_case);
+			sb.append("」のわざ");
+			return new String(sb);
+		}
 	},
 	HIT("命中率"){
 		@Override
@@ -276,7 +291,20 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 			// TODO Auto-generated method stub
 			return null;
 		}
+		@Override
+		public String getDefaultSearchIf(String _case){
+			return SearchIf.createSearchIf(this, _case+" "+OneCompareOptions.EQUAL, SearchTypes.FILTER);
+		}
 		
+		@Override
+		public String getDefaultTitle(String _case){
+			Utility.log(TAG, "getDefaultTitle");
+			StringBuilder sb = new StringBuilder();
+			sb.append("「命中率");
+			sb.append(_case);
+			sb.append("」のわざ");
+			return new String(sb);
+		}
 	},
 	PP("PP"){
 		@Override
@@ -305,6 +333,20 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 		public String getCaseByFreeWord(String free_word) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+		@Override
+		public String getDefaultSearchIf(String _case){
+			return SearchIf.createSearchIf(this, _case+" "+OneCompareOptions.EQUAL, SearchTypes.FILTER);
+		}
+		
+		@Override
+		public String getDefaultTitle(String _case){
+			Utility.log(TAG, "getDefaultTitle");
+			StringBuilder sb = new StringBuilder();
+			sb.append("「PP");
+			sb.append(_case);
+			sb.append("」のわざ");
+			return new String(sb);
 		}
 	},
 	PRIORITY("優先度"){
@@ -337,6 +379,20 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 		public String getCaseByFreeWord(String free_word) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+		@Override
+		public String getDefaultSearchIf(String _case){
+			return SearchIf.createSearchIf(this, _case+" "+OneCompareOptions.EQUAL, SearchTypes.FILTER);
+		}
+		
+		@Override
+		public String getDefaultTitle(String _case){
+			Utility.log(TAG, "getDefaultTitle");
+			StringBuilder sb = new StringBuilder();
+			sb.append("「優先度");
+			sb.append(_case);
+			sb.append("」のわざ");
+			return new String(sb);
 		}
 	},
 	SKILL_CLASS("分類"){
@@ -424,6 +480,33 @@ public enum SkillSearchableInformations implements SkillSearchIfCategory{
 			return null;
 		}
 		
+	},
+	KIND("種類"){
+		@Override
+		public SkillData[] search(SkillData[] skill_array, String category,
+				String _case) {
+			SkillData.SkillKind kind=SkillData.SkillKind.fromName(_case);
+			List<SkillData> list=new ArrayList<SkillData>();
+			for(SkillData skill:skill_array){
+				if(skill.hasSkillKind(kind)){
+					list.add(skill);
+				}
+			}
+			return list.toArray(new SkillData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.openSimpleListDialog(context, search_type, listener, this, Utility.changeToStringArray(SkillData.SkillKind.values()));
+			
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	},
 	POKEMON("ポケモン"){
 		public final String[] LEARNING_TYPE={"Lv","マ","卵","教"};
