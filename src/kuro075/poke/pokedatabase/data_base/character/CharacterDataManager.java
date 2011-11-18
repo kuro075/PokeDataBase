@@ -60,6 +60,26 @@ public class CharacterDataManager {
 							chara_builder.setName(tmp);
 							chara_builder.setBattle_effect(st.nextToken());
 							chara_builder.setField_effect(st.nextToken());
+							//発動タイミング
+							String next=st.nextToken();
+							String[] split=next.split(",");
+							for(String timing:split){
+								chara_builder.addTiming(CharacterData.Timings.fromName(timing));
+							}
+							//対象
+							next=st.nextToken();
+							split=next.split(",");
+							for(String target:split){
+								chara_builder.addTarget(CharacterData.Targets.fromName(target));
+							}
+							//効果の種類
+							next=st.nextToken();
+							split=next.split(",");
+							for(String kind:split){
+								chara_builder.addKind(CharacterData.Kinds.fromName(kind));
+							}
+							
+							
 							chara_list.add(chara_builder.build());
 							num++;
 						}

@@ -40,6 +40,111 @@ public enum CharacterViewableInformations {
 			};
 		}
 	},
+	TIMING("発動タイミング"){
+		@Override
+		public String getInformation(CharacterData chara) {
+			CharacterData.Timings[] timings=chara.getAllTimings();
+			StringBuilder sb=new StringBuilder();
+			sb.append(timings[0]);
+			for(int i=1,n=timings.length;i<n;i++){
+				sb.append(",");
+				sb.append(timings[i]);
+			}
+			return new String(sb);
+		}
+
+		@Override
+		public Comparator<CharacterData> getComparator() {
+			return new Comparator<CharacterData>(){
+				@Override
+				public int compare(CharacterData c1, CharacterData c2) {
+					int d=0;
+					int n1=c1.getAllTimings().length;
+					int n2=c2.getAllTimings().length;
+					for(int i=0;i<n1 && i<n2 && d==0;i++){
+						d=c1.getAllTimings()[i].compareTo(c2.getAllTimings()[i]);
+					}
+					if(d==0){
+						if(n1!=n2){
+							return n1-n2;
+						}else
+							return c1.getNo()-c2.getNo();
+					}
+					return d;
+				}
+			};
+		}
+	},
+	TARGET("対象"){
+		@Override
+		public String getInformation(CharacterData chara) {
+			CharacterData.Targets[] targets=chara.getAllTargets();
+			StringBuilder sb=new StringBuilder();
+			sb.append(targets[0]);
+			for(int i=1,n=targets.length;i<n;i++){
+				sb.append(",");
+				sb.append(targets[i]);
+			}
+			return new String(sb);
+		}
+
+		@Override
+		public Comparator<CharacterData> getComparator() {
+			return new Comparator<CharacterData>(){
+				@Override
+				public int compare(CharacterData c1, CharacterData c2) {
+					int d=0;
+					int n1=c1.getAllTargets().length;
+					int n2=c2.getAllTargets().length;
+					for(int i=0;i<n1 && i<n2 && d==0;i++){
+						d=c1.getAllTargets()[i].compareTo(c2.getAllTargets()[i]);
+					}
+					if(d==0){
+						if(n1!=n2){
+							return n1-n2;
+						}else
+							return c1.getNo()-c2.getNo();
+					}
+					return d;
+				}
+			};
+		}
+	},
+	KIND("効果の種類"){
+		@Override
+		public String getInformation(CharacterData chara) {
+			CharacterData.Kinds[] kinds=chara.getAllKinds();
+			StringBuilder sb=new StringBuilder();
+			sb.append(kinds[0]);
+			for(int i=1,n=kinds.length;i<n;i++){
+				sb.append(",");
+				sb.append(kinds[i]);
+			}
+			return new String(sb);
+		}
+
+		@Override
+		public Comparator<CharacterData> getComparator() {
+			return new Comparator<CharacterData>(){
+				@Override
+				public int compare(CharacterData c1, CharacterData c2) {
+					int d=0;
+					int n1=c1.getAllKinds().length;
+					int n2=c2.getAllKinds().length;
+					for(int i=0;i<n1 && i<n2 && d==0;i++){
+						d=c1.getAllKinds()[i].compareTo(c2.getAllKinds()[i]);
+					}
+					if(d==0){
+						if(n1!=n2){
+							return n1-n2;
+						}else
+							return c1.getNo()-c2.getNo();
+					}
+					return d;
+				}
+			};
+		}
+	},
 	NUM_POKE("ポケモンの数"){
 		@Override
 		public String getInformation(CharacterData chara) {

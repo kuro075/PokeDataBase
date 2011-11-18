@@ -155,6 +155,84 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 			}
 			return "";
 		}
+	},
+	TIMING("発動タイミング"){
+		@Override
+		public CharacterData[] search(CharacterData[] chara_array,
+				String category, String _case) {
+			CharacterData.Timings timing=CharacterData.Timings.fromName(_case);
+			List<CharacterData> searched_list=new ArrayList<CharacterData>();
+			for(CharacterData chara:chara_array){
+				if(chara.hasTiming(timing)){
+					searched_list.add(chara);
+				}
+			}
+			return searched_list.toArray(new CharacterData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.openSimpleListDialog(context, search_type, listener, this, Utility.changeToStringArray(CharacterData.Timings.values()));
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		};
+	},
+	TARGET("対象"){
+		@Override
+		public CharacterData[] search(CharacterData[] chara_array,
+				String category, String _case) {
+			CharacterData.Targets target=CharacterData.Targets.fromName(_case);
+			List<CharacterData> searched_list=new ArrayList<CharacterData>();
+			for(CharacterData chara:chara_array){
+				if(chara.hasTarget(target)){
+					searched_list.add(chara);
+				}
+			}
+			return searched_list.toArray(new CharacterData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.openSimpleListDialog(context, search_type, listener, this, Utility.changeToStringArray(CharacterData.Targets.values()));
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		};
+	},
+	KIND("効果の種類"){
+		@Override
+		public CharacterData[] search(CharacterData[] chara_array,
+				String category, String _case) {
+			CharacterData.Kinds kind=CharacterData.Kinds.fromName(_case);
+			List<CharacterData> searched_list=new ArrayList<CharacterData>();
+			for(CharacterData chara:chara_array){
+				if(chara.hasKind(kind)){
+					searched_list.add(chara);
+				}
+			}
+			return searched_list.toArray(new CharacterData[0]);
+		}
+
+		@Override
+		public void openDialog(Context context, SearchTypes search_type,
+				SearchIfListener listener) {
+			SearchIf.openSimpleListDialog(context, search_type, listener, this, Utility.changeToStringArray(CharacterData.Kinds.values()));
+		}
+
+		@Override
+		public String getCaseByFreeWord(String free_word) {
+			// TODO Auto-generated method stub
+			return null;
+		};
 	};
 	
 	public static CharacterSearchableInformations fromCategory(String category){
