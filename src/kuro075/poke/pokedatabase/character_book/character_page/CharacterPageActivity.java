@@ -3,12 +3,16 @@ package kuro075.poke.pokedatabase.character_book.character_page;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.character_book.search_result.CharacterSearchResultActivity;
 import kuro075.poke.pokedatabase.data_base.character.CharacterData;
 import kuro075.poke.pokedatabase.data_base.character.CharacterDataManager;
+import kuro075.poke.pokedatabase.data_base.search.character.CharacterSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.store.DataStore;
 import kuro075.poke.pokedatabase.data_base.viewable_informations.CharacterViewableInformations;
@@ -118,7 +122,57 @@ public class CharacterPageActivity extends CharacterBookMenuActivity{
 	 * 種類を初期化
 	 */
 	private void initKind(){
-		//TODO 種類を初期化
+		final Context context=this;
+		//発動タイミング
+		CharacterData.Timings[] timings=character.getAllTimings();
+		LinearLayout layout=(LinearLayout)findViewById(R.id.layout_timing);
+		for(final CharacterData.Timings timing:timings){
+			TextView tv=new TextView(layout.getContext());
+			tv.setText(timing.toString());
+			tv.setGravity(Gravity.RIGHT);
+			tv.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v){
+					//発動タイミングがクリックされた時の動作
+					CharacterSearchResultActivity.startThisActivityWithDefaultSearch(context, CharacterSearchableInformations.TIMING, timing.toString());
+				}
+			});
+			layout.addView(tv);
+		}
+		
+		//対象
+		CharacterData.Targets[] targets=character.getAllTargets();
+		layout=(LinearLayout)findViewById(R.id.layout_target);
+		for(final CharacterData.Targets target:targets){
+			TextView tv=new TextView(layout.getContext());
+			tv.setText(target.toString());
+			tv.setGravity(Gravity.RIGHT);
+			tv.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v){
+					//発動タイミングがクリックされた時の動作
+					CharacterSearchResultActivity.startThisActivityWithDefaultSearch(context, CharacterSearchableInformations.TARGET, target.toString());
+				}
+			});
+			layout.addView(tv);
+		}
+		
+		//効果の種類
+		CharacterData.Kinds[] kinds=character.getAllKinds();
+		layout=(LinearLayout)findViewById(R.id.layout_kind);
+		for(final CharacterData.Kinds kind:kinds){
+			TextView tv=new TextView(layout.getContext());
+			tv.setText(kind.toString());
+			tv.setGravity(Gravity.RIGHT);
+			tv.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v){
+					//発動タイミングがクリックされた時の動作
+					CharacterSearchResultActivity.startThisActivityWithDefaultSearch(context, CharacterSearchableInformations.KIND, kind.toString());
+				}
+			});
+			layout.addView(tv);
+		}
 	}
 	
 	

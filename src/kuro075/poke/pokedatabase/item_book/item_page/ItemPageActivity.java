@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import kuro075.poke.pokedatabase.R;
+import kuro075.poke.pokedatabase.data_base.search.item.ItemSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.search.poke.PokeSearchableInformations;
 import kuro075.poke.pokedatabase.data_base.item.ItemData;
 import kuro075.poke.pokedatabase.data_base.item.ItemDataManager;
@@ -16,6 +17,7 @@ import kuro075.poke.pokedatabase.data_base.viewable_informations.ItemViewableInf
 import kuro075.poke.pokedatabase.menu.book.ItemBookMenuActivity;
 import kuro075.poke.pokedatabase.poke_book.PokeSearchResultActivity;
 import kuro075.poke.pokedatabase.item_book.item_page.ItemPageActivity;
+import kuro075.poke.pokedatabase.item_book.search_result.ItemSearchResultActivity;
 import kuro075.poke.pokedatabase.util.Utility;
 
 public class ItemPageActivity extends ItemBookMenuActivity{
@@ -140,16 +142,32 @@ public class ItemPageActivity extends ItemBookMenuActivity{
 	 * 買値から効果までの基本データを初期化
 	 */
 	private void initBasicInfo(){
+		final Context context=this;
 		((TableLayout)findViewById(R.id.tablelayout)).setStretchAllColumns(true);
 		//買値
 		((TextView)findViewById(R.id.text_buy)).setText(ItemViewableInformations.BUY_VALUE.getInformation(item));
 		//売値
 		((TextView)findViewById(R.id.text_sell)).setText(ItemViewableInformations.SELL_VALUE.getInformation(item));
 		//分類
-		((TextView)findViewById(R.id.text_class)).setText(ItemViewableInformations.CLASS.getInformation(item));
+		TextView tv=((TextView)findViewById(R.id.text_class));
+		tv.setText(ItemViewableInformations.CLASS.getInformation(item));
+		tv.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// 分類がクリックされた時の動作
+				ItemSearchResultActivity.startThisActivityWithDefaultSearch(context, ItemSearchableInformations.ITEM_CLASS, item.getItemClass().toString());
+			}
+		});
 		//サブ分類
-		((TextView)findViewById(R.id.text_sub_class)).setText(ItemViewableInformations.SUB_CLASS.getInformation(item));
-		
+		tv=((TextView)findViewById(R.id.text_sub_class));
+		tv.setText(ItemViewableInformations.SUB_CLASS.getInformation(item));
+		tv.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// サブ分類がクリックされた時の動作
+				ItemSearchResultActivity.startThisActivityWithDefaultSearch(context, ItemSearchableInformations.SUB_CLASS, item.getItemSubClass().toString());
+			}
+		});
 		//使用時の効果
 		((TextView)findViewById(R.id.text_using_effect)).setText(ItemViewableInformations.USING_EFFECT.getInformation(item));
 		//所持時の効果

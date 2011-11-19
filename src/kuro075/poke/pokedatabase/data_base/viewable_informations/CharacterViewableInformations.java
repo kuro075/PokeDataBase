@@ -40,7 +40,7 @@ public enum CharacterViewableInformations {
 			};
 		}
 	},
-	TIMING("発動タイミング"){
+	TIMING("発動"){
 		@Override
 		public String getInformation(CharacterData chara) {
 			CharacterData.Timings[] timings=chara.getAllTimings();
@@ -110,7 +110,7 @@ public enum CharacterViewableInformations {
 			};
 		}
 	},
-	KIND("効果の種類"){
+	KIND("種類"){
 		@Override
 		public String getInformation(CharacterData chara) {
 			CharacterData.Kinds[] kinds=chara.getAllKinds();

@@ -61,11 +61,11 @@ public class PokeDataBaseActivity extends DefaultMenuActivity {
 			public void startActivity(Context context) {
 				TypeBookActivity.startThisActivity(context);
 			}
-		},SIMULATOR("シミュレーター") {
+		},SIMULATOR("シミュレーター(工事中)"/*"シミュレーター"*/) {
 			@Override
 			public void startActivity(Context context) {
 				// TODO Auto-generated method stub
-				
+				Utility.popToast(context, "鋭意作成中");
 			}
 		};
 		private final String name;

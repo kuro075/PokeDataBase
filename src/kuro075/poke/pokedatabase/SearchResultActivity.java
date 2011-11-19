@@ -269,7 +269,6 @@ public class SearchResultActivity extends BookMenuActivity{
 	enum ListChoiceModes{
 		MULTIPLE,SINGLE;
 	}
-	
 	/**
 	 * 検索条件受信クラス
 	 * @author sanogenma
@@ -299,9 +298,9 @@ public class SearchResultActivity extends BookMenuActivity{
 		@Override
 		public String toString(){return name;}
 	}
+	
 	private static final String PACKAGE="kuro075.poke.pokedatabase";
 	private static final String TAG="SearchResultActivity";
-	
 	protected static final String KEY_SEARCH_IF=PACKAGE+"."+TAG+".search_if",
 								  KEY_TITLE=PACKAGE+"."+TAG+".title";
 	/*================/
@@ -309,26 +308,26 @@ public class SearchResultActivity extends BookMenuActivity{
 	/================*/
 	/* ウィジェット */
 	private TextView text_title,text_detail_if,text_no,text_name,text_info;
+	
 	private ListView list_view;//リスト
-
 	/* 検索関連 */
 	private BasicData[] datas;//検索後のデータ
 	private List<String> search_ifs=new ArrayList<String>();//検索条件
+
 	private List<String[]> prev_search_ifs=new ArrayList<String[]>();//Undo用検索条件保存変数
 	/* 表示関連 */
 	private String title;//タイトル
-
 	private int prev_num_datas;//前回のデータの数
 	private int index_viewable_informations;//表示する情報のインデックス
+
 	/* ソート */
 	private SortTypes sort_type;//ソートのインデックス
-	
 	private boolean flag_reverse=false;//逆順にソートするかどうか
 	/* 複数選択 */
 	private ListChoiceModes choice_mode=ListChoiceModes.SINGLE;
+	
 	/* ダイアログ */
 	private DialogManager dialog_manager;
-	
 	/**
 	 * 検索条件を追加
 	 * @param search_if
@@ -400,13 +399,13 @@ public class SearchResultActivity extends BookMenuActivity{
 			refreshListView(new String(toast));
 		}
 	}
-
 	/**
 	 * リストをクリックした時の動作
 	 */
 	protected void clickListItem(BasicData data){
 		Utility.log(TAG, "clickListItem");
 	}
+	
 	/**
 	 * 長押しした時のダイアログの項目をクリックした時の動作
 	 * @param position
@@ -438,7 +437,7 @@ public class SearchResultActivity extends BookMenuActivity{
 				break;
 		}
 	}
-	
+
 	/**
 	 * リストを長押しした時の動作
 	 * @param position
@@ -447,7 +446,6 @@ public class SearchResultActivity extends BookMenuActivity{
 		Utility.log(TAG, "clickLongListItem");
 		dialog_manager.openLongClickDialog(datas[position]);
 	}
-	
 	/**
 	 * 表示切替の項目をクリックした時の動作
 	 * @param position
@@ -468,6 +466,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	protected BasicData[] getAllDatas(){
 		return new BasicData[0];
 	}
+	
 	/**
 	 * ViewableInformationのComparatorを取得
 	 * @param index
@@ -485,15 +484,15 @@ public class SearchResultActivity extends BookMenuActivity{
 		if(getNoVisible()) return SortTypes.NO;
 		return SortTypes.NAME;
 	}
-	
 	/**
 	 * リストを長押しした時に表示するダイアログの項目
 	 * @return
 	 */
 	protected String[] getLongClickDialogItems(){
-		final String[] items={"除外","登録"};
+		final String[] items={"登録","除外"};
 		return items;
 	}
+	
 	/**
 	 * データの名前の最大長を返す
 	 * @return
@@ -508,7 +507,6 @@ public class SearchResultActivity extends BookMenuActivity{
 	protected boolean getNoVisible(){
 		return false;
 	}
-	
 	/**
 	 * SearchableInformationsのタイトルの配列を返す
 	 * @return
@@ -516,6 +514,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	protected String[] getSearchableInformationTitles(){
 		return new String[0];
 	}
+	
 	/**
 	 * 複数選択モードで選択された項目を取得
 	 * @return
@@ -531,6 +530,7 @@ public class SearchResultActivity extends BookMenuActivity{
 			}
 			return remove_list.toArray(new BasicData[0]);
 		}
+		
 		return new BasicData[0];
 	}
 	
@@ -551,6 +551,7 @@ public class SearchResultActivity extends BookMenuActivity{
 	protected String getViewableInformationTitle(int index){
 		return "";
 	}
+	
 	/**
 	 * ViewableInformationsのタイトルの配列を返す
 	 * @return
@@ -558,7 +559,6 @@ public class SearchResultActivity extends BookMenuActivity{
 	protected String[] getViewableInformationTitles(){
 		return new String[0];
 	}
-	
 	/**
 	 * 戻るボタンを押した時の動作
 	 */
@@ -579,7 +579,6 @@ public class SearchResultActivity extends BookMenuActivity{
 				break;
 		}
 	}
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -754,6 +753,30 @@ public class SearchResultActivity extends BookMenuActivity{
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onRestoreInstanceState(savedInstanceState);
+		Utility.log(TAG, "onRestoreInstanceState");
+		String[] saved_search_ifs=savedInstanceState.getStringArray(KEY_SEARCH_IFS);
+		search_ifs=new ArrayList<String>();
+		prev_search_ifs=new ArrayList<String[]>();
+		for(String search_if:saved_search_ifs){
+			this.addSearchIf(search_if);
+		}
+		this.updateDatas();
+		this.refreshListViewWithoutToast();
+	}
+	
+	private static final String KEY_SEARCH_IFS="search_ifs";
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		outState.putStringArray(KEY_SEARCH_IFS, search_ifs.toArray(new String[0]));
+	}
+	
 	
 	/**
 	 * 検索ダイアログを開く
@@ -763,6 +786,65 @@ public class SearchResultActivity extends BookMenuActivity{
 	 */
 	protected void openSearchDialog(int index,Context context,SearchTypes search_type,SearchIfListener listener){
 		Utility.log(TAG, "openSearchDialog");
+	}
+	
+	/**
+	 * トースト無しでリストビューを更新する(復帰時用
+	 */
+	private void refreshListViewWithoutToast(){
+		updateDatas();
+		sort();
+		switch(choice_mode){
+			case SINGLE://通常モード
+				text_info.setText(getViewableInformationTitle(index_viewable_informations));//情報のラベルのテキストをセット
+				//リストビューの項目を作成
+				List<ListItemBean> list = new ArrayList<ListItemBean>();
+				for(BasicData data:datas){
+					ListItemBean item =new ListItemBean();
+					item.setNo(data.getNo2String());
+					item.setName(data.getName());
+					item.setInfo(getViewableInformation(index_viewable_informations,data));
+					list.add(item);
+				}
+				ListAdapter adapter = new ListAdapter(getApplicationContext(),list,getNoVisible(),getMaxLengthOfName());
+				list_view.setAdapter(adapter);
+				list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position,
+							long id) {
+						if(choice_mode==ListChoiceModes.SINGLE){
+							clickListItem(datas[position]);
+						}
+					}
+				});
+				list_view.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+					@Override
+					public boolean onItemLongClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						if(choice_mode==ListChoiceModes.SINGLE){
+							clickLongListItem(position);
+							return true;
+						}
+						return false;
+					}
+				});
+				
+				prev_num_datas=datas.length;
+				refreshTitle(title);
+				break;
+				
+			case MULTIPLE://複数選択モード
+				text_info.setText("選択");
+				list_view.setAdapter(new MultipleChoicePokeListAdapter(getApplicationContext(),Arrays.asList(datas),getNoVisible(),getMaxLengthOfName()));
+			
+			    for (int i=0,n=datas.length;i<n;i++) {  
+				      // 指定したアイテムがチェックされているかを設定  
+				      list_view.setItemChecked(i, false);  
+			    } 
+				refreshTitle("複数選択モード");
+				
+				break;
+		}
 	}
 	
 	/**

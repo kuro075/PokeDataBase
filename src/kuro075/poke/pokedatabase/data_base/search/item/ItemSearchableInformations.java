@@ -409,7 +409,7 @@ public enum ItemSearchableInformations implements ItemSearchIfCategory{
 		StringBuilder sb = new StringBuilder();
 		sb.append("「");
 		sb.append(_case);
-		sb.append("」の特性");
+		sb.append("」のアイテム");
 		return new String(sb);
 	}
 	

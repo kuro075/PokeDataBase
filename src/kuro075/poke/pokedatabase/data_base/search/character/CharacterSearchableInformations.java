@@ -156,7 +156,7 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 			return "";
 		}
 	},
-	TIMING("発動タイミング"){
+	TIMING("発動"){
 		@Override
 		public CharacterData[] search(CharacterData[] chara_array,
 				String category, String _case) {
@@ -181,6 +181,15 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 			// TODO Auto-generated method stub
 			return null;
 		};
+		
+		public String getDefaultTitle(String _case){
+			Utility.log(TAG, "getDefaultTitle");
+			StringBuilder sb = new StringBuilder();
+			sb.append("発動が「");
+			sb.append(_case);
+			sb.append("」の特性");
+			return new String(sb);
+		}
 	},
 	TARGET("対象"){
 		@Override
@@ -207,8 +216,16 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 			// TODO Auto-generated method stub
 			return null;
 		};
+		public String getDefaultTitle(String _case){
+			Utility.log(TAG, "getDefaultTitle");
+			StringBuilder sb = new StringBuilder();
+			sb.append("対象が「");
+			sb.append(_case);
+			sb.append("」の特性");
+			return new String(sb);
+		}
 	},
-	KIND("効果の種類"){
+	KIND("種類"){
 		@Override
 		public CharacterData[] search(CharacterData[] chara_array,
 				String category, String _case) {
@@ -233,6 +250,14 @@ public enum CharacterSearchableInformations implements CharacterSearchIfCategory
 			// TODO Auto-generated method stub
 			return null;
 		};
+		public String getDefaultTitle(String _case){
+			Utility.log(TAG, "getDefaultTitle");
+			StringBuilder sb = new StringBuilder();
+			sb.append("種類が「");
+			sb.append(_case);
+			sb.append("」の特性");
+			return new String(sb);
+		}
 	};
 	
 	public static CharacterSearchableInformations fromCategory(String category){
