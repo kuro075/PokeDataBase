@@ -136,6 +136,7 @@ public class PokeDataBaseActivity extends DefaultMenuActivity {
        		button[i].setOnClickListener(listener);
        		linear.addView(button[i]);
        	}
+       	
     }
     
     private void copy2Apk(InputStream input,String file) throws IOException{

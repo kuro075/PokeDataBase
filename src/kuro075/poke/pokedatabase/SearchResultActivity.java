@@ -412,7 +412,10 @@ public class SearchResultActivity extends BookMenuActivity{
 	 */
 	protected void clickLongClickDialogItem(final BasicData target,int position){
 		switch(position){
-			case 0://除外
+			case 0://登録
+				getDataType().openSaveStarDialog(this, target.toString());
+				break;
+			case 1://除外
 				StringBuilder sb=new StringBuilder();
 				sb.append("「");
 				sb.append(target.toString());
@@ -431,9 +434,6 @@ public class SearchResultActivity extends BookMenuActivity{
 						dialog.dismiss();
 					}
 				});
-				break;
-			case 1://登録
-				getDataType().openSaveStarDialog(this, target.toString());
 				break;
 		}
 	}
